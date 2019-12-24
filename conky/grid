@@ -1,0 +1,11 @@
+#!/bin/bash
+
+GRID=$($HOME/bin/conky/get-grid)
+GRIDCH=$(echo $GRID | grep -i JJ00)
+
+if [ -z "$GRIDCH" ]
+then
+echo $GRID
+else
+echo "NO GPS"
+fi
