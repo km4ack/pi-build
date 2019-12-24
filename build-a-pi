@@ -1,0 +1,321 @@
+#!/bin/bash
+
+#MAIN SCRIPT FOR NEW PI BUILD
+#20191210 KM4ACK
+
+MYDIR=$HOME/pi-build
+DIR=$HOME/temp
+mkdir -p $DIR
+TEMPCRON=$DIR/tempcron
+touch $TEMPCRON
+WHO=$(whoami)
+RB=$(ls $HOME/.config/ | grep KM4ACK)
+LOG=$HOME/Documents/mylog.txt
+
+touch $LOG
+
+if [ -z "$RB" ]
+then
+echo
+else
+echo "It looks like you have run this script in the past"
+echo "It is only designed to be run one time"
+echo "It may cause issues if you try to run multiple times"
+echo "Press CRTL+C to exit or"
+read -n 1 -s -r -p "Press any key to continue"
+fi
+
+
+clear;echo;echo
+read -p "What is your call sign? " CALL
+echo "Please stand by while we grab a few updates"
+echo "This may take a while if you haven't already"
+echo "updated the system. You will be presented with"
+echo "a pop up window shortly to select which"
+echo "applications you wish to install."
+read -n 1 -s -r -p "Press any key to begin"
+
+sudo apt-get update
+sudo apt-get -y upgrade
+sudo apt -y full-upgrade
+touch $HOME/.config/KM4ACK
+
+mkdir -p $HOME/bin
+echo "export PATH=$PATH:$HOME/bin" >> $HOME/.bashrc
+
+	if ! hash yad 2>/dev/null; then
+	sudo apt install -y yad
+	fi
+
+##########################################
+MAIN () {
+yad --height=600 --width=400 --center --list --checklist --column=Install --column=App --separator="," --text "Select the apps you wish to install." --title="Build-a-Pi by KM4ACK" --button="Exit:1" --button="Install Selected:2" < $MYDIR/app-list > $MYDIR/appchoices
+
+BUTTON=$?
+
+if [ $BUTTON = "3" ]
+then 
+yad --width=500 --height=500 --center --button="Close:1" --wrap --text-info < info.txt
+MAIN
+elif [ $BUTTON = "252" ]
+then
+exit 0
+elif [ $BUTTON = "1" ]
+then
+exit 0
+fi
+
+echo $BUTTON
+
+cat appchoices | sed 's/TRUE,//g' | sed 's/,//' | sed 's/$/=yes/' > config
+rm appchoices
+};export -f MAIN
+
+MAIN
+
+############################################################################
+
+source $MYDIR/config
+
+if [ $HOTSPOT = "yes" ]
+then
+cd $DIR
+wget https://raw.githubusercontent.com/km4ack/pi-scripts/master/autohotspotN-setup
+chmod +x $DIR/autohotspotN-setup
+sudo $DIR/autohotspotN-setup
+echo "*/5 * * * * sudo /usr/bin/autohotspotN >/dev/null 2>&1" >> $TEMPCRON
+rm $DIR/autohotspotN-setup
+fi
+
+if [ $GPS = "yes" ]
+then
+cd $DIR
+wget https://raw.githubusercontent.com/km4ack/pi-scripts/master/gpsinstall
+chmod +x $DIR/gpsinstall
+sudo $DIR/gpsinstall
+rm $DIR/gpsinstall
+fi
+
+if [ $CONKY = "yes" ]
+then
+	if ! hash conky 2>/dev/null; then
+	sudo apt install -y conky
+	fi
+sudo apt-get install -y ruby2.3
+sudo gem install gpsd_client
+sudo gem install maidenhead
+cp $MYDIR/conky/.conkyrc $HOME/.conkyrc
+mkdir -p $HOME/bin/conky
+cp $MYDIR/conky/* $HOME/bin/conky/
+chmod +x $HOME/bin/conky/get-grid $HOME/bin/conky/temp-conv $HOME/bin/conky/get-freq $HOME/bin/conky/grid
+sed -i "s/N0CALL/$CALL/" $HOME/.conkyrc
+echo "@reboot sleep 20 && export DISPLAY=:0 && /usr/bin/conky" >> $TEMPCRON
+fi
+
+if [ $FLRIG = "yes" ]
+then
+	if ! hash flrig 2>/dev/null; then
+	sudo apt install -y flrig
+	fi
+fi
+
+if [ $FLDIGI = "yes" ]
+then
+	if ! hash fldigi 2>/dev/null; then
+	sudo apt install -y fldigi
+	fi
+fi
+
+if [ $PAT = "yes" ]
+then
+	if ! hash pat 2>/dev/null; then
+	cd $DIR
+	wget https://github.com/la5nta/pat/releases/download/v0.8.0/pat_0.8.0_linux_armhf.deb
+	sudo dpkg -i $DIR/pat_0.8.0_linux_armhf.deb
+	pat http &
+	sudo killall pat
+	sudo systemctl start pat@$WHO
+	sudo systemctl enable pat@$WHO
+	#/usr/bin/pat http &
+	#sudo killall pat
+	cd $DIR
+	wget https://raw.githubusercontent.com/km4ack/patmenu/master/patlogin
+	bash patlogin
+	sed -i "s/\"http_addr\": \".*\",/\"http_addr\": \"0.0.0.0:8080\",/" $HOME/.wl2k/config.json
+		#enable gps in pat is gps=yes
+		if [ $GPS = "yes" ]
+		then
+		sed -i 's/"enable_http": false,/"enable_http": true,/' $HOME/.wl2k/config.json
+		fi
+	fi
+fi
+
+if [ $ARDOPC = "yes" ]
+then
+mkdir -p $HOME/ardop
+cd $HOME/ardop
+wget https://www.cantab.net/users/john.wiseman/Downloads/Beta/piardopc
+sudo chmod +x $HOME/ardop/piardopc
+fi
+
+if [ $ARDOPGUI = "yes" ]
+then
+mkdir -p $HOME/ardop
+cd $HOME/ardop
+wget https://www.cantab.net/users/john.wiseman/Downloads/Beta/piARDOP_GUI
+sudo chmod +x $HOME/ardop/piARDOP_GUI
+ln -s $HOME/ardop/piARDOP_GUI $HOME/Desktop/ARDOP-GUI
+FILE=$HOME/.config/G8BPQ/ARDOP_GUI.conf
+mkdir -p $HOME/.config/G8BPQ
+touch $FILE
+echo "[General]" >> $FILE
+echo "Host=local" >> $FILE
+echo "Port=8515" >> $FILE
+fi
+
+if [ $PATMENU = "yes" ]
+then
+git clone https://github.com/km4ack/patmenu.git $HOME/patmenu && bash $HOME/patmenu/setup
+fi
+
+if [ $HAMLIB = "yes" ]
+then
+cd $DIR
+wget https://sourceforge.net/projects/hamlib/files/hamlib/3.3/hamlib-3.3.tar.gz
+tar -xzf $DIR/hamlib-3.3.tar.gz
+rm $DIR/hamlib-3.3.tar.gz
+cd $DIR/hamlib-3.3
+./configure
+make 
+sudo make install
+sudo ldconfig
+fi
+
+if [ $GARIM = "yes" ]
+then 
+cd $HOME
+sudo apt-get install -y fluid
+wget https://www.whitemesa.net/garim/src/garim-1.1.tar.gz
+tar xzvf garim-1.1.tar.gz
+rm garim-1.1.tar.gz
+cd $HOME/garim-1.1
+./configure
+make
+sudo make install
+fi
+
+if [ $DIREWOLF = "yes" ]
+then
+cd $HOME
+git clone https://www.github.com/wb2osz/direwolf
+cd $HOME/direwolf
+sudo apt-get install -y libasound2-dev
+make
+sudo make install
+make install-conf
+sed -i "s/N0CALL/$CALL/" "$HOME/direwolf.conf"
+sed -i 's/# ADEVICE  plughw:1,0/ADEVICE  plughw:1,0/' $HOME/direwolf.conf
+fi
+
+if [ $AX25 = "yes" ]
+then
+sudo apt-get install -y ax25-tools
+echo "wl2k "$CALL" 1200 255 7 Winlink" | sudo tee -a /etc/ax25/axports
+sudo apt-get install -y ax25-apps
+fi
+
+if [ $JS8CALL = "yes" ]
+then
+cd $DIR
+wget http://files.js8call.com/2.0.0/js8call_2.0.0_armhf.deb
+sudo dpkg -i js8call_2.0.0_armhf.deb
+sudo apt-get --fix-broken -y install
+sudo dpkg -i js8call_2.0.0_armhf.deb
+fi
+
+if [ $PULSE = "yes" ]
+then
+sudo apt-get install -y pulseaudio
+sudo apt-get install -y pavucontrol
+fi
+
+if [ $M0IAX = "yes" ]
+then
+pip3 install gps
+pip3 install maidenhead
+pip3 install psutil
+cd $HOME/bin
+wget https://raw.githubusercontent.com/m0iax/js8calltools/master/js8callgpsUI.py
+wget https://raw.githubusercontent.com/m0iax/js8calltools/master/gps_listener.py
+wget https://raw.githubusercontent.com/m0iax/js8call_aprsmessaging_interface/master/aprs_msgJS8Call.py
+chmod +x js8callgpsUI.py aprs_msgJS8Call.py
+ln -s $HOME/bin/js8callgpsUI.py $HOME/Desktop/JS8-GPS-Tool
+ln $HOME/bin/aprs_msgJS8Call.py $HOME/Desktop/JS8Call-Messenger
+fi
+
+if [ $WSJTX = "yes" ]
+then
+cd $DIR
+wget --no-check-certificate https://physics.princeton.edu/pulsar/k1jt/wsjtx_2.1.0_armhf.deb
+sudo dpkg -i wsjtx_2.1.0_armhf.deb
+sudo apt-get --fix-broken -y install
+sudo dpkg -i wsjtx_2.1.0_armhf.deb
+fi
+
+if [ $CHIRP = "yes" ]
+then
+cd $DIR
+wget https://trac.chirp.danplanet.com/chirp_daily/LATEST/
+CHIRPBUILD=$(cat index.html | grep .tar.gz | grep chirp-daily- | awk '{ print $6 }' | sed 's/.*"//' | sed 's/>//' | sed 's/[<].*$//')
+sudo apt-get -y install python-gtk2 python-serial python-libxml2
+mkdir $HOME/chirp
+cd $HOME/chirp
+wget https://trac.chirp.danplanet.com/chirp_daily/LATEST/$CHIRPBUILD
+tar -xzf $CHIRPBUILD
+CHIRPDIR=$(echo $CHIRPBUILD | sed 's/[.].*$//')
+cd $CHIRPDIR
+sudo python setup.py install
+fi
+
+if [ $XASTIR = "yes" ]
+then
+sudo apt-get install -y xastir
+sudo sed -i 's/Exec=xastir/Exec=sudo xastir/' /usr/share/applications/xastir.desktop
+fi
+
+if [ $YAAC = "yes" ]
+then
+cd $DIR
+wget https://www.ka2ddo.org/ka2ddo/YAAC.zip
+sudo apt-get install -y openjdk-8-jre librxtx-java
+mkdir -p $HOME/YAAC
+cd $HOME/YAAC
+touch YAAC
+echo "#!/bin/bash" >> YAAC
+echo "java -jar $HOME/YAAC/YAAC.jar" >> YAAC
+chmod +x YAAC
+ln -sf $HOME/YAAC/YAAC $HOME/Desktop/YAAC
+ln -sf $HOME/YAAC/YAAC $HOME/bin/YAAC
+unzip $DIR/YAAC.zip
+fi
+
+
+
+
+
+crontab $TEMPCRON
+rm -rf $DIR
+
+echo;echo;echo "rebooting in 5 seconds"
+sleep 5
+sudo reboot
+
+
+
+
+
+
+
+
+
+
