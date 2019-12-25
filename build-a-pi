@@ -67,7 +67,7 @@ fi
 
 echo $BUTTON
 
-cat appchoices | sed 's/TRUE,//g' | sed 's/,//' | sed 's/$/=yes/' > config
+cat appchoices | sed 's/TRUE,//g' | sed 's/,//' | sed 's/$/=yes/' > $MYDIR/config
 rm appchoices
 };export -f MAIN
 
