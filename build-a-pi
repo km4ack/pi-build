@@ -14,11 +14,17 @@ LOG=$HOME/Documents/mylog.txt
 
 touch $LOG
 
+if [ $WHO = "root" ]
+then
+echo "No need for sudo with this script"
+exit 0
+fi
+
 if [ -z "$RB" ]
 then
 echo
 else
-echo "It looks like you have run this script in the past"
+echo "It looks like you have run this script before"
 echo "It is only designed to be run one time"
 echo "It may cause issues if you try to run multiple times"
 echo "Press CRTL+C to exit or"
@@ -227,10 +233,12 @@ fi
 if [ $JS8CALL = "yes" ]
 then
 cd $DIR
-wget http://files.js8call.com/2.0.0/js8call_2.0.0_armhf.deb
-sudo dpkg -i js8call_2.0.0_armhf.deb
+JS8LATE=$(curl -s http://files.js8call.com/latest.html | grep armhf | awk '{ print $2 }' | sed 's/href=//' | sed 's/"//g')
+JS8PKG=$(curl -s http://files.js8call.com/latest.html | grep armhf | awk '{ print $2 }' | sed 's/\///g' | sed 's/href="http:files.js8call.com[0-9].[0-9].[0-9]//' | sed 's/"//')
+wget $JS8LATE
+sudo dpkg -i $JS8PKG
 sudo apt-get --fix-broken -y install
-sudo dpkg -i js8call_2.0.0_armhf.deb
+sudo dpkg -i $JS8PKG
 fi
 
 if [ $PULSE = "yes" ]
