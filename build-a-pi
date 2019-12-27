@@ -83,7 +83,7 @@ MAIN
 
 source $MYDIR/config
 
-if [ $HOTSPOT = "yes" ]
+if [ $HOTSPOT = "yes" ] > /dev/null 2>&1
 then
 cd $DIR
 wget https://raw.githubusercontent.com/km4ack/pi-scripts/master/autohotspotN-setup
@@ -93,7 +93,7 @@ echo "*/5 * * * * sudo /usr/bin/autohotspotN >/dev/null 2>&1" >> $TEMPCRON
 rm $DIR/autohotspotN-setup
 fi
 
-if [ $GPS = "yes" ]
+if [ $GPS = "yes" ] > /dev/null 2>&1
 then
 cd $DIR
 wget https://raw.githubusercontent.com/km4ack/pi-scripts/master/gpsinstall
@@ -102,7 +102,7 @@ sudo $DIR/gpsinstall
 rm $DIR/gpsinstall
 fi
 
-if [ $CONKY = "yes" ]
+if [ $CONKY = "yes" ] > /dev/null 2>&1
 then
 	if ! hash conky 2>/dev/null; then
 	sudo apt install -y conky
@@ -118,21 +118,21 @@ sed -i "s/N0CALL/$CALL/" $HOME/.conkyrc
 echo "@reboot sleep 20 && export DISPLAY=:0 && /usr/bin/conky" >> $TEMPCRON
 fi
 
-if [ $FLRIG = "yes" ]
+if [ $FLRIG = "yes" ] > /dev/null 2>&1
 then
 	if ! hash flrig 2>/dev/null; then
 	sudo apt install -y flrig
 	fi
 fi
 
-if [ $FLDIGI = "yes" ]
+if [ $FLDIGI = "yes" ] > /dev/null 2>&1
 then
 	if ! hash fldigi 2>/dev/null; then
 	sudo apt install -y fldigi
 	fi
 fi
 
-if [ $PAT = "yes" ]
+if [ $PAT = "yes" ] > /dev/null 2>&1
 then
 	if ! hash pat 2>/dev/null; then
 	cd $DIR
@@ -156,7 +156,7 @@ then
 	fi
 fi
 
-if [ $ARDOPC = "yes" ]
+if [ $ARDOPC = "yes" ] > /dev/null 2>&1
 then
 mkdir -p $HOME/ardop
 cd $HOME/ardop
@@ -164,7 +164,7 @@ wget https://www.cantab.net/users/john.wiseman/Downloads/Beta/piardopc
 sudo chmod +x $HOME/ardop/piardopc
 fi
 
-if [ $ARDOPGUI = "yes" ]
+if [ $ARDOPGUI = "yes" ] > /dev/null 2>&1
 then
 mkdir -p $HOME/ardop
 cd $HOME/ardop
@@ -179,12 +179,12 @@ echo "Host=local" >> $FILE
 echo "Port=8515" >> $FILE
 fi
 
-if [ $PATMENU = "yes" ]
+if [ $PATMENU = "yes" ] > /dev/null 2>&1
 then
 git clone https://github.com/km4ack/patmenu.git $HOME/patmenu && bash $HOME/patmenu/setup
 fi
 
-if [ $HAMLIB = "yes" ]
+if [ $HAMLIB = "yes" ] > /dev/null 2>&1
 then
 cd $DIR
 wget https://sourceforge.net/projects/hamlib/files/hamlib/3.3/hamlib-3.3.tar.gz
@@ -197,7 +197,7 @@ sudo make install
 sudo ldconfig
 fi
 
-if [ $GARIM = "yes" ]
+if [ $GARIM = "yes" ] > /dev/null 2>&1
 then 
 cd $HOME
 sudo apt-get install -y fluid
@@ -210,7 +210,7 @@ make
 sudo make install
 fi
 
-if [ $DIREWOLF = "yes" ]
+if [ $DIREWOLF = "yes" ] > /dev/null 2>&1
 then
 cd $HOME
 git clone https://www.github.com/wb2osz/direwolf
@@ -223,14 +223,14 @@ sed -i "s/N0CALL/$CALL/" "$HOME/direwolf.conf"
 sed -i 's/# ADEVICE  plughw:1,0/ADEVICE  plughw:1,0/' $HOME/direwolf.conf
 fi
 
-if [ $AX25 = "yes" ]
+if [ $AX25 = "yes" ] > /dev/null 2>&1 
 then
 sudo apt-get install -y ax25-tools
 echo "wl2k "$CALL" 1200 255 7 Winlink" | sudo tee -a /etc/ax25/axports
 sudo apt-get install -y ax25-apps
 fi
 
-if [ $JS8CALL = "yes" ]
+if [ $JS8CALL = "yes" ] > /dev/null 2>&1
 then
 cd $DIR
 JS8LATE=$(curl -s http://files.js8call.com/latest.html | grep armhf | awk '{ print $2 }' | sed 's/href=//' | sed 's/"//g')
@@ -241,13 +241,13 @@ sudo apt-get --fix-broken -y install
 sudo dpkg -i $JS8PKG
 fi
 
-if [ $PULSE = "yes" ]
+if [ $PULSE = "yes" ] > /dev/null 2>&1
 then
 sudo apt-get install -y pulseaudio
 sudo apt-get install -y pavucontrol
 fi
 
-if [ $M0IAX = "yes" ]
+if [ $M0IAX = "yes" ] > /dev/null 2>&1
 then
 pip3 install gps
 pip3 install maidenhead
@@ -261,7 +261,7 @@ ln -s $HOME/bin/js8callgpsUI.py $HOME/Desktop/JS8-GPS-Tool
 ln $HOME/bin/aprs_msgJS8Call.py $HOME/Desktop/JS8Call-Messenger
 fi
 
-if [ $WSJTX = "yes" ]
+if [ $WSJTX = "yes" ] > /dev/null 2>&1
 then
 cd $DIR
 wget --no-check-certificate https://physics.princeton.edu/pulsar/k1jt/wsjtx_2.1.0_armhf.deb
@@ -270,7 +270,7 @@ sudo apt-get --fix-broken -y install
 sudo dpkg -i wsjtx_2.1.0_armhf.deb
 fi
 
-if [ $CHIRP = "yes" ]
+if [ $CHIRP = "yes" ] > /dev/null 2>&1
 then
 cd $DIR
 wget https://trac.chirp.danplanet.com/chirp_daily/LATEST/
@@ -285,13 +285,13 @@ cd $CHIRPDIR
 sudo python setup.py install
 fi
 
-if [ $XASTIR = "yes" ]
+if [ $XASTIR = "yes" ] > /dev/null 2>&1
 then
 sudo apt-get install -y xastir
 sudo sed -i 's/Exec=xastir/Exec=sudo xastir/' /usr/share/applications/xastir.desktop
 fi
 
-if [ $YAAC = "yes" ]
+if [ $YAAC = "yes" ] > /dev/null 2>&1
 then
 cd $DIR
 wget https://www.ka2ddo.org/ka2ddo/YAAC.zip
