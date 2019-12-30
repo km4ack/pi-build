@@ -307,9 +307,21 @@ ln -sf $HOME/YAAC/YAAC $HOME/bin/YAAC
 unzip $DIR/YAAC.zip
 fi
 
+#add virtual sound card link for pulse audio
+#20191228
+cd $DIR
+cat > tempsound <<EOF
+pcm.pulse {
+	type pulse
+	}
 
-
-
+ctl.pulse {
+	type pulse
+	}
+EOF
+sudo chown root:root tempsound
+sudo mv tempsound /etc/asound.conf
+#End 20191228 edits
 
 crontab $TEMPCRON
 rm -rf $DIR
