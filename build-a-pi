@@ -52,6 +52,10 @@ echo "export PATH=$PATH:$HOME/bin" >> $HOME/.bashrc
 	if ! hash yad 2>/dev/null; then
 	sudo apt install -y yad
 	fi
+	if ! hash jq 2>/dev/null; then
+	sudo apt install -y jq
+	fi
+
 
 ##########################################
 MAIN () {
@@ -147,6 +151,8 @@ then
 	cd $DIR
 	wget https://raw.githubusercontent.com/km4ack/patmenu/master/patlogin
 	bash patlogin
+	jq '.ax25.rig = '\"my-rig\"'' $HOME/.wl2k/config.json | jq '.ardop.rig = '\"my-rig\"'' | jq '.hamlib_rigs = {'\"my-rig\"': {"address": "127.0.0.1:4532", "network": "tcp"}}' > ~/Desktop/config.json
+	mv ~/Desktop/config.json ~/.wl2k/config.json
 	sed -i "s/\"http_addr\": \".*\",/\"http_addr\": \"0.0.0.0:8080\",/" $HOME/.wl2k/config.json
 		#enable gps in pat is gps=yes
 		if [ $GPS = "yes" ]
