@@ -77,8 +77,8 @@ fi
 
 echo $BUTTON
 
-cat appchoices | sed 's/TRUE,//g' | sed 's/,//' | sed 's/$/=yes/' > $MYDIR/config
-rm appchoices
+cat $MYDIR/appchoices | sed 's/TRUE,//g' | sed 's/,//' | sed 's/$/=yes/' > $MYDIR/config
+rm $MYDIR/appchoices
 };export -f MAIN
 
 MAIN
@@ -89,6 +89,11 @@ source $MYDIR/config
 
 if [ $HOTSPOT = "yes" ] > /dev/null 2>&1
 then
+echo;echo;echo
+##################################################
+##########INSTALLING AUTOHOTSPOT
+##################################################
+sleep 2
 cd $DIR
 wget https://raw.githubusercontent.com/km4ack/pi-scripts/master/autohotspotN-setup
 chmod +x $DIR/autohotspotN-setup
@@ -108,6 +113,11 @@ fi
 
 if [ $CONKY = "yes" ] > /dev/null 2>&1
 then
+echo;echo;echo
+##################################################
+##########INSTALLING CONKY
+##################################################
+sleep 2
 	if ! hash conky 2>/dev/null; then
 	sudo apt install -y conky
 	fi
@@ -124,6 +134,11 @@ fi
 
 if [ $FLRIG = "yes" ] > /dev/null 2>&1
 then
+echo;echo;echo
+##################################################
+##########INSTALLING FLRIG
+##################################################
+sleep 2
 	if ! hash flrig 2>/dev/null; then
 	sudo apt install -y flrig
 	fi
@@ -131,6 +146,11 @@ fi
 
 if [ $FLDIGI = "yes" ] > /dev/null 2>&1
 then
+echo;echo;echo
+##################################################
+##########INSTALLING FLDIGI
+##################################################
+sleep 2
 	if ! hash fldigi 2>/dev/null; then
 	sudo apt install -y fldigi
 	fi
@@ -138,6 +158,11 @@ fi
 
 if [ $PAT = "yes" ] > /dev/null 2>&1
 then
+echo;echo;echo
+##################################################
+##########INSTALLING PAT WINLINK
+##################################################
+sleep 2
 	if ! hash pat 2>/dev/null; then
 	cd $DIR
 	wget https://github.com/la5nta/pat/releases/download/v0.8.0/pat_0.8.0_linux_armhf.deb
@@ -164,6 +189,11 @@ fi
 
 if [ $ARDOPC = "yes" ] > /dev/null 2>&1
 then
+echo;echo;echo
+##################################################
+##########INSTALLING PIARDOPC
+##################################################
+sleep 2
 mkdir -p $HOME/ardop
 cd $HOME/ardop
 wget https://www.cantab.net/users/john.wiseman/Downloads/Beta/piardopc
@@ -172,6 +202,11 @@ fi
 
 if [ $ARDOPGUI = "yes" ] > /dev/null 2>&1
 then
+echo;echo;echo
+##################################################
+##########INSTALLING ARDOP-GUI
+##################################################
+sleep 2
 mkdir -p $HOME/ardop
 cd $HOME/ardop
 wget https://www.cantab.net/users/john.wiseman/Downloads/Beta/piARDOP_GUI
@@ -187,11 +222,21 @@ fi
 
 if [ $PATMENU = "yes" ] > /dev/null 2>&1
 then
+echo;echo;echo
+##################################################
+##########INSTALLING PAT MENU
+##################################################
+sleep 2
 git clone https://github.com/km4ack/patmenu.git $HOME/patmenu && bash $HOME/patmenu/setup
 fi
 
 if [ $HAMLIB = "yes" ] > /dev/null 2>&1
 then
+echo;echo;echo
+##################################################
+##########INSTALLING HAMLIB (RIG CONTROL)
+##################################################
+sleep 2
 cd $DIR
 wget https://sourceforge.net/projects/hamlib/files/hamlib/3.3/hamlib-3.3.tar.gz
 tar -xzf $DIR/hamlib-3.3.tar.gz
@@ -204,7 +249,12 @@ sudo ldconfig
 fi
 
 if [ $GARIM = "yes" ] > /dev/null 2>&1
-then 
+then
+echo;echo;echo
+##################################################
+##########INSTALLING GARIM
+##################################################
+sleep 2
 cd $HOME
 sudo apt-get install -y fluid
 wget https://www.whitemesa.net/garim/src/garim-1.1.tar.gz
@@ -218,6 +268,11 @@ fi
 
 if [ $DIREWOLF = "yes" ] > /dev/null 2>&1
 then
+echo;echo;echo
+##################################################
+##########INSTALLING DIREWOLF
+##################################################
+sleep 2
 cd $HOME
 git clone https://www.github.com/wb2osz/direwolf
 cd $HOME/direwolf
@@ -231,6 +286,11 @@ fi
 
 if [ $AX25 = "yes" ] > /dev/null 2>&1 
 then
+echo;echo;echo
+##################################################
+##########INSTALLING AX25
+##################################################
+sleep 2
 sudo apt-get install -y ax25-tools
 echo "wl2k "$CALL" 1200 255 7 Winlink" | sudo tee -a /etc/ax25/axports
 sudo apt-get install -y ax25-apps
@@ -238,6 +298,11 @@ fi
 
 if [ $JS8CALL = "yes" ] > /dev/null 2>&1
 then
+echo;echo;echo
+##################################################
+##########INSTALLING JS8CALL
+##################################################
+sleep 2
 cd $DIR
 JS8LATE=$(curl -s http://files.js8call.com/latest.html | grep armhf | awk '{ print $2 }' | sed 's/href=//' | sed 's/"//g')
 JS8PKG=$(curl -s http://files.js8call.com/latest.html | grep armhf | awk '{ print $2 }' | sed 's/\///g' | sed 's/href="http:files.js8call.com[0-9].[0-9].[0-9]//' | sed 's/"//')
@@ -249,12 +314,22 @@ fi
 
 if [ $PULSE = "yes" ] > /dev/null 2>&1
 then
+echo;echo;echo
+##################################################
+##########INSTALLING PULSE AUDIO
+##################################################
+sleep 2
 sudo apt-get install -y pulseaudio
 sudo apt-get install -y pavucontrol
 fi
 
 if [ $M0IAX = "yes" ] > /dev/null 2>&1
 then
+echo;echo;echo
+##################################################
+##########INSTALLING M0IAX TOOLS
+##################################################
+sleep 2
 pip3 install gps
 pip3 install maidenhead
 pip3 install psutil
@@ -269,6 +344,11 @@ fi
 
 if [ $WSJTX = "yes" ] > /dev/null 2>&1
 then
+echo;echo;echo
+##################################################
+##########INSTALLING WSJTX
+##################################################
+sleep 2
 cd $DIR
 wget --no-check-certificate https://physics.princeton.edu/pulsar/k1jt/wsjtx_2.1.0_armhf.deb
 sudo dpkg -i wsjtx_2.1.0_armhf.deb
@@ -278,6 +358,11 @@ fi
 
 if [ $CHIRP = "yes" ] > /dev/null 2>&1
 then
+echo;echo;echo
+##################################################
+##########INSTALLING CHIRP
+##################################################
+sleep 2
 cd $DIR
 wget https://trac.chirp.danplanet.com/chirp_daily/LATEST/
 CHIRPBUILD=$(cat index.html | grep .tar.gz | grep chirp-daily- | awk '{ print $6 }' | sed 's/.*"//' | sed 's/>//' | sed 's/[<].*$//')
@@ -293,12 +378,22 @@ fi
 
 if [ $XASTIR = "yes" ] > /dev/null 2>&1
 then
+echo;echo;echo
+##################################################
+##########INSTALLING XASTIR
+##################################################
+sleep 2
 sudo apt-get install -y xastir
 sudo sed -i 's/Exec=xastir/Exec=sudo xastir/' /usr/share/applications/xastir.desktop
 fi
 
 if [ $YAAC = "yes" ] > /dev/null 2>&1
 then
+echo;echo;echo
+##################################################
+##########INSTALLING YAAC
+##################################################
+sleep 2
 cd $DIR
 wget https://www.ka2ddo.org/ka2ddo/YAAC.zip
 sudo apt-get install -y openjdk-8-jre librxtx-java
