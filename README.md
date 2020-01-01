@@ -1,5 +1,15 @@
 # pi-build
 
+During the install you will need a few pieces of information depending on what you choose to install. If installing all apps, you will need:
+
+For Hotspot:
+Current WiFi SSID
+Current WiFi Password
+
+For Pat Winlink:
+Winlink Password
+Grid Square
+
 HOTSPOT:
 Hotspot is used to generate a wifi hotspot that you can connect to with other wireless devices. This is useful when in the field so you can connect to and contol the pi from a wireless device.
 
@@ -50,4 +60,11 @@ Software to program radios.
 XASTIR:
 GUI interface useful when configuring APRS nodes. 
 
-YAAC
+YAAC:
+Yet Another APRS Client GUI interface useful when configuring APRS nodes.
+
+(COMING SOON)
+EES - Requires hotspot to be installed
+Emergency Email Server
+
+
