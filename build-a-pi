@@ -90,9 +90,9 @@ source $MYDIR/config
 if [ $HOTSPOT = "yes" ] > /dev/null 2>&1
 then
 echo;echo;echo
-##################################################
-##########INSTALLING AUTOHOTSPOT
-##################################################
+echo "##################################################"
+echo "##########INSTALLING AUTOHOTSPOT"
+echo "##################################################"
 sleep 2
 cd $DIR
 wget https://raw.githubusercontent.com/km4ack/pi-scripts/master/autohotspotN-setup
@@ -114,9 +114,9 @@ fi
 if [ $CONKY = "yes" ] > /dev/null 2>&1
 then
 echo;echo;echo
-##################################################
-##########INSTALLING CONKY
-##################################################
+echo "##################################################"
+echo "##########INSTALLING CONKY"
+echo "##################################################"
 sleep 2
 	if ! hash conky 2>/dev/null; then
 	sudo apt install -y conky
@@ -135,9 +135,9 @@ fi
 if [ $FLRIG = "yes" ] > /dev/null 2>&1
 then
 echo;echo;echo
-##################################################
-##########INSTALLING FLRIG
-##################################################
+echo "##################################################"
+echo "##########INSTALLING FLRIG"
+echo "##################################################"
 sleep 2
 	if ! hash flrig 2>/dev/null; then
 	sudo apt install -y flrig
@@ -147,9 +147,9 @@ fi
 if [ $FLDIGI = "yes" ] > /dev/null 2>&1
 then
 echo;echo;echo
-##################################################
-##########INSTALLING FLDIGI
-##################################################
+echo "##################################################"
+echo "##########INSTALLING FLDIGI"
+echo "##################################################"
 sleep 2
 	if ! hash fldigi 2>/dev/null; then
 	sudo apt install -y fldigi
@@ -159,9 +159,9 @@ fi
 if [ $PAT = "yes" ] > /dev/null 2>&1
 then
 echo;echo;echo
-##################################################
-##########INSTALLING PAT WINLINK
-##################################################
+echo "##################################################"
+echo "##########INSTALLING PAT WINLINK"
+echo "##################################################"
 sleep 2
 	if ! hash pat 2>/dev/null; then
 	cd $DIR
@@ -190,9 +190,9 @@ fi
 if [ $ARDOPC = "yes" ] > /dev/null 2>&1
 then
 echo;echo;echo
-##################################################
-##########INSTALLING PIARDOPC
-##################################################
+echo "##################################################"
+echo "##########INSTALLING PIARDOPC"
+echo "##################################################"
 sleep 2
 mkdir -p $HOME/ardop
 cd $HOME/ardop
@@ -203,9 +203,9 @@ fi
 if [ $ARDOPGUI = "yes" ] > /dev/null 2>&1
 then
 echo;echo;echo
-##################################################
-##########INSTALLING ARDOP-GUI
-##################################################
+echo "##################################################"
+echo "##########INSTALLING ARDOP-GUI"
+echo "##################################################"
 sleep 2
 mkdir -p $HOME/ardop
 cd $HOME/ardop
@@ -223,9 +223,9 @@ fi
 if [ $PATMENU = "yes" ] > /dev/null 2>&1
 then
 echo;echo;echo
-##################################################
-##########INSTALLING PAT MENU
-##################################################
+echo "##################################################"
+echo "##########INSTALLING Pat Menu"
+echo "##################################################"
 sleep 2
 git clone https://github.com/km4ack/patmenu.git $HOME/patmenu && bash $HOME/patmenu/setup
 fi
@@ -233,9 +233,9 @@ fi
 if [ $HAMLIB = "yes" ] > /dev/null 2>&1
 then
 echo;echo;echo
-##################################################
-##########INSTALLING HAMLIB (RIG CONTROL)
-##################################################
+echo "##################################################"
+echo "##########INSTALLING RIG CONTROL"
+echo "##################################################"
 sleep 2
 cd $DIR
 wget https://sourceforge.net/projects/hamlib/files/hamlib/3.3/hamlib-3.3.tar.gz
@@ -251,9 +251,9 @@ fi
 if [ $GARIM = "yes" ] > /dev/null 2>&1
 then
 echo;echo;echo
-##################################################
-##########INSTALLING GARIM
-##################################################
+echo "##################################################"
+echo "##########INSTALLING GARIM"
+echo "##################################################"
 sleep 2
 cd $HOME
 sudo apt-get install -y fluid
@@ -269,9 +269,9 @@ fi
 if [ $DIREWOLF = "yes" ] > /dev/null 2>&1
 then
 echo;echo;echo
-##################################################
-##########INSTALLING DIREWOLF
-##################################################
+echo "##################################################"
+echo "##########INSTALLING DIREWOLF"
+echo "##################################################"
 sleep 2
 cd $HOME
 git clone https://www.github.com/wb2osz/direwolf
@@ -287,9 +287,9 @@ fi
 if [ $AX25 = "yes" ] > /dev/null 2>&1 
 then
 echo;echo;echo
-##################################################
-##########INSTALLING AX25
-##################################################
+echo "##################################################"
+echo "##########INSTALLING AX25"
+echo "##################################################"
 sleep 2
 sudo apt-get install -y ax25-tools
 echo "wl2k "$CALL" 1200 255 7 Winlink" | sudo tee -a /etc/ax25/axports
@@ -299,9 +299,9 @@ fi
 if [ $JS8CALL = "yes" ] > /dev/null 2>&1
 then
 echo;echo;echo
-##################################################
-##########INSTALLING JS8CALL
-##################################################
+echo "##################################################"
+echo "##########INSTALLING JS8CALL"
+echo "##################################################"
 sleep 2
 cd $DIR
 JS8LATE=$(curl -s http://files.js8call.com/latest.html | grep armhf | awk '{ print $2 }' | sed 's/href=//' | sed 's/"//g')
@@ -315,9 +315,9 @@ fi
 if [ $PULSE = "yes" ] > /dev/null 2>&1
 then
 echo;echo;echo
-##################################################
-##########INSTALLING PULSE AUDIO
-##################################################
+echo "##################################################"
+echo "##########INSTALLING PULSE AUDIO"
+echo "##################################################"
 sleep 2
 sudo apt-get install -y pulseaudio
 sudo apt-get install -y pavucontrol
@@ -326,9 +326,9 @@ fi
 if [ $M0IAX = "yes" ] > /dev/null 2>&1
 then
 echo;echo;echo
-##################################################
-##########INSTALLING M0IAX TOOLS
-##################################################
+echo "##################################################"
+echo "##########INSTALLING M0IAX TOOLS"
+echo "##################################################"
 sleep 2
 pip3 install gps
 pip3 install maidenhead
@@ -345,9 +345,9 @@ fi
 if [ $WSJTX = "yes" ] > /dev/null 2>&1
 then
 echo;echo;echo
-##################################################
-##########INSTALLING WSJTX
-##################################################
+echo "##################################################"
+echo "##########INSTALLING WSJTX"
+echo "##################################################"
 sleep 2
 cd $DIR
 wget --no-check-certificate https://physics.princeton.edu/pulsar/k1jt/wsjtx_2.1.0_armhf.deb
@@ -359,9 +359,9 @@ fi
 if [ $CHIRP = "yes" ] > /dev/null 2>&1
 then
 echo;echo;echo
-##################################################
-##########INSTALLING CHIRP
-##################################################
+echo "##################################################"
+echo "##########INSTALLING CHIRP"
+echo "##################################################"
 sleep 2
 cd $DIR
 wget https://trac.chirp.danplanet.com/chirp_daily/LATEST/
@@ -379,9 +379,9 @@ fi
 if [ $XASTIR = "yes" ] > /dev/null 2>&1
 then
 echo;echo;echo
-##################################################
-##########INSTALLING XASTIR
-##################################################
+echo "##################################################"
+echo "##########INSTALLING XASTIR"
+echo "##################################################"
 sleep 2
 sudo apt-get install -y xastir
 sudo sed -i 's/Exec=xastir/Exec=sudo xastir/' /usr/share/applications/xastir.desktop
@@ -390,9 +390,9 @@ fi
 if [ $YAAC = "yes" ] > /dev/null 2>&1
 then
 echo;echo;echo
-##################################################
-##########INSTALLING YAAC
-##################################################
+echo "##################################################"
+echo "##########INSTALLING YAAC"
+echo "##################################################"
 sleep 2
 cd $DIR
 wget https://www.ka2ddo.org/ka2ddo/YAAC.zip
@@ -406,6 +406,41 @@ chmod +x YAAC
 ln -sf $HOME/YAAC/YAAC $HOME/Desktop/YAAC
 ln -sf $HOME/YAAC/YAAC $HOME/bin/YAAC
 unzip $DIR/YAAC.zip
+fi
+
+if [ $EES = "yes" ] > /dev/null 2>&1
+then
+echo;echo;echo
+echo "##################################################"
+echo "##########INSTALLING KM4ACK EMERGENCY EMAIL SERVER"
+echo "##################################################"
+sleep 2
+#install PHP7.3 if not installed
+#this will also install apache2
+if ! hash php7.3 2>/dev/null; then
+sudo apt install -y php7.3
+fi
+#Install the KM4ACK EES
+cd $DIR
+wget https://github.com/km4ack/EES-LITE/archive/master.zip
+unzip master.zip
+sudo cp -r $DIR/EES-LITE-master/* /var/www/html/
+rm -rf $DIR/EES-LITE-master
+rm $DIR/master.zip
+cd /var/www/html
+sudo chmod +x /var/www/html/firstrun
+sudo /var/www/html/./firstrun
+#/var/www/html/./schedule
+sudo mv /var/www/html/index.html /var/www/html/index.html.org
+sudo sed -i "s/N0CALL/$CALL/" /var/www/html/config.php
+sudo sed -i 's/REMINDER\ FOR\ OPERATOR\ TO\ DO\ SOMETHING/ENABLE\ AUTO\ POST\ REPLY\ IN\ CRON/' /var/www/html/config.php
+cd $DIR
+#Change Pat Winlink port so it won't interfer with the EES
+sed -i 's/0.0.0.0:8080/0.0.0.0:5000/' $HOME/.wl2k/config.json
+sed -i 's/PORT=8080/PORT=5000/' $HOME/patmenu/config
+
+sudo killall pat
+sudo systemctl start pat@pi
 fi
 
 #add virtual sound card link for pulse audio
@@ -425,6 +460,7 @@ sudo mv tempsound /etc/asound.conf
 #End 20191228 edits
 
 crontab $TEMPCRON
+/var/www/html/./schedule > /dev/null 2>&1
 rm -rf $DIR
 
 echo;echo;echo "rebooting in 5 seconds"
