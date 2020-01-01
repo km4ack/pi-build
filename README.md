@@ -1,4 +1,4 @@
-# pi-build
+# Needed info for pi build
 
 During the install you will need a few pieces of information depending on what you choose to install. If installing all apps, you will need:
 
@@ -7,6 +7,8 @@ Current WiFi SSID & Current WiFi Password
 
 For Pat Winlink:
 Winlink Password & Grid Square
+
+# Available Apps to Install
 
 HOTSPOT:
 Hotspot is used to generate a wifi hotspot that you can connect to with other wireless devices. This is useful when in the field so you can connect to and contol the pi from a wireless device.
@@ -17,7 +19,8 @@ This will install the needed utilities to get a GPS device configured as a time 
 FLRIG:
 Rig contol graphical interface. 
 
-FLDIGI 
+FLDIGI:
+Digital Mode Software
 
 PAT:
 Winlink client for Raspberry Pi 
@@ -41,7 +44,7 @@ HAMLIB:
 Rig contol software. 
 
 PULSE:
-Pulse audio. Provides a way to configure virtual sound cards. Recommended for AMRRON ops. 
+Pulse audio. Provides a way to configure virtual sound cards. REQUIRED for AMRRON ops. 
 
 JS8: 
 JS8Call digital software
@@ -61,8 +64,6 @@ GUI interface useful when configuring APRS nodes.
 YAAC:
 Yet Another APRS Client GUI interface useful when configuring APRS nodes.
 
-(COMING SOON)
-EES - Requires hotspot to be installed
-Emergency Email Server
+Emergency Email Server (EES): My personal EES. Require hotspot to be installed.
 
 
