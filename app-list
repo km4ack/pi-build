@@ -9,6 +9,10 @@ FLRIG
 true
 FLDIGI
 true
+FLAMP
+true
+FLMSG
+true
 PAT
 true
 ARDOPC
