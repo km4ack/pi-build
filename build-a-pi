@@ -156,6 +156,30 @@ sleep 2
 	fi
 fi
 
+if [ $FLAMP = "yes" ] > /dev/null 2>&1
+then
+echo;echo;echo
+echo "##################################################"
+echo "##########INSTALLING FLAMP"
+echo "##################################################"
+sleep 2
+	if ! hash fldigi 2>/dev/null; then
+	sudo apt install -y flamp
+	fi
+fi
+
+if [ $FLMSG = "yes" ] > /dev/null 2>&1
+then
+echo;echo;echo
+echo "##################################################"
+echo "##########INSTALLING FLMSG"
+echo "##################################################"
+sleep 2
+	if ! hash fldigi 2>/dev/null; then
+	sudo apt install -y flmsg
+	fi
+fi
+
 if [ $PAT = "yes" ] > /dev/null 2>&1
 then
 echo;echo;echo
