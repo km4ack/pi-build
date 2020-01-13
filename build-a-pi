@@ -2,6 +2,7 @@
 
 #MAIN SCRIPT FOR NEW PI BUILD
 #20191210 KM4ACK
+#Credit to TB-14 for the inspiration for this script
 
 MYDIR=$HOME/pi-build
 DIR=$HOME/temp
