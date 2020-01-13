@@ -89,6 +89,7 @@ My personal EES. Requires hotspot to be installed. https://youtu.be/XC9vdAnolO0
 To access the EES, connect to the pi's hotspot, open a web browser, and navigate to email.com\
 or open a web browser and navigate to the pi's ip adderss on your local network.\
 Admin credentials are admin/admin by default but can be changed in the file found at\
-/var/www/html/config.php
+/var/www/html/config.php \
+For more configuration options - https://youtu.be/KaEeCq50Mno
 
 
