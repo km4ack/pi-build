@@ -380,10 +380,10 @@ echo "##########INSTALLING WSJTX"
 echo "##################################################"
 sleep 2
 cd $DIR
-wget --no-check-certificate https://physics.princeton.edu/pulsar/k1jt/wsjtx_2.1.0_armhf.deb
-sudo dpkg -i wsjtx_2.1.0_armhf.deb
+wget --no-check-certificate https://physics.princeton.edu/pulsar/k1jt/wsjtx_2.1.2_armhf.deb
+sudo dpkg -i wsjtx_2.1.2_armhf.deb
 sudo apt-get --fix-broken -y install
-sudo dpkg -i wsjtx_2.1.0_armhf.deb
+sudo dpkg -i wsjtx_2.1.2_armhf.deb
 fi
 
 if [ $CHIRP = "yes" ] > /dev/null 2>&1
