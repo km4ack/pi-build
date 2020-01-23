@@ -1,0 +1,34 @@
+#!/bin/bash
+
+#set conky display size per user env
+#20200123 km4ack
+
+RES=$(xdpyinfo | grep "dimensions" | awk '{ print $2 }' | sed 's/x.*$//')
+
+if [ $RES = "1920" ]
+then 
+CS=conky-large
+elif [ $RES = "1280" ]
+then
+CS=conky-medium
+elif [ $RES = "800" ]
+then
+CS=conky-small
+else
+echo "Unable to determine screen resolution automatically"
+read -p "Would you like to try conky in small, medium, or large? s/m/l " ANS
+	if [ $ANS = "s" ] || [ $ANS = "S" ]
+	then
+	CS=conky-small
+	elif [ $ANS = "m" ] || [ $ANS = "M" ]
+	then
+	CS=conky-medium
+	elif [ $ANS = "l" ] || [ $ANS = "L" ]
+	then
+	CS=conky-large
+	fi
+fi
+
+echo "Setting new conky size and restarting conky"
+
+cp $HOME/pi-build/conky/$CS $HOME/.conkyrc
