@@ -9,10 +9,15 @@ For Pat Winlink:
 Winlink Password & Grid Square
 
 # Install
-After flashing Buster to a SD card run the following command
+This script is intended to run on a brand new installation of Buster. It should not be run on a pi that you have already started installing applications on. Install additional apps that you require after running this script.\
+\
+Flash a fresh copy of  Buster to a SD card and run the following command
 
      git clone https://github.com/km4ack/pi-build.git $HOME/pi-build && bash $HOME/pi-build/build-a-pi
      
+# Issue Reporting - Feature Requests
+Please report issues & feature requests here https://github.com/km4ack/pi-build/issues
+
 # Video
 [![IMAGE ALT TEXT](http://img.youtube.com/vi/gBokG9FI-NM/0.jpg)](https://youtu.be/gBokG9FI-NM "Build-a-Pi")
 
@@ -80,5 +85,11 @@ Yet Another APRS Client GUI interface useful when configuring APRS nodes. https:
 
 #### Emergency Email Server (EES):
 My personal EES. Requires hotspot to be installed. https://youtu.be/XC9vdAnolO0
+\
+To access the EES, connect to the pi's hotspot, open a web browser, and navigate to email.com\
+or open a web browser and navigate to the pi's ip adderss on your local network.\
+Admin credentials are admin/admin by default but can be changed in the file found at\
+/var/www/html/config.php \
+For more configuration options - https://youtu.be/KaEeCq50Mno
 
 
