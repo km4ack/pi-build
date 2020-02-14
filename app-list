@@ -29,19 +29,11 @@ HAMLIB
 true
 PULSE
 true
-GARIM
-true
 JS8CALL
 true
 M0IAX
 true
 WSJTX
-true
-CHIRP
-true
-XASTIR
-true
-YAAC
-true
-EES
+
+
 
