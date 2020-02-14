@@ -292,7 +292,7 @@ rm $HOME/Downloads/crontemp.txt
 sudo apt-get autoremove -y
 echo;echo;echo "rebooting in 5 seconds"
 sleep 5
-reboot
+sudo reboot
 
 
 
