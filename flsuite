@@ -1,0 +1,149 @@
+#!/bin/bash
+
+#script to install FLDIGI from source
+#20200121 km4ack
+
+mkdir -p $HOME/Downloads
+
+#find how much memory we are working with
+FREEMEM=$(free -m | grep Mem: | awk '{ print $2 }')
+echo $FREEMEM
+
+#increase swap file if less than 3G memory
+if [ $FREEMEM -lt 3000 ]
+then
+echo "Increasing Swap size for build"
+#increase swap size
+sudo sed -i 's/#CONF_SWAPFILE=\/var\/swap/CONF_SWAPFILE=\/var\/swap/' /etc/dphys-swapfile
+sudo sed -i 's/CONF_SWAPSIZE=100/CONF_SWAPSIZE=1024/' /etc/dphys-swapfile
+sudo /etc/init.d/dphys-swapfile restart
+sleep 10
+fi
+
+#install needed depends
+sudo apt-get install -y libfltk1.3-dev libjpeg9-dev libxft-dev libxinerama-dev libxcursor-dev libsndfile1-dev libsamplerate0-dev portaudio19-dev libpulse-dev libusb-1.0-0-dev texinfo
+
+#determine latest FLXMLRPC & download
+FLXM=$(curl -s http://www.w1hkj.com/files/flxmlrpc/ | grep .tar.gz | sed 's/<li><a\ href="//' | sed 's/">\ flxmlrpc.*$//')
+echo $FLXM
+XMPKG=$( echo $FLXM | sed 's/.tar.gz//')
+cd $HOME/Downloads
+wget http://www.w1hkj.com/files/flxmlrpc/$FLXM
+tar -zxvf $FLXM
+rm *.gz
+
+#build FLXMLRPC
+cd $XMPKG
+./configure --prefix=/usr/local --enable-static
+make
+sudo make install
+sudo ldconfig
+
+
+
+#Determine latest FLRIG
+RIGTAR=$(curl -s http://www.w1hkj.com/files/flrig/ | grep .tar.gz | sed 's/<li><a\ href="//' | sed 's/">\ flrig.*$//')
+RIGPKG=$(echo $RIGTAR | sed 's/.tar.gz//')
+
+#Download latest FLRIG
+cd $HOME/Downloads
+wget http://www.w1hkj.com/files/flrig/$RIGTAR
+tar -zxvf $RIGTAR
+rm *.gz
+
+#Build FLRIG
+cd $RIGPKG
+./configure --prefix=/usr/local --enable-static
+make
+sudo make install
+sudo ldconfig
+
+#Determine latest FLDIGI
+FLTAR=$(curl -s http://www.w1hkj.com/files/fldigi/ | grep .tar.gz | sed 's/<li><a\ href="//' | sed 's/">\ fldigi.*$//')
+FLPKG=$(echo $FLTAR | sed 's/.tar.gz//')
+
+#Download latest FLDIGI tar file
+cd $HOME/Downloads
+wget http://www.w1hkj.com/files/fldigi/$FLTAR
+tar -zxvf $FLTAR
+rm *.gz
+
+
+#build FLDIGI
+cd $FLPKG
+./configure --prefix=/usr/local --enable-static
+make
+sudo make install
+sudo ldconfig
+
+#Determine latest FLMSG
+MSGTAR=$(curl -s http://www.w1hkj.com/files/flmsg/ | grep .tar.gz | sed 's/<li><a\ href="//' | sed 's/">\ flmsg.*$//')
+MSGPKG=$(echo $MSGTAR | sed 's/.tar.gz//')
+
+#download FLMSG
+cd $HOME/Downloads
+wget http://www.w1hkj.com/files/flmsg/$MSGTAR
+tar -zxvf $MSGTAR
+rm *.gz
+
+#Build FLMSG
+cd $MSGPKG
+./configure --prefix=/usr/local --enable-static
+make
+sudo make install
+sudo ldconfig
+
+#determine latest FLAMP
+AMPTAR=$(curl -s http://www.w1hkj.com/files/flamp/ | grep .tar.gz | sed 's/<li><a\ href="//' | sed 's/">\ flamp.*$//')
+AMPPKG=$(echo $AMPTAR | sed 's/.tar.gz//')
+
+#download FLAMP
+cd $HOME/Downloads
+wget http://www.w1hkj.com/files/flamp/$AMPTAR
+tar -zxvf $AMPTAR
+rm *.gz
+
+#build FLAMP
+cd $AMPPKG
+./configure --prefix=/usr/local --enable-static
+make
+sudo make install
+sudo ldconfig
+
+#determine lastest FLNET
+NETTAR=$(curl -s http://www.w1hkj.com/files/flnet/ | grep .tar.gz | sed 's/<li><a\ href="//' | sed 's/">\ flnet.*$//')
+NETPKG=$(echo $NETTAR | sed 's/.tar.gz//')
+
+#download FLNET
+cd $HOME/Downloads
+wget http://www.w1hkj.com/files/flnet/$NETTAR
+tar -zxvf $NETTAR
+rm *.gz
+
+#build FLNET
+cd $NETPKG
+./configure --prefix=/usr/local --enable-static
+make
+sudo make install
+sudo ldconfig
+
+#reset swap size to default
+if [ $FREEMEM -lt 3000 ]
+then
+echo "Resetting swap size to default"
+#increase swap size
+sudo sed -i 's/CONF_SWAPFILE=\/var\/swap/#CONF_SWAPFILE=\/var\/swap/' /etc/dphys-swapfile
+sudo sed -i 's/CONF_SWAPSIZE=1024/CONF_SWAPSIZE=100/' /etc/dphys-swapfile
+sudo /etc/init.d/dphys-swapfile restart
+fi
+
+#install xdg menus to clean up our menu system
+sudo apt-get install -y extra-xdg-menus
+
+
+
+
+
+
+
+
