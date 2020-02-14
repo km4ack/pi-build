@@ -1,0 +1,305 @@
+#!/bin/bash
+
+#MAIN SCRIPT FOR NEW PI BUILD
+#20191210 KM4ACK
+#Credit to TB-14 for the inspiration for this script
+
+MYDIR=$HOME/pi-build
+DIR=$HOME/temp
+mkdir -p $DIR
+TEMPCRON=$DIR/tempcron
+touch $TEMPCRON
+WHO=$(whoami)
+RB=$(ls $HOME/.config/ | grep KM4ACK)
+LOG=$HOME/Documents/mylog.txt
+CALL=$(cat $MYDIR/callsign.txt)
+
+touch $LOG
+
+if [ $WHO = "root" ]
+then
+echo "No need for sudo with this script"
+exit 0
+fi
+
+
+##########################################
+MAIN () {
+yad --height=600 --width=400 --center --list --checklist --column=Install --column=App --separator="," --text "Select the apps you wish to install." --title="Build-a-Pi by KM4ACK" --button="Exit:1" --button="Install Selected:2" < $MYDIR/addon-app-list > $MYDIR/appchoices
+
+BUTTON=$?
+
+if [ $BUTTON = "3" ]
+then 
+yad --width=500 --height=500 --center --button="Close:1" --wrap --text-info < info.txt
+MAIN
+elif [ $BUTTON = "252" ]
+then
+exit 0
+elif [ $BUTTON = "1" ]
+then
+exit 0
+fi
+
+echo $BUTTON
+
+cat $MYDIR/appchoices | sed 's/TRUE,//g' | sed 's/,//' | sed 's/$/=yes/' > $MYDIR/config2
+rm $MYDIR/appchoices
+};export -f MAIN
+
+MAIN
+
+############################################################################
+
+source $MYDIR/config2
+
+if [ $GARIM = "yes" ] > /dev/null 2>&1
+then
+echo;echo;echo
+echo "##################################################"
+echo "##########INSTALLING GARIM"
+echo "##################################################"
+sleep 2
+cd $HOME
+sudo apt-get install -y fluid
+wget https://www.whitemesa.net/garim/src/garim-1.1.tar.gz
+tar xzvf garim-1.1.tar.gz
+rm garim-1.1.tar.gz
+cd $HOME/garim-1.1
+./configure
+make
+sudo make install
+fi
+
+if [ $CHIRP = "yes" ] > /dev/null 2>&1
+then
+echo;echo;echo
+echo "##################################################"
+echo "##########INSTALLING CHIRP"
+echo "##################################################"
+sleep 2
+cd $DIR
+wget https://trac.chirp.danplanet.com/chirp_daily/LATEST/
+CHIRPBUILD=$(cat index.html | grep .tar.gz | grep chirp-daily- | awk '{ print $6 }' | sed 's/.*"//' | sed 's/>//' | sed 's/[<].*$//')
+sudo apt-get -y install python-gtk2 python-serial python-libxml2
+mkdir $HOME/chirp
+cd $HOME/chirp
+wget https://trac.chirp.danplanet.com/chirp_daily/LATEST/$CHIRPBUILD
+tar -xzf $CHIRPBUILD
+CHIRPDIR=$(echo $CHIRPBUILD | sed 's/[.].*$//')
+cd $CHIRPDIR
+sudo python setup.py install
+fi
+
+if [ $XASTIR = "yes" ] > /dev/null 2>&1
+then
+echo;echo;echo
+echo "##################################################"
+echo "##########INSTALLING XASTIR"
+echo "##################################################"
+sleep 2
+sudo apt-get install -y xastir
+sudo sed -i 's/Exec=xastir/Exec=sudo xastir/' /usr/share/applications/xastir.desktop
+fi
+
+if [ $YAAC = "yes" ] > /dev/null 2>&1
+then
+echo;echo;echo
+echo "##################################################"
+echo "##########INSTALLING YAAC"
+echo "##################################################"
+sleep 2
+cd $DIR
+wget https://www.ka2ddo.org/ka2ddo/YAAC.zip
+sudo apt-get install -y openjdk-8-jre librxtx-java
+mkdir -p $HOME/YAAC
+cd $HOME/YAAC
+touch YAAC
+echo "#!/bin/bash" >> YAAC
+echo "java -jar $HOME/YAAC/YAAC.jar" >> YAAC
+chmod +x YAAC
+#ln -sf $HOME/YAAC/YAAC $HOME/Desktop/YAAC
+#ln -sf $HOME/YAAC/YAAC $HOME/bin/YAAC
+cat > yaac.desktop <<EOF
+[Desktop Entry]
+Name=YAAC
+GenericName=YAAC
+Comment=APRS Client
+Exec=$HOME/YAAC/YAAC
+Terminal=false
+Type=Application
+Categories=Network;HamRadio;
+EOF
+
+sudo mv yaac.desktop /usr/share/applications/
+unzip $DIR/YAAC.zip
+fi
+
+if [ $EES = "yes" ] > /dev/null 2>&1
+then
+echo;echo;echo
+echo "##################################################"
+echo "##########INSTALLING KM4ACK EMERGENCY EMAIL SERVER"
+echo "##################################################"
+sleep 2
+#install PHP7.3 if not installed
+#this will also install apache2
+if ! hash php7.3 2>/dev/null; then
+sudo apt install -y php7.3
+fi
+#Install the KM4ACK EES
+cd $DIR
+wget https://github.com/km4ack/EES-LITE/archive/master.zip
+unzip master.zip
+sudo cp -r $DIR/EES-LITE-master/* /var/www/html/
+rm -rf $DIR/EES-LITE-master
+rm $DIR/master.zip
+cd /var/www/html
+sudo chmod +x /var/www/html/firstrun
+sudo /var/www/html/./firstrun
+#/var/www/html/./schedule
+sudo mv /var/www/html/index.html /var/www/html/index.html.org
+sudo sed -i "s/N0CALL/$CALL/" /var/www/html/config.php
+sudo sed -i 's/REMINDER\ FOR\ OPERATOR\ TO\ DO\ SOMETHING/ENABLE\ AUTO\ POST\ REPLY\ IN\ CRON/' /var/www/html/config.php
+cd $DIR
+#Change Pat Winlink port so it won't interfer with the EES
+sed -i 's/0.0.0.0:8080/0.0.0.0:5000/' $HOME/.wl2k/config.json
+sed -i 's/PORT=8080/PORT=5000/' $HOME/patmenu/config
+
+sudo killall pat
+sudo systemctl start pat@pi
+fi
+#set EES schedule using EES script
+/var/www/html/./schedule > /dev/null 2>&1
+
+if [ $PYQSO = "yes" ] > /dev/null 2>&1
+then
+echo;echo;echo
+echo "##################################################"
+echo "##########INSTALLING PYQSO########################"
+echo "##################################################"
+sudo apt-get install -y pyqso
+fi
+
+if [ $GPREDICT = "yes" ] > /dev/null 2>&1
+then 
+echo;echo;echo
+echo "##################################################"
+echo "##########INSTALLING PYQSO########################"
+echo "##################################################"
+sudo apt-get install -y gpredict
+fi
+
+if [ $CQRLOG = "yes" ] > /dev/null 2>&1
+then 
+echo;echo;echo
+echo "##################################################"
+echo "##########INSTALLING CQRLOG#######################"
+echo "##################################################"
+sudo apt-get install -y cqrlog
+fi
+
+if [ $GRIDTRACKER = "yes" ] > /dev/null 2>&1
+then
+echo;echo;echo
+echo "##################################################"
+echo "##########INSTALLING GRIDTRACKER##################"
+echo "##################################################"
+cd $HOME
+sudo apt-get install -y libgconf-2-4
+GRIDDLL=$(curl -s https://tagloomis.com/downloads/ | grep Arm | head -1 | sed 's/<p><a\ href="//' | sed 's/?.*$//')
+wget $GRIDDLL
+GRIDTAR=$(echo $GRIDDLL | sed 's/.*\///g')
+tar -xzvf $GRIDTAR
+rm *.gz
+cat > gridtracker.desktop <<EOF
+[Desktop Entry]
+Name=GridTracker
+Comment=GridTracker
+GenericName=GridTracker, a WSJT-X Companion
+Exec=/home/pi/GridTracker/GridTracker --disable-accelerated-2d-canvas --num-raster-threads=2
+Icon=/home/pi/GridTracker/gridtracker.png
+Path=/home/pi/GridTracker
+Type=Application
+Encoding=UTF-8
+Terminal=false
+Categories=HamRadio;
+EOF
+
+sudo mv gridtracker.desktop /usr/share/applications/
+
+fi
+
+if [ $QSSTV = "yes" ] > /dev/null 2>&1
+then
+echo;echo;echo
+echo "##################################################"
+echo "##########INSTALLING QSSTV##################"
+echo "##################################################"
+sudo apt-get install -y g++ libfftw3-dev qt5-default libpulse-dev libhamlib-dev libasound2-dev libv4l-dev libopenjp2-7 libopenjp2-7-dev
+
+cd $HOME/Downloads
+
+TAR=$(curl -s http://users.telenet.be/on4qz/qsstv/downloads/ | grep tar.gz | sed 's/.*href="//' | sed 's/">.*$//')
+wget http://users.telenet.be/on4qz/qsstv/downloads/$TAR
+SSTVTAR=$(echo $TAR | sed 's/.tar.gz//')
+tar -xvzf $TAR
+cd $SSTVTAR
+qmake
+make
+sudo make install
+
+sudo sed -i 's/Education;/Network;HamRadio;/' /usr/local/share/applications/qsstv.desktop
+
+fi
+
+if [ $PROPAGATION = "yes" ] > /dev/null 2>&1
+then
+echo;echo;echo
+echo "##################################################"
+echo "##########INSTALLING PROPAGATION SOFTWARE#########"
+echo "##################################################"
+sudo apt-get install -y gfortran yelp python3-gi python3-gi-cairo rarian-compat gnome-doc-utils pkg-config python3-dateutil python3-mpltoolkits.basemap python3-cairocffi libgtk-3-dev
+
+#install primary program
+cd $HOME/Downloads
+wget https://www.qsl.net/hz1jw/voacapl/downloads/voacapl-0.7.2.tar.gz
+tar -xzf voacapl-0.7.2.tar.gz
+cd voacapl-0.7.2
+./configure
+make
+sudo make install
+
+
+#install gui app for propagation reports
+cd $HOME/Downloads
+wget https://www.qsl.net/hz1jw/pythonprop/downloads/pythonprop-0.28.tar.gz
+tar -xzf pythonprop-0.28.tar.gz
+cd pythonprop-0.28
+./configure
+sudo make install
+
+fi
+
+$HOME/Downloads/voacapl-0.7.2/makeitshfbc
+
+rm -rf $DIR
+
+crontab -l > $HOME/Downloads/crontemp.txt
+sed -i 's/@reboot\ sleep\ 20\ &&\ export\ DISPLAY=:0\ &&\ lxterminal.*$//' $HOME/Downloads/crontemp.txt
+crontab $HOME/Downloads/crontemp.txt
+rm $HOME/Downloads/crontemp.txt
+sudo apt-get autoremove -y
+echo;echo;echo "rebooting in 5 seconds"
+sleep 5
+reboot
+
+
+
+
+
+
+
+
+
+
