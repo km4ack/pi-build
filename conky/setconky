@@ -3,6 +3,8 @@
 #set conky display size per user env
 #20200123 km4ack
 
+read -p "What is your call sign? " CALL
+
 RES=$(xdpyinfo | grep "dimensions" | awk '{ print $2 }' | sed 's/x.*$//')
 
 if [ $RES = "1920" ]
@@ -31,4 +33,10 @@ fi
 
 echo "Setting new conky size and restarting conky"
 
-cp $HOME/pi-build/conky/$CS $HOME/.conkyrc
+cp $HOME/bin/conky/$CS $HOME/.conkyrc
+
+sed -i "s/N0CALL/$CALL/" $HOME/.conkyrc
+
+sudo killall conky > /dev/null 2>&1
+
+conky > /dev/null 2>&1
