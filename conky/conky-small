@@ -38,8 +38,8 @@ ${voffset -20}
 ${color DarkSlateGray}${hr 2}
 ${font Arial:bold:size=08}${color White}${time %H:%M:%S}\
 ${alignr}${tztime Zulu %H:%M:%S}
-${font Arial:bold:size=08}${color White}${time %m-%d-%y}\
-${alignr}${tztime Zulu %m-%d-%y}
+${font Arial:bold:size=25}${color White}${time %d%b%y}\
+${alignr}${tztime Zulu %d%b%y}
 
 
 ${voffset -85}
