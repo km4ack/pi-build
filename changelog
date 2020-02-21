@@ -12,3 +12,4 @@
 20200220	include add-wifi script
 		update M0IAX tools to latest version
 		remove old MOIAX tools
+		change date format in conky
