@@ -23,7 +23,7 @@ Please report issues & feature requests here https://github.com/km4ack/pi-build/
 
 # Available Apps to Install
 
-####RTC | Real Time Clock
+#### RTC | Real Time Clock
 Software for DS3231 real time clock
 
 #### HOTSPOT:
