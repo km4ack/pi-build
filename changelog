@@ -1,0 +1,14 @@
+20200117 	Initial Release on Youtube
+
+20200122	Add option to build FLDIGI suite from source
+		split app selection to two boxes
+		backup cron just in case script is run twice
+		begin logging the build ~/Downloads/build-log.txt
+		add PYQSO from repository
+		add GPREDICT from repository
+		add CQRLOG from repository
+		add QSSTV from source
+20200214	add conky resize script
+20200220	include add-wifi script
+		update M0IAX tools to latest version
+		remove old MOIAX tools
