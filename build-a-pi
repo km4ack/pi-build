@@ -139,17 +139,10 @@ source $MYDIR/config
 
 if [ $RTC = "yes" ] > /dev/null 2>&1
 then
-echo "##################################################"
-echo "##########INSTALLING REAL TIME CLOCK"
-echo "##################################################"
-sleep 2
-echo;echo;echo "Please be sure the real time clock is installed on the GPIO pins"
-read -n 1 -s -r -p "Press any key to continue once the RTC is installed"
 sudo sed -i 's/#dtparam=i2c_arm=on/dtparam=i2c_arm=on/' /boot/config.txt
-sleep 1
-cd $DIR
-wget https://raw.githubusercontent.com/km4ack/pi-scripts/master/rtc
-bash $DIR/rtc
+touch $HOME/RTC
+#NOTE: Reboot is required before we can install. We are simply enabling i2c interface &
+#writing an emptyfile that we can check for in the second part of the install
 fi
 
 if [ $HOTSPOT = "yes" ] > /dev/null 2>&1
