@@ -137,6 +137,14 @@ MAIN
 
 source $MYDIR/config
 
+if [ $RTC = "yes" ] > /dev/null 2>&1
+then
+sudo sed -i 's/#dtparam=i2c_arm=on/dtparam=i2c_arm=on/' /boot/config.txt
+touch $HOME/RTC
+#NOTE: Reboot is required before we can install. We are simply enabling i2c interface &
+#writing an emptyfile that we can check for in the second part of the install
+fi
+
 if [ $HOTSPOT = "yes" ] > /dev/null 2>&1
 then
 echo;echo;echo
@@ -176,8 +184,8 @@ echo "##################################################"
 sleep 2
 	if ! hash pat 2>/dev/null; then
 	cd $DIR
-	wget https://github.com/la5nta/pat/releases/download/v0.8.0/pat_0.8.0_linux_armhf.deb || echo "Can't download Pat Winlink" >> $BUILDLOG
-	sudo dpkg -i $DIR/pat_0.8.0_linux_armhf.deb
+	wget https://github.com/la5nta/pat/releases/download/v0.9.0/pat_0.9.0_linux_armhf.deb || echo "Can't download Pat Winlink" >> $BUILDLOG 
+	sudo dpkg -i $DIR/pat_0.9.0_linux_armhf.deb
 	pat http &
 	sudo killall pat
 	sudo systemctl start pat@$WHO

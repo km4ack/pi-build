@@ -1,3 +1,5 @@
+false
+RTC
 true
 HOTSPOT
 true
@@ -20,7 +22,7 @@ true
 AX25
 true
 HAMLIB
-true
+false
 PULSE
 true
 JS8CALL

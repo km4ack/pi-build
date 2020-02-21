@@ -16,12 +16,21 @@ CALL=$(cat $MYDIR/callsign.txt)
 
 touch $LOG
 
-if [ $WHO = "root" ]
+RTC=$(ls $HOME | grep RTC)
+if [ -z "$RTC" ]
 then
-echo "No need for sudo with this script"
-exit 0
+echo
+else
+echo "##################################################"
+echo "##########INSTALLING REAL TIME CLOCK"
+echo "##################################################"
+sleep 2
+echo;echo;echo "Please be sure the real time clock is installed on the GPIO pins"
+read -n 1 -s -r -p "Press any key to continue once the RTC is installed"
+cd $DIR
+wget https://raw.githubusercontent.com/km4ack/pi-scripts/master/rtc
+bash $DIR/rtc
 fi
-
 
 ##########################################
 MAIN () {

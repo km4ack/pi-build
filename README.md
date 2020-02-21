@@ -23,6 +23,9 @@ Please report issues & feature requests here https://github.com/km4ack/pi-build/
 
 # Available Apps to Install
 
+####RTC | Real Time Clock
+Software for DS3231 real time clock
+
 #### HOTSPOT:
 Hotspot is used to generate a wifi hotspot that you can connect to with other wireless devices. This is useful when in the field so you can connect to and contol the pi from a wireless device.
 
