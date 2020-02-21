@@ -83,6 +83,24 @@ GUI interface useful when configuring APRS nodes. https://sourceforge.net/projec
 #### YAAC:
 Yet Another APRS Client GUI interface useful when configuring APRS nodes. https://www.ka2ddo.org/ka2ddo/YAAC.html
 
+#### PYQSO:
+Logging software https://github.com/ctjacobs/pyqso
+
+#### GPREDICT:
+Satellite Tracking http://gpredict.oz9aec.net/
+
+#### CQRLOG:
+Loggin Software https://www.cqrlog.com/
+
+#### QSSTV:
+Slow scan tv http://users.telenet.be/on4qz/qsstv/index.html
+
+#### Gridtracker 
+https://tagloomis.com/
+
+#### Propagation (VOACAP)
+Propagation Prediction Software https://www.qsl.net/hz1jw/voacapl/index.html
+
 #### Emergency Email Server (EES):
 My personal EES. Requires hotspot to be installed. https://youtu.be/XC9vdAnolO0
 \

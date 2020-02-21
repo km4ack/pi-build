@@ -12,8 +12,28 @@ touch $TEMPCRON
 WHO=$(whoami)
 RB=$(ls $HOME/.config/ | grep KM4ACK)
 LOG=$HOME/Documents/mylog.txt
+APPLIST=app-list
+BUILDLOG=$HOME/Documents/build-log.txt
+chmod +x $MYDIR/addon-build-a-pi
 
+
+
+#put info in build log
+echo "###########SYSTEM INFO##############" >> $BUILDLOG
+cat /etc/os-release >> $BUILDLOG
+uname -a >> $BUILDLOG
+free -m | grep Mem: | awk '{ print $2 }' >> $BUILDLOG
+echo "###########END SYSTEM INFO##############" >> $BUILDLOG
+
+#Backup cron just in case script is run twice
+crontab -l > $TEMPCRON
+#add part 2 to be called from cron at boot
+echo "@reboot sleep 20 && export DISPLAY=:0 && lxterminal -e $HOME/pi-build/addon-build-a-pi" >> $TEMPCRON
+
+#create primary log
 touch $LOG
+#create buld log
+touch $BUILDLOG
 
 if [ $WHO = "root" ]
 then
@@ -25,21 +45,28 @@ if [ -z "$RB" ]
 then
 echo
 else
-echo "It looks like you have run this script before"
-echo "It is only designed to be run one time"
-echo "It may cause issues if you try to run multiple times"
-echo "Press CRTL+C to exit or"
+cat <<EOF
+It looks like you have run this script before
+It is only designed to be run one time
+It may cause issues if you try to run multiple times
+Press CRTL+C to exit or
+EOF
 read -n 1 -s -r -p "Press any key to continue"
 fi
 
 
 clear;echo;echo
 read -p "What is your call sign? " CALL
-echo "Please stand by while we grab a few updates"
-echo "This may take a while if you haven't already"
-echo "updated the system. You will be presented with"
-echo "a pop up window shortly to select which"
-echo "applications you wish to install."
+touch $MYDIR/callsign.txt
+echo $CALL > $MYDIR/callsign.txt
+cat <<EOF
+Please stand by while we grab a few updates
+This may take a while if you haven't already
+updated the system. You will be presented with
+a pop up window shortly to select which
+applications you wish to install.
+
+EOF
 read -n 1 -s -r -p "Press any key to begin"
 
 sudo apt-get update
@@ -47,8 +74,14 @@ sudo apt-get -y upgrade
 sudo apt -y full-upgrade
 touch $HOME/.config/KM4ACK
 
+#create bin dir and add to path
 mkdir -p $HOME/bin
 echo "export PATH=$PATH:$HOME/bin" >> $HOME/.bashrc
+#grab add-wifi tool
+cd $HOME/bin
+wget https://raw.githubusercontent.com/km4ack/pi-scripts/master/add-wifi
+chmod +x add-wifi
+cd $HOME
 
 	if ! hash yad 2>/dev/null; then
 	sudo apt install -y yad
@@ -57,10 +90,26 @@ echo "export PATH=$PATH:$HOME/bin" >> $HOME/.bashrc
 	sudo apt install -y jq
 	fi
 
+clear;echo;echo
+cat <<EOF
+Decision time......
+The FLDIGI suite can be built from source or downloaded from the 
+repository. Building from source will give you the very latest and 
+greatest FLDIGI suite. It will also add roughly an hour to the 
+build time of this script. If you choose to build from 
+source, many of FLDIGI tools will be installed. The 
+tools this script includes is FLRIG, FLDIGI, FLARQ, FLMSG, FLAMP.
+
+EOF
+read -p "Build FL suite from source? y/n " FLS
+if [ $FLS = "y" ] || [ $FLS = "Y" ]
+then
+APPLIST=source-app-list
+fi
 
 ##########################################
 MAIN () {
-yad --height=600 --width=400 --center --list --checklist --column=Install --column=App --separator="," --text "Select the apps you wish to install." --title="Build-a-Pi by KM4ACK" --button="Exit:1" --button="Install Selected:2" < $MYDIR/app-list > $MYDIR/appchoices
+yad --height=600 --width=400 --center --list --checklist --column=Install --column=App --separator="," --text "Select the apps you wish to install." --title="Build-a-Pi by KM4ACK" --button="Exit:1" --button="Install Selected:2" < $MYDIR/$APPLIST > $MYDIR/appchoices
 
 BUTTON=$?
 
@@ -96,11 +145,12 @@ echo "##########INSTALLING AUTOHOTSPOT"
 echo "##################################################"
 sleep 2
 cd $DIR
-wget https://raw.githubusercontent.com/km4ack/pi-scripts/master/autohotspotN-setup
+wget https://raw.githubusercontent.com/km4ack/pi-scripts/master/autohotspotN-setup || echo "Can't download autohotspot script" >> $BUILDLOG
 chmod +x $DIR/autohotspotN-setup
 sudo $DIR/autohotspotN-setup
 echo "*/5 * * * * sudo /usr/bin/autohotspotN >/dev/null 2>&1" >> $TEMPCRON
 rm $DIR/autohotspotN-setup
+echo "Hot spot installed" >> $BUILDLOG
 fi
 
 if [ $GPS = "yes" ] > /dev/null 2>&1
@@ -110,10 +160,62 @@ echo "##################################################"
 echo "##########INSTALLING GPS Tools"
 echo "##################################################"
 cd $DIR
-wget https://raw.githubusercontent.com/km4ack/pi-scripts/master/gpsinstall
+wget https://raw.githubusercontent.com/km4ack/pi-scripts/master/gpsinstall || echo "Can't download GPS Tools" >> $BUILDLOG
 chmod +x $DIR/gpsinstall
 sudo $DIR/gpsinstall
 rm $DIR/gpsinstall
+echo "GPS Tools installed" >> $BUILDLOG
+fi
+
+if [ $PAT = "yes" ] > /dev/null 2>&1
+then
+echo;echo;echo
+echo "##################################################"
+echo "##########INSTALLING PAT WINLINK"
+echo "##################################################"
+sleep 2
+	if ! hash pat 2>/dev/null; then
+	cd $DIR
+	wget https://github.com/la5nta/pat/releases/download/v0.8.0/pat_0.8.0_linux_armhf.deb || echo "Can't download Pat Winlink" >> $BUILDLOG
+	sudo dpkg -i $DIR/pat_0.8.0_linux_armhf.deb
+	pat http &
+	sudo killall pat
+	sudo systemctl start pat@$WHO
+	sudo systemctl enable pat@$WHO
+	#/usr/bin/pat http &
+	#sudo killall pat
+	cd $DIR
+	wget https://raw.githubusercontent.com/km4ack/patmenu/master/patlogin
+	bash patlogin
+	jq '.ax25.rig = '\"my-rig\"'' $HOME/.wl2k/config.json | jq '.ardop.rig = '\"my-rig\"'' | jq '.hamlib_rigs = {'\"my-rig\"': {"address": "127.0.0.1:4532", "network": "tcp"}}' > ~/Desktop/config.json
+	mv ~/Desktop/config.json ~/.wl2k/config.json
+	sed -i "s/\"http_addr\": \".*\",/\"http_addr\": \"0.0.0.0:8080\",/" $HOME/.wl2k/config.json
+		#enable gps in pat is gps=yes
+		if [ $GPS = "yes" ]
+		then
+		sed -i 's/"enable_http": false,/"enable_http": true,/' $HOME/.wl2k/config.json
+		fi
+		echo "Pat Winlink installed" >> $BUILDLOG
+	fi
+fi
+
+if [ $HAMLIB = "yes" ] > /dev/null 2>&1
+then
+echo;echo;echo
+echo "##################################################"
+echo "##########INSTALLING RIG CONTROL"
+echo "##################################################"
+sleep 2
+cd $DIR
+wget https://sourceforge.net/projects/hamlib/files/hamlib/3.3/hamlib-3.3.tar.gz || echo "Can't download HAMLIB" >> $BUILDLOG
+tar -xzf $DIR/hamlib-3.3.tar.gz
+rm $DIR/hamlib-3.3.tar.gz
+cd $DIR/hamlib-3.3
+./configure
+make 
+sudo make install
+sudo ldconfig
+echo "HAMLIB installed" >> $BUILDLOG
 fi
 
 if [ $CONKY = "yes" ] > /dev/null 2>&1
@@ -135,6 +237,20 @@ cp $MYDIR/conky/* $HOME/bin/conky/
 chmod +x $HOME/bin/conky/get-grid $HOME/bin/conky/temp-conv $HOME/bin/conky/get-freq $HOME/bin/conky/grid
 sed -i "s/N0CALL/$CALL/" $HOME/.conkyrc
 echo "@reboot sleep 20 && export DISPLAY=:0 && /usr/bin/conky" >> $TEMPCRON
+echo "CONKY installed" >> $BUILDLOG
+fi
+
+if [ $FL_Suite = "yes" ] > /dev/null 2>&1
+then
+echo;echo;echo
+echo "##################################################"
+echo "##########INSTALLING FLDIGI SUITE"
+echo "##################################################"
+sleep 2
+
+chmod +x $HOME/pi-build/flsuite
+$HOME/pi-build/flsuite
+echo "FLDIGI SUITE installed" >> $BUILDLOG
 fi
 
 if [ $FLRIG = "yes" ] > /dev/null 2>&1
@@ -146,6 +262,7 @@ echo "##################################################"
 sleep 2
 	if ! hash flrig 2>/dev/null; then
 	sudo apt install -y flrig
+	echo "FLRIG installed repository" >> $BUILDLOG
 	fi
 fi
 
@@ -158,6 +275,7 @@ echo "##################################################"
 sleep 2
 	if ! hash fldigi 2>/dev/null; then
 	sudo apt install -y fldigi
+	echo "FLDIGI installed repository" >> $BUILDLOG
 	fi
 fi
 
@@ -170,6 +288,7 @@ echo "##################################################"
 sleep 2
 	if ! hash flamp 2>/dev/null; then
 	sudo apt install -y flamp
+	echo "FLAMP installed repository" >> $BUILDLOG
 	fi
 fi
 
@@ -182,37 +301,7 @@ echo "##################################################"
 sleep 2
 	if ! hash flmsg 2>/dev/null; then
 	sudo apt install -y flmsg
-	fi
-fi
-
-if [ $PAT = "yes" ] > /dev/null 2>&1
-then
-echo;echo;echo
-echo "##################################################"
-echo "##########INSTALLING PAT WINLINK"
-echo "##################################################"
-sleep 2
-	if ! hash pat 2>/dev/null; then
-	cd $DIR
-	wget https://github.com/la5nta/pat/releases/download/v0.8.0/pat_0.8.0_linux_armhf.deb
-	sudo dpkg -i $DIR/pat_0.8.0_linux_armhf.deb
-	pat http &
-	sudo killall pat
-	sudo systemctl start pat@$WHO
-	sudo systemctl enable pat@$WHO
-	#/usr/bin/pat http &
-	#sudo killall pat
-	cd $DIR
-	wget https://raw.githubusercontent.com/km4ack/patmenu/master/patlogin
-	bash patlogin
-	jq '.ax25.rig = '\"my-rig\"'' $HOME/.wl2k/config.json | jq '.ardop.rig = '\"my-rig\"'' | jq '.hamlib_rigs = {'\"my-rig\"': {"address": "127.0.0.1:4532", "network": "tcp"}}' > ~/Desktop/config.json
-	mv ~/Desktop/config.json ~/.wl2k/config.json
-	sed -i "s/\"http_addr\": \".*\",/\"http_addr\": \"0.0.0.0:8080\",/" $HOME/.wl2k/config.json
-		#enable gps in pat is gps=yes
-		if [ $GPS = "yes" ]
-		then
-		sed -i 's/"enable_http": false,/"enable_http": true,/' $HOME/.wl2k/config.json
-		fi
+	echo "FLMSG installed repository" >> $BUILDLOG
 	fi
 fi
 
@@ -225,8 +314,9 @@ echo "##################################################"
 sleep 2
 mkdir -p $HOME/ardop
 cd $HOME/ardop
-wget https://www.cantab.net/users/john.wiseman/Downloads/Beta/piardopc
+wget https://www.cantab.net/users/john.wiseman/Downloads/Beta/piardopc || echo "Can't download PIARDOPC" >> $BUILDLOG
 sudo chmod +x $HOME/ardop/piardopc
+echo "PIARDOPC installed" >> $BUILDLOG
 fi
 
 if [ $ARDOPGUI = "yes" ] > /dev/null 2>&1
@@ -238,15 +328,27 @@ echo "##################################################"
 sleep 2
 mkdir -p $HOME/ardop
 cd $HOME/ardop
-wget https://www.cantab.net/users/john.wiseman/Downloads/Beta/piARDOP_GUI
+wget https://www.cantab.net/users/john.wiseman/Downloads/Beta/piARDOP_GUI || echo "Can't download piARDOP_GUI" >> $BUILDLOG
 sudo chmod +x $HOME/ardop/piARDOP_GUI
-ln -s $HOME/ardop/piARDOP_GUI $HOME/Desktop/ARDOP-GUI
+cat > ardopgui.desktop <<EOF
+[Desktop Entry]
+Name=ARDOP GUI
+GenericName=ARDOP GUI
+Comment=Graphical User Interface for ARDOP modem
+Exec=$HOME/ardop/piARDOP_GUI
+Terminal=false
+Type=Application
+Categories=Network;HamRadio;
+EOF
+
+sudo mv ardopgui.desktop /usr/share/applications/
 FILE=$HOME/.config/G8BPQ/ARDOP_GUI.conf
 mkdir -p $HOME/.config/G8BPQ
 touch $FILE
 echo "[General]" >> $FILE
 echo "Host=local" >> $FILE
 echo "Port=8515" >> $FILE
+echo "ARDOP-GUI installed" >> $BUILDLOG
 fi
 
 if [ $PATMENU = "yes" ] > /dev/null 2>&1
@@ -256,43 +358,21 @@ echo "##################################################"
 echo "##########INSTALLING Pat Menu"
 echo "##################################################"
 sleep 2
-git clone https://github.com/km4ack/patmenu.git $HOME/patmenu && bash $HOME/patmenu/setup
-fi
+git clone https://github.com/km4ack/patmenu.git $HOME/patmenu && bash $HOME/patmenu/setup || echo "Can't download Pat Menu" >> $BUILDLOG
+echo "Pat Menu installed" >> $BUILDLOG
+cat > patmenu.desktop <<EOF
+[Desktop Entry]
+Name=Pat Menu
+GenericName=Amateur Radio Digital Modem
+Comment=Amateur Radio Sound Card Communications
+Exec=$HOME/patmenu/patmenu-new
+Icon=$HOME/patmenu/pat-logo.png
+Terminal=true
+Type=Application
+Categories=Network;HamRadio;
+EOF
 
-if [ $HAMLIB = "yes" ] > /dev/null 2>&1
-then
-echo;echo;echo
-echo "##################################################"
-echo "##########INSTALLING RIG CONTROL"
-echo "##################################################"
-sleep 2
-cd $DIR
-wget https://sourceforge.net/projects/hamlib/files/hamlib/3.3/hamlib-3.3.tar.gz
-tar -xzf $DIR/hamlib-3.3.tar.gz
-rm $DIR/hamlib-3.3.tar.gz
-cd $DIR/hamlib-3.3
-./configure
-make 
-sudo make install
-sudo ldconfig
-fi
-
-if [ $GARIM = "yes" ] > /dev/null 2>&1
-then
-echo;echo;echo
-echo "##################################################"
-echo "##########INSTALLING GARIM"
-echo "##################################################"
-sleep 2
-cd $HOME
-sudo apt-get install -y fluid
-wget https://www.whitemesa.net/garim/src/garim-1.1.tar.gz
-tar xzvf garim-1.1.tar.gz
-rm garim-1.1.tar.gz
-cd $HOME/garim-1.1
-./configure
-make
-sudo make install
+sudo mv patmenu.desktop /usr/share/applications/
 fi
 
 if [ $DIREWOLF = "yes" ] > /dev/null 2>&1
@@ -303,7 +383,7 @@ echo "##########INSTALLING DIREWOLF"
 echo "##################################################"
 sleep 2
 cd $HOME
-git clone https://www.github.com/wb2osz/direwolf
+git clone https://www.github.com/wb2osz/direwolf || echo "Can't download DIREWOLF" >> $BUILDLOG
 cd $HOME/direwolf
 sudo apt-get install -y libasound2-dev
 make
@@ -311,6 +391,7 @@ sudo make install
 make install-conf
 sed -i "s/N0CALL/$CALL/" "$HOME/direwolf.conf"
 sed -i 's/# ADEVICE  plughw:1,0/ADEVICE  plughw:1,0/' $HOME/direwolf.conf
+echo "DIREWOLF installed" >> $BUILDLOG
 fi
 
 if [ $AX25 = "yes" ] > /dev/null 2>&1 
@@ -323,6 +404,7 @@ sleep 2
 sudo apt-get install -y ax25-tools
 echo "wl2k "$CALL" 1200 255 7 Winlink" | sudo tee -a /etc/ax25/axports
 sudo apt-get install -y ax25-apps
+echo "AX25 tools installed" >> $BUILDLOG
 fi
 
 if [ $JS8CALL = "yes" ] > /dev/null 2>&1
@@ -335,10 +417,11 @@ sleep 2
 cd $DIR
 JS8LATE=$(curl -s http://files.js8call.com/latest.html | grep armhf | awk '{ print $2 }' | sed 's/href=//' | sed 's/"//g')
 JS8PKG=$(curl -s http://files.js8call.com/latest.html | grep armhf | awk '{ print $2 }' | sed 's/\///g' | sed 's/href="http:files.js8call.com[0-9].[0-9].[0-9]//' | sed 's/"//')
-wget $JS8LATE
+wget $JS8LATE || echo "Can't Download JS8Call" >> $BUILDLOG
 sudo dpkg -i $JS8PKG
 sudo apt-get --fix-broken -y install
 sudo dpkg -i $JS8PKG
+echo "JS8Call installed" >> $BUILDLOG
 fi
 
 if [ $PULSE = "yes" ] > /dev/null 2>&1
@@ -350,6 +433,7 @@ echo "##################################################"
 sleep 2
 sudo apt-get install -y pulseaudio
 sudo apt-get install -y pavucontrol
+echo "Pulse audio installed" >> $BUILDLOG
 fi
 
 if [ $M0IAX = "yes" ] > /dev/null 2>&1
@@ -362,14 +446,27 @@ sleep 2
 pip3 install gps
 pip3 install maidenhead
 pip3 install psutil
+pip3 install OSGridConverter
 cd $HOME/bin
-wget https://raw.githubusercontent.com/m0iax/js8calltools/master/js8callgpsUI.py
-wget https://raw.githubusercontent.com/m0iax/js8calltools/master/gps_listener.py
-wget https://raw.githubusercontent.com/m0iax/js8call_aprsmessaging_interface/master/aprs_msgJS8Call.py
-wget https://raw.githubusercontent.com/m0iax/js8calltools/master/configAndSettings.py
-chmod +x js8callgpsUI.py aprs_msgJS8Call.py
-ln -s $HOME/bin/js8callgpsUI.py $HOME/Desktop/JS8-GPS-Tool
-ln $HOME/bin/aprs_msgJS8Call.py $HOME/Desktop/JS8Call-Messenger
+git clone https://github.com/m0iax/JS8CallUtilsGPSD.git
+chmod +x $HOME/bin/JS8CallUtilsGPSD/gpsdGPSListener.py $HOME/bin/JS8CallUtilsGPSD/js8callutilsGPSD.py
+mv $HOME/bin/JS8CallUtilsGPSD/* $HOME/bin
+rm -rf JS8CallUtilsGPSD
+
+cat > js8tools.desktop <<EOF
+[Desktop Entry]
+Name=M0IAX JS8 Tools
+GenericName=M0IAX JS8 Tools
+Comment=GPS & Message Tool for JS8Call
+Exec=$HOME/bin/js8callutilsGPSD.py
+Terminal=false
+Type=Application
+Categories=Network;HamRadio;
+EOF
+
+sudo mv js8tools.desktop /usr/share/applications/
+
+echo "MOIAX tools installed" >> $BUILDLOG
 fi
 
 if [ $WSJTX = "yes" ] > /dev/null 2>&1
@@ -380,97 +477,11 @@ echo "##########INSTALLING WSJTX"
 echo "##################################################"
 sleep 2
 cd $DIR
-wget --no-check-certificate https://physics.princeton.edu/pulsar/k1jt/wsjtx_2.1.2_armhf.deb
-sudo dpkg -i wsjtx_2.1.2_armhf.deb
+wget --no-check-certificate https://physics.princeton.edu/pulsar/k1jt/wsjtx_2.1.0_armhf.deb || echo "Can't download WSJTX" >> $BUILDLOG
+sudo dpkg -i wsjtx_2.1.0_armhf.deb
 sudo apt-get --fix-broken -y install
-sudo dpkg -i wsjtx_2.1.2_armhf.deb
-fi
-
-if [ $CHIRP = "yes" ] > /dev/null 2>&1
-then
-echo;echo;echo
-echo "##################################################"
-echo "##########INSTALLING CHIRP"
-echo "##################################################"
-sleep 2
-cd $DIR
-wget https://trac.chirp.danplanet.com/chirp_daily/LATEST/
-CHIRPBUILD=$(cat index.html | grep .tar.gz | grep chirp-daily- | awk '{ print $6 }' | sed 's/.*"//' | sed 's/>//' | sed 's/[<].*$//')
-sudo apt-get -y install python-gtk2 python-serial python-libxml2
-mkdir $HOME/chirp
-cd $HOME/chirp
-wget https://trac.chirp.danplanet.com/chirp_daily/LATEST/$CHIRPBUILD
-tar -xzf $CHIRPBUILD
-CHIRPDIR=$(echo $CHIRPBUILD | sed 's/[.].*$//')
-cd $CHIRPDIR
-sudo python setup.py install
-fi
-
-if [ $XASTIR = "yes" ] > /dev/null 2>&1
-then
-echo;echo;echo
-echo "##################################################"
-echo "##########INSTALLING XASTIR"
-echo "##################################################"
-sleep 2
-sudo apt-get install -y xastir
-sudo sed -i 's/Exec=xastir/Exec=sudo xastir/' /usr/share/applications/xastir.desktop
-fi
-
-if [ $YAAC = "yes" ] > /dev/null 2>&1
-then
-echo;echo;echo
-echo "##################################################"
-echo "##########INSTALLING YAAC"
-echo "##################################################"
-sleep 2
-cd $DIR
-wget https://www.ka2ddo.org/ka2ddo/YAAC.zip
-sudo apt-get install -y openjdk-8-jre librxtx-java
-mkdir -p $HOME/YAAC
-cd $HOME/YAAC
-touch YAAC
-echo "#!/bin/bash" >> YAAC
-echo "java -jar $HOME/YAAC/YAAC.jar" >> YAAC
-chmod +x YAAC
-ln -sf $HOME/YAAC/YAAC $HOME/Desktop/YAAC
-ln -sf $HOME/YAAC/YAAC $HOME/bin/YAAC
-unzip $DIR/YAAC.zip
-fi
-
-if [ $EES = "yes" ] > /dev/null 2>&1
-then
-echo;echo;echo
-echo "##################################################"
-echo "##########INSTALLING KM4ACK EMERGENCY EMAIL SERVER"
-echo "##################################################"
-sleep 2
-#install PHP7.3 if not installed
-#this will also install apache2
-if ! hash php7.3 2>/dev/null; then
-sudo apt install -y php7.3
-fi
-#Install the KM4ACK EES
-cd $DIR
-wget https://github.com/km4ack/EES-LITE/archive/master.zip
-unzip master.zip
-sudo cp -r $DIR/EES-LITE-master/* /var/www/html/
-rm -rf $DIR/EES-LITE-master
-rm $DIR/master.zip
-cd /var/www/html
-sudo chmod +x /var/www/html/firstrun
-sudo /var/www/html/./firstrun
-#/var/www/html/./schedule
-sudo mv /var/www/html/index.html /var/www/html/index.html.org
-sudo sed -i "s/N0CALL/$CALL/" /var/www/html/config.php
-sudo sed -i 's/REMINDER\ FOR\ OPERATOR\ TO\ DO\ SOMETHING/ENABLE\ AUTO\ POST\ REPLY\ IN\ CRON/' /var/www/html/config.php
-cd $DIR
-#Change Pat Winlink port so it won't interfer with the EES
-sed -i 's/0.0.0.0:8080/0.0.0.0:5000/' $HOME/.wl2k/config.json
-sed -i 's/PORT=8080/PORT=5000/' $HOME/patmenu/config
-
-sudo killall pat
-sudo systemctl start pat@pi
+sudo dpkg -i wsjtx_2.1.0_armhf.deb
+echo "WSJTX installed" >> $BUILDLOG
 fi
 
 #add virtual sound card link for pulse audio
@@ -489,9 +500,14 @@ sudo chown root:root tempsound
 sudo mv tempsound /etc/asound.conf
 #End 20191228 edits
 
+sudo apt-get install -y extra-xdg-menus
+
 crontab $TEMPCRON
-/var/www/html/./schedule > /dev/null 2>&1
+
 rm -rf $DIR
+
+#clean up downloads dir
+rm -rf $HOME/Downloads/*
 
 echo;echo;echo "rebooting in 5 seconds"
 sleep 5
