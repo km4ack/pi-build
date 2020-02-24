@@ -11,12 +11,21 @@ TEMPCRON=$DIR/tempcron
 touch $TEMPCRON
 WHO=$(whoami)
 RB=$(ls $HOME/.config/ | grep KM4ACK)
+DESK=$(printenv | grep DISPLAY)
 LOG=$HOME/Documents/mylog.txt
 APPLIST=app-list
 BUILDLOG=$HOME/Documents/build-log.txt
 chmod +x $MYDIR/addon-build-a-pi
 
-
+if [ -z "$DESK" ]
+then
+cat <<EOF
+This script cannot be run from an SSH session.
+Please boot into the pi's desktop environment,
+open the terminal, and run this script again
+EOF
+exit 0
+fi
 
 #put info in build log
 echo "###########SYSTEM INFO##############" >> $BUILDLOG
