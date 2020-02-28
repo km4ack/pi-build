@@ -20,7 +20,7 @@ Please report issues & feature requests here https://github.com/km4ack/pi-build/
 
 # Video
 [![Build-a-Pi](http://img.youtube.com/vi/gBokG9FI-NM/0.jpg)](https://youtu.be/gBokG9FI-NM "Build-a-Pi")
-[![Build-a-Pi V2](http://img.youtube.com/vi/jAZh2dYTuA/0.jpg)](https://youtu.be/-jAZh2dYTuA "Build-a-Pi")
+[![Build-a-Pi V2](https://img.youtube.com/vi/gBokG9FI-NM/0.jpg)](https://youtu.be/-jAZh2dYTuA "Build-a-Pi")
 
 # Available Apps to Install
 
