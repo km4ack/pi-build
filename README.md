@@ -1,3 +1,13 @@
+# Description
+
+Build-a-Pi will allow you to get up and running fast with a Raspberry Pi for ham radio.
+Rather than downloading a pre-built image where you have no choices in the build, Build-a-
+Pi gives you complete control over the build. It allows you to choose the applications you 
+want to install and skip the ones you don’t need. This keeps your pi as lean and mean as
+possible. A list of applications available using Build-a-Pi can be found below on this 
+page. Use it as your base and add additional applications as needed down the road. Be sure 
+to check out the videos. They will help you get things configured after the build.
+
 # Needed info for pi build
 
 During the install you will need a few pieces of information depending on what you choose to install. If installing all apps, you will need:
