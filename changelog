@@ -16,3 +16,6 @@
 		add real time clock install to app choices
 		update pat winlink to latest version 0.9.0
 20200228	Version 2 release on YouTube
+20200229	add beta version of hotspot tools ------------------need to change to master checkout at some point in the future
+		update EES install to include new way of modding index.html with ghost writer-----------------EES is checking out DEV version
+		add ghost writer install to EES section
