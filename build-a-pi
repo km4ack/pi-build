@@ -170,6 +170,20 @@ rm $DIR/autohotspotN-setup
 echo "Hot spot installed" >> $BUILDLOG
 fi
 
+if [ $HSTOOLS = "yes" ] > /dev/null 2>&1
+then
+echo;echo;echo
+echo "##################################################"
+echo "##########INSTALLING HOTSPOT TOOLS"
+echo "##################################################"
+sleep 2
+git clone https://github.com/km4ack/hotspot-tools.git $HOME/hotspot-tools
+cd $HOME/hotspot-tools
+git checkout dev
+bash setup
+fi
+
+
 if [ $GPS = "yes" ] > /dev/null 2>&1
 then
 echo;echo;echo
