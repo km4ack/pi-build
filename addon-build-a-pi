@@ -192,7 +192,7 @@ fi
 sudo mv /var/www/html/info.markdown /home/pi/Documents/
 sudo chown pi:pi /home/pi/Documents/info.markdown
 #move info.html to pi documents folder
-sudo mv /var/www/html/info.html /home/pi/Documents/info.html
+sudo cp /var/www/html/index.html /home/pi/Documents/info.html
 sudo chown pi:pi /home/pi/Documents/info.html
 #move script to be run by cron to bin dir
 sudo mv /var/www/html/webcopy /home/pi/bin/
