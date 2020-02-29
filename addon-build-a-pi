@@ -169,7 +169,8 @@ cd $DIR
 #unzip master.zip
 wget https://github.com/km4ack/EES-LITE/archive/dev.zip
 unzip dev.zip
-sudo cp -r $DIR/EES-LITE-master/* /var/www/html/
+sudo cp -r $DIR/EES-LITE-dev/* /var/www/html/
+#sudo cp -r $DIR/EES-LITE-master/* /var/www/html/
 rm -rf $DIR/EES-LITE-master
 rm $DIR/master.zip
 cd /var/www/html
