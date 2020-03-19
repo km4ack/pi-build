@@ -305,7 +305,23 @@ NEWGARIM=$(curl -s https://www.whitemesa.net/garim/garim.html | grep -m 1 \
 	GARIM="is already latest version"
 	fi
 fi
-
+#----------------------------------------------------#
+#		Grid Tracker
+#----------------------------------------------------#
+echo "Checking Grid Tracker"
+if [ ! -d $HOME/GridTracker ]; then
+GRIDTRACK="Not Installed"
+else
+GRIDDLL=$(curl -s https://tagloomis.com/downloads/ | grep Arm | head -1 | sed 's/<p><a\ href="//' | sed 's/?.*$//')
+CURRENT=$(cat $HOME/GridTracker/package.nw/lib/gt.js | grep gtVersion | head -1 | sed 's/var\ gtVersion\ =\ //' | sed 's/;//')
+LATEST=$(echo $GRIDDLL | sed 's/.*Arm-//' | sed 's/.tar.gz//' | sed 's/\.//g')
+	if (( $(echo "$LATEST $CURRENT" | awk '{print ($1 > $2)}') ))
+	then
+	GRIDTRACK=NEEDS-UPDATE
+	else
+	GRIDTRACK="is already latest version"
+	fi
+fi
 #----------------------------------------------------#
 #		END VERSION CHECK
 #		Print Results
@@ -326,6 +342,7 @@ echo "Direwolf "$DIRE
 echo "Pat Menu "$PATMENU
 echo "GARIM "$GARIM
 echo "Hotspot Tools "$HSTOOLS
+echo "Grid Tracker "$GRIDTRACK
 
 #----------------------------------------------------#
 #		Update Function
@@ -618,6 +635,20 @@ git fetch --all
 git reset --hard origin/master
 bash setup
 fi
+#----------------------------------------------------#
+#		Grid Tracker
+#----------------------------------------------------#
+if [ $GRIDTRACK = "NEEDS-UPDATE" ] > /dev/null 2>&1
+then
+rm -rf $HOME/GridTracker
+cd $HOME
+sudo apt-get install -y libgconf-2-4
+GRIDDLL=$(curl -s https://tagloomis.com/downloads/ | grep Arm | head -1 | sed 's/<p><a\ href="//' | sed 's/?.*$//')
+wget $GRIDDLL
+GRIDTAR=$(echo $GRIDDLL | sed 's/.*\///g')
+tar -xzvf $GRIDTAR
+rm *.gz
+fi
 }
 
 
@@ -629,7 +660,7 @@ if [ $FLDIGI = "NEEDS-UPDATE" ] > /dev/null 2>&1 || [ $FLRIG = "NEEDS-UPDATE" ] 
 [ $CHIRP = "NEEDS-UPDATE" ] > /dev/null 2>&1 || [ $FLNET = "NEEDS-UPDATE" ] > /dev/null 2>&1 || 
 [ $PAT = "NEEDS-UPDATE" ] > /dev/null 2>&1 || [ $RIG = "NEEDS-UPDATE" ] > /dev/null 2>&1 || 
 [ $PATMENU = "NEEDS-UPDATE" ] > /dev/null 2>&1 || [ $GARIM = "NEEDS-UPDATE" ] > /dev/null 2>&1 ||
-[ $HSTOOLS = "NEEDS-UPDATE" ] > /dev/null 2>&1
+[ $HSTOOLS = "NEEDS-UPDATE" ] > /dev/null 2>&1 || [ GRIDTRACK = "NEEDS-UPDATE" ] > /dev/null 2>&1
 then
 read -p "Would you like to update all apps that need it now? y/n " ANS
 	if [ $ANS = 'y' ] || [ $ANS = 'Y' ]
