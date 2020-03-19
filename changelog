@@ -1,5 +1,7 @@
-20200117 	Initial Release on Youtube
+20200319	Add gridtracker to update script
+20200316	Add bap-update script (beta)
 
+20200117 	Initial Release on Youtube
 20200122	Add option to build FLDIGI suite from source
 		split app selection to two boxes
 		backup cron just in case script is run twice
