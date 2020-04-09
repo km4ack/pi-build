@@ -156,18 +156,28 @@ sleep 2
 if ! hash php7.3 2>/dev/null; then
 sudo apt install -y php7.3
 fi
+#install ghostwriter if needed
+#this is used to mod the new index.html
+#page. 20200229
+if ! hash ghostwriter 2>/dev/null; then
+sudo apt-get install -y ghostwriter
+fi
 #Install the KM4ACK EES
 cd $DIR
-wget https://github.com/km4ack/EES-LITE/archive/master.zip
-unzip master.zip
-sudo cp -r $DIR/EES-LITE-master/* /var/www/html/
+#comment out master branch and add dev branch 20200229 km4ack----------------------------------------
+#wget https://github.com/km4ack/EES-LITE/archive/master.zip
+#unzip master.zip
+wget https://github.com/km4ack/EES-LITE/archive/dev.zip
+unzip dev.zip
+sudo cp -r $DIR/EES-LITE-dev/* /var/www/html/
+#sudo cp -r $DIR/EES-LITE-master/* /var/www/html/
 rm -rf $DIR/EES-LITE-master
 rm $DIR/master.zip
 cd /var/www/html
 sudo chmod +x /var/www/html/firstrun
 sudo /var/www/html/./firstrun
-#/var/www/html/./schedule
-sudo mv /var/www/html/index.html /var/www/html/index.html.org
+#line below commented out while testing new index.html file 20200229 km4ack---------------------------
+#sudo mv /var/www/html/index.html /var/www/html/index.html.org
 sudo sed -i "s/N0CALL/$CALL/" /var/www/html/config.php
 sudo sed -i 's/REMINDER\ FOR\ OPERATOR\ TO\ DO\ SOMETHING/ENABLE\ AUTO\ POST\ REPLY\ IN\ CRON/' /var/www/html/config.php
 cd $DIR
@@ -178,6 +188,16 @@ sed -i 's/PORT=8080/PORT=5000/' $HOME/patmenu/config
 sudo killall pat
 sudo systemctl start pat@pi
 fi
+#Move info.markdown from EES folder to Documents
+sudo mv /var/www/html/info.markdown /home/pi/Documents/
+sudo chown pi:pi /home/pi/Documents/info.markdown
+#move info.html to pi documents folder
+sudo cp /var/www/html/index.html /home/pi/Documents/info.html
+sudo chown pi:pi /home/pi/Documents/info.html
+#move script to be run by cron to bin dir
+sudo mv /var/www/html/webcopy /home/pi/bin/
+sudo chown pi:pi /home/pi/bin/webcopy
+sudo chmod +x /home/pi/bin/webcopy
 #set EES schedule using EES script
 /var/www/html/./schedule > /dev/null 2>&1
 

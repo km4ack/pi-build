@@ -3,6 +3,8 @@ RTC
 true
 HOTSPOT
 true
+HSTOOLS
+true
 GPS
 true
 CONKY
