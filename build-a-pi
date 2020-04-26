@@ -489,7 +489,7 @@ cat > js8tools.desktop <<EOF
 Name=M0IAX JS8 Tools
 GenericName=M0IAX JS8 Tools
 Comment=GPS & Message Tool for JS8Call
-Exec=$HOME/bin/JS8CallUtilities_V2/JS8CallUtils_v2.py
+Exec=$HOME/bin/JS8CallUtils_v2.py
 Terminal=false
 Type=Application
 Categories=Network;HamRadio;
