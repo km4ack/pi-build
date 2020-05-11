@@ -660,7 +660,7 @@ if [ $FLDIGI = "NEEDS-UPDATE" ] > /dev/null 2>&1 || [ $FLRIG = "NEEDS-UPDATE" ] 
 [ $CHIRP = "NEEDS-UPDATE" ] > /dev/null 2>&1 || [ $FLNET = "NEEDS-UPDATE" ] > /dev/null 2>&1 || 
 [ $PAT = "NEEDS-UPDATE" ] > /dev/null 2>&1 || [ $RIG = "NEEDS-UPDATE" ] > /dev/null 2>&1 || 
 [ $PATMENU = "NEEDS-UPDATE" ] > /dev/null 2>&1 || [ $GARIM = "NEEDS-UPDATE" ] > /dev/null 2>&1 ||
-[ $HSTOOLS = "NEEDS-UPDATE" ] > /dev/null 2>&1 || [ GRIDTRACK = "NEEDS-UPDATE" ] > /dev/null 2>&1
+[ $HSTOOLS = "NEEDS-UPDATE" ] > /dev/null 2>&1 || [ $GRIDTRACK = "NEEDS-UPDATE" ] > /dev/null 2>&1
 then
 read -p "Would you like to update all apps that need it now? y/n " ANS
 	if [ $ANS = 'y' ] || [ $ANS = 'Y' ]
