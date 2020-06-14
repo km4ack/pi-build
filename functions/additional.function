@@ -1,0 +1,429 @@
+#additional software to install with build-a-pi
+#20200513 km4ack
+
+MYPATH=$HOME/pi-build
+TEMPCRON=$MYPATH/cron.tmp
+DIR=$MYPATH/temp
+WHO=$(whoami)
+mkdir -p $DIR
+
+
+source $MYPATH/config
+
+##################################
+#	PAT WINLINK
+##################################
+PAT(){
+PORT=8080
+if ! hash pat 2>/dev/null; then
+cd $DIR
+wget --tries 2 --connect-timeout=60 https://github.com/la5nta/pat/releases/download/v0.9.0/pat_0.9.0_linux_armhf.deb
+sudo dpkg -i $DIR/pat_0.9.0_linux_armhf.deb
+pat http &
+sudo killall pat
+sudo systemctl start pat@$WHO
+sudo systemctl enable pat@$WHO
+cd $DIR
+FIG=$HOME/.wl2k/config.json
+#set callsign
+sed -i "s/\"mycall\": \".*\",/\"mycall\": \"$CALL\",/" $FIG
+#set password
+WL2KPASS=$(cat $HOME/pi-build/config | grep WL2KPASS | sed 's/"//g' | sed 's/WL2KPASS=//')
+sed -i "s/\"secure_login_password\": \".*\",/\"secure_login_password\": \""$WL2KPASS"\",/" $FIG
+#set locator
+sed -i "s/\"locator\": \".*\",/\"locator\": \"$GRID\",/" $FIG
+#Change localhost to 0.0.0.0
+sed -i "s/\"http_addr\": \".*\",/\"http_addr\": \"0.0.0.0:$PORT\",/" $FIG
+jq '.ax25.rig = '\"my-rig\"'' $HOME/.wl2k/config.json | jq '.ardop.rig = '\"my-rig\"'' | jq '.hamlib_rigs = {'\"my-rig\"': {"address": "127.0.0.1:4532", "network": "tcp"}}' > ~/Desktop/config.json
+mv $HOME/Desktop/config.json $FIG
+sed -i 's/"enable_http": false,/"enable_http": true,/' $FIG
+
+fi
+}
+##################################
+#	PAT MENU
+##################################
+PAT-MENU(){
+if [ -d $HOME/patmenu2 ]; then
+rm -rf $HOME/patmenu2
+fi
+cd $HOME
+git clone https://github.com/km4ack/patmenu2.git $HOME/patmenu2 && bash $HOME/patmenu2/setup
+sed -i "s/N0CALL/$CALL/" $HOME/patmenu2/config
+sed -i 's/1,0/2,0/g' $HOME/patmenu2/config
+
+}
+##################################
+#	JS8Call
+##################################
+JS8CALL(){
+cd $DIR
+JS8LATE=$(curl -s http://files.js8call.com/latest.html | grep armhf | awk '{ print $2 }' | sed 's/href=//' | sed 's/"//g')
+JS8PKG=$(curl -s http://files.js8call.com/latest.html | grep armhf | awk '{ print $2 }' | sed 's/\///g' | sed 's/href="http:files.js8call.com[0-9].[0-9].[0-9]//' | sed 's/"//')
+wget --tries 2 --connect-timeout=60 $JS8LATE || echo "Can't Download JS8Call" >> $BUILDLOG
+sudo dpkg -i $JS8PKG
+sudo apt-get --fix-broken -y install
+sudo dpkg -i $JS8PKG
+}
+
+##################################
+#	WSJTX
+##################################
+WSJTX(){
+cd $DIR
+WSPKG=$(curl -s https://physics.princeton.edu/pulsar/k1jt/wsjtx.html | grep armhf.deb | sed 's/^.*wsjtx/wsjtx/' | sed 's/deb.*$/deb/' | head -1)
+wget --tries 2 --connect-timeout=60 --no-check-certificate https://physics.princeton.edu/pulsar/k1jt/$WSPKG
+sudo dpkg -i $WSPKG
+sudo apt-get --fix-broken -y install
+sudo dpkg -i $WSPKG
+}
+
+##################################
+#	CONKY
+##################################
+CONKY(){
+	if ! hash conky 2>/dev/null; then
+	sudo apt install -y conky
+	fi
+touch $HOME/Documents/mylog.txt		#conky will fail to load if this file doesn't exist
+sudo apt-get install -y ruby2.3
+sudo gem install gpsd_client
+sudo gem install maidenhead
+cp $MYPATH/conky/.conkyrc $HOME/.conkyrc
+mkdir -p $HOME/bin/conky
+cp $MYPATH/conky/* $HOME/bin/conky/
+chmod +x $HOME/bin/conky/get-grid $HOME/bin/conky/temp-conv $HOME/bin/conky/get-freq $HOME/bin/conky/grid
+sed -i "s/N0CALL/$CALL/" $HOME/.conkyrc
+echo "@reboot sleep 20 && export DISPLAY=:0 && /usr/bin/conky" >> $TEMPCRON
+}
+
+##################################
+#	M0IAX Tools
+##################################
+M0IAX(){
+pip3 install gps
+pip3 install maidenhead
+pip3 install psutil
+pip3 install OSGridConverter
+cd $HOME/bin
+git clone https://github.com/m0iax/JS8CallUtilities_V2.git
+chmod +x $HOME/bin/JS8CallUtilities_V2/gpsdGPSListener.py $HOME/bin/JS8CallUtilities_V2.git/JS8CallUtils_v2.py
+mv $HOME/bin/JS8CallUtilities_V2/* $HOME/bin
+rm -rf JS8CallUtilities_V2
+
+cat > js8tools.desktop <<EOF
+[Desktop Entry]
+Name=M0IAX JS8 Tools
+GenericName=M0IAX JS8 Tools
+Comment=GPS & Message Tool for JS8Call
+Exec=$HOME/bin/JS8CallUtils_v2.py
+Terminal=false
+Type=Application
+Categories=Network;HamRadio;
+EOF
+
+sudo mv js8tools.desktop /usr/share/applications/
+}
+
+##################################
+#	PYQSO
+##################################
+PYQSO(){
+sudo apt-get install -y pyqso
+}
+
+##################################
+#	CQRLOG
+##################################
+CQRLOG(){
+sudo apt-get install -y cqrlog
+}
+
+##################################
+#	CHIRP
+##################################
+CHIRP(){
+cd $DIR
+wget --tries 2 --connect-timeout=60 https://trac.chirp.danplanet.com/chirp_daily/LATEST/
+CHIRPBUILD=$(cat index.html | grep .tar.gz | grep chirp-daily- | awk '{ print $6 }' | sed 's/.*"//' | sed 's/>//' | sed 's/[<].*$//')
+sudo apt-get -y install python-gtk2 python-serial python-libxml2
+mkdir $HOME/chirp
+cd $HOME/chirp
+wget --tries 2 --connect-timeout=60 https://trac.chirp.danplanet.com/chirp_daily/LATEST/$CHIRPBUILD
+tar -xzf $CHIRPBUILD
+CHIRPDIR=$(echo $CHIRPBUILD | sed 's/[.].*$//')
+cd $CHIRPDIR
+sudo python setup.py install
+}
+
+##################################
+#	GARIM
+##################################
+GARIM(){
+GPKG=$(curl -s https://www.whitemesa.net/garim/src/ | grep tar.gz | tail -1 | sed 's/^.*garim/garim/' | sed 's/tar.gz.*$/tar.gz/')
+cd $DIR
+wget --tries 2 --connect-timeout=60 https://www.whitemesa.net/garim/src/$GPKG
+tar -xzvf $GPKG
+DIR=$(echo $GPKG | sed 's/.tar.gz//')
+cd $DIR
+./configure
+make
+sudo make install
+}
+
+##################################
+#	QSSTV
+##################################
+QSSTV(){
+sudo apt-get install -y g++ libfftw3-dev qt5-default libpulse-dev libhamlib-dev libasound2-dev libv4l-dev libopenjp2-7 libopenjp2-7-dev
+
+cd $HOME/Downloads
+
+TAR=$(curl -s http://users.telenet.be/on4qz/qsstv/downloads/ | grep tar.gz | sed 's/.*href="//' | sed 's/">.*$//')
+wget --tries 2 --connect-timeout=60 http://users.telenet.be/on4qz/qsstv/downloads/$TAR
+SSTVTAR=$(echo $TAR | sed 's/.tar.gz//')
+tar -xvzf $TAR
+cd $SSTVTAR
+qmake
+make
+sudo make install
+
+sudo sed -i 's/Education;/Network;HamRadio;/' /usr/local/share/applications/qsstv.desktop
+
+}
+
+##################################
+#	GRIDTRACKER
+##################################
+GRIDTRACKER(){
+cd $HOME
+sudo apt-get install -y libgconf-2-4
+GRIDDLL=$(curl -s https://tagloomis.com/downloads/ | grep Arm | head -1 | sed 's/<p><a\ href="//' | sed 's/?.*$//')
+wget --tries 2 --connect-timeout=60 $GRIDDLL
+GRIDTAR=$(echo $GRIDDLL | sed 's/.*\///g')
+tar -xzvf $GRIDTAR
+rm *.gz
+cat > gridtracker.desktop <<EOF
+[Desktop Entry]
+Name=GridTracker
+Comment=GridTracker
+GenericName=GridTracker, a WSJT-X Companion
+Exec=/home/pi/GridTracker/GridTracker --disable-accelerated-2d-canvas --num-raster-threads=2
+Icon=/home/pi/GridTracker/gridtracker.png
+Path=/home/pi/GridTracker
+Type=Application
+Encoding=UTF-8
+Terminal=false
+Categories=HamRadio;
+EOF
+
+sudo mv gridtracker.desktop /usr/share/applications/
+}
+
+
+##################################
+#	PROPAGATION
+##################################
+PROPAGATION(){
+sudo apt-get install -y gfortran yelp python3-gi python3-gi-cairo rarian-compat gnome-doc-utils pkg-config python3-dateutil python3-mpltoolkits.basemap python3-cairocffi libgtk-3-dev
+
+#install primary program
+cd $HOME/Downloads
+wget --tries 2 --connect-timeout=60 https://www.qsl.net/hz1jw/voacapl/downloads/voacapl-0.7.2.tar.gz
+tar -xzf voacapl-0.7.2.tar.gz
+cd voacapl-0.7.2
+./configure
+make
+sudo make install
+
+#install gui app for propagation reports
+cd $HOME/Downloads
+wget --tries 2 --connect-timeout=60 https://www.qsl.net/hz1jw/pythonprop/downloads/pythonprop-0.28.tar.gz
+tar -xzf pythonprop-0.28.tar.gz
+cd pythonprop-0.28
+./configure
+sudo make install
+$HOME/Downloads/voacapl-0.7.2/makeitshfbc
+}
+
+##################################
+#	YAAC
+##################################
+YAAC(){
+cd $DIR
+#wget --tries 2 --connect-timeout=60 https://sourceforge.net/projects/yetanotheraprsc/files/YAAC.zip/
+wget --tries 2 --connect-timeout=60 https://www.ka2ddo.org/ka2ddo/YAAC.zip
+sudo apt-get install -y openjdk-8-jre librxtx-java
+mkdir -p $HOME/YAAC
+cd $HOME/YAAC
+touch YAAC
+echo "#!/bin/bash" >> YAAC
+echo "java -jar $HOME/YAAC/YAAC.jar" >> YAAC
+chmod +x YAAC
+cat > yaac.desktop <<EOF
+[Desktop Entry]
+Name=YAAC
+GenericName=YAAC
+Comment=APRS Client
+Exec=$HOME/YAAC/YAAC
+Terminal=false
+Type=Application
+Categories=Network;HamRadio;
+EOF
+
+sudo mv yaac.desktop /usr/share/applications/
+unzip $DIR/YAAC.zip
+}
+
+##################################
+#	XASTIR
+##################################
+XASTIR(){
+sudo apt-get install -y xastir
+sudo sed -i 's/Exec=xastir/Exec=sudo xastir/' /usr/share/applications/xastir.desktop
+}
+
+##################################
+#	KM4ACK EES
+##################################
+
+EES(){
+
+#install PHP7.3 if not installed
+#this will also install apache2
+if ! hash php7.3 2>/dev/null; then
+sudo apt install -y php7.3
+fi
+#install ghostwriter if needed
+#this is used to mod the new index.html
+#page. 20200229
+if ! hash ghostwriter 2>/dev/null; then
+sudo apt-get install -y ghostwriter
+fi
+#Install the KM4ACK EES
+cd $DIR
+git clone https://github.com/km4ack/EES-LITE.git
+cd $DIR/EES-LITE
+#git dev branch of code
+git checkout dev
+sudo cp -r $DIR/EES-LITE/* /var/www/html/
+rm -rf $DIR/EES-LITE
+cd /var/www/html
+sudo chmod +x /var/www/html/firstrun
+sudo /var/www/html/./firstrun
+sudo sed -i "s/N0CALL/$CALL/" /var/www/html/config.php
+sudo sed -i 's/REMINDER\ FOR\ OPERATOR\ TO\ DO\ SOMETHING/ENABLE\ AUTO\ POST\ REPLY\ IN\ CRON/' /var/www/html/config.php
+cd $DIR
+#Change Pat Winlink port so it won't interfer with the EES
+sed -i 's/0.0.0.0:8080/0.0.0.0:5000/' $HOME/.wl2k/config.json
+sed -i 's/PORT=8080/PORT=5000/' $HOME/patmenu2/config
+
+sudo killall pat
+sudo systemctl start pat@$WHO
+
+#Move info.markdown from EES folder to Documents
+sudo mv /var/www/html/info.markdown /home/pi/Documents/
+sudo chown pi:pi /home/pi/Documents/info.markdown
+#move info.html to pi documents folder
+sudo cp /var/www/html/index.html /home/pi/Documents/info.html
+sudo chown pi:pi /home/pi/Documents/info.html
+#move script to be run by cron to bin dir
+sudo mv /var/www/html/webcopy /home/pi/bin/
+sudo chown pi:pi /home/pi/bin/webcopy
+sudo chmod +x /home/pi/bin/webcopy
+
+#set up cron job for EES
+echo "#-----Start EES Server Options------" >> $TEMPCRON
+echo "#Move EES email to Pat Winlink Outbox" >> $TEMPCRON
+echo "*/1 * * * * /var/www/html/movetopat" >> $TEMPCRON
+echo " " >> $TEMPCRON
+echo "#Auto post replies for EES server" >> $TEMPCRON
+echo "#Default is off. Activate by removing # on line below" >> $TEMPCRON
+echo "#*/1 * * * * /var/www/html/autopostreply" >> $TEMPCRON
+echo "#Line below moves info.html to index.html when modified" >> $TEMPCRON
+echo "*/1 * * * * /home/pi/bin/webcopy" >> $TEMPCRON
+echo "#-----End EES Server Options------" >> $TEMPCRON
+
+
+
+}
+
+
+##################################
+#	Pi-APRS
+##################################
+PI-APRS(){
+cd $HOME
+git clone https://github.com/km4ack/Pi-APRS.git
+sudo cp ~/Pi-APRS/piaprs.desktop /usr/share/applications
+
+}
+
+##################################
+#	HamClock Small
+##################################
+SMALL(){
+sudo apt-get -y install make g++ libx11-dev
+cd $DIR
+curl -o ESPHamClock.zip http://www.clearskyinstitute.com/ham/HamClock/ESPHamClock.zip
+unzip ESPHamClock.zip
+rm ESPHamClock.zip
+cd ESPHamClock
+sudo make -j 4 hamclock
+sudo chmod +s hamclock
+sudo mv hamclock /usr/local/bin/hamclock
+rm -rf $DIR/ESPHamClock
+
+cat > $HOME/Downloads/hamclock.desktop <<EOF
+[Desktop Entry]
+Name=HamClock
+GenericName=Ham Clock
+Comment=Ham Clock
+Exec=hamclock
+Icon=/usr/share/icons/Adwaita/scalable/apps/preferences-system-time-symbolic.svg
+Terminal=false
+Type=Application
+Categories=HamRadio;
+EOF
+
+sudo mv $HOME/Downloads/hamclock.desktop /usr/share/applications/
+}
+
+##################################
+#	HamClock Large
+##################################
+LARGE(){
+sudo apt-get -y install make g++ libx11-dev
+cd $DIR
+curl -o ESPHamClock.zip http://www.clearskyinstitute.com/ham/HamClock/ESPHamClock.zip
+unzip ESPHamClock.zip
+rm ESPHamClock.zip
+cd ESPHamClock
+sudo make -j 4 hamclock-1600x960
+sudo chmod +s hamclock-1600x960
+sudo mv hamclock-1600x960 /usr/local/bin/hamclock
+rm -rf $DIR/ESPHamClock
+
+cat > $HOME/Downloads/hamclock.desktop <<EOF
+[Desktop Entry]
+Name=HamClock
+GenericName=Ham Clock
+Comment=Ham Clock
+Exec=hamclock
+Icon=/usr/share/icons/Adwaita/scalable/apps/preferences-system-time-symbolic.svg
+Terminal=false
+Type=Application
+Categories=HamRadio;
+EOF
+
+sudo mv $HOME/Downloads/hamclock.desktop /usr/share/applications/
+}
+
+
+
+
+
+
+
+
+

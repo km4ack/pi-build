@@ -1,0 +1,214 @@
+
+
+
+
+##################################
+#	DIPOLE CALC
+##################################
+DIPOLE(){
+cd $HOME/bin
+wget --tries 2 --connect-timeout=60 https://raw.githubusercontent.com/km4ack/pi-scripts/master/dipole
+chmod +x dipole
+
+cat > dipole.desktop <<EOF
+[Desktop Entry]
+Name=Dipole Calculator
+GenericName=Dipole Calc
+Comment=Dipole Calculator
+Exec=$HOME/bin/dipole
+Icon=/usr/share/icons/Adwaita/scalable/apps/accessories-calculator-symbolic.svg
+Terminal=false
+Type=Application
+Categories=HamRadio;
+EOF
+
+sudo mv dipole.desktop /usr/share/applications/
+
+}
+
+##################################
+#	Call Lookup
+##################################
+CALLSIGN(){
+cd $HOME/bin
+wget --tries 2 --connect-timeout=60 https://raw.githubusercontent.com/km4ack/pi-scripts/master/getcall
+chmod +x getcall
+
+cat > getcall.desktop <<EOF
+[Desktop Entry]
+Name=Call Sign Lookup
+GenericName=Call sign lookup utility
+Comment=Call sign lookup utility
+Exec=$HOME/bin/getcall
+Icon=/usr/share/icons/Adwaita/scalable/apps/user-info-symbolic.svg
+Terminal=false
+Type=Application
+Categories=HamRadio;
+EOF
+
+sudo mv getcall.desktop /usr/share/applications/
+}
+
+##################################
+#	Temp Convert
+##################################
+TEMPCONVERT(){
+if ! hash bc 2>/dev/null; then
+sudo apt-get install -y bc
+fi
+cd $HOME/bin
+wget --tries 2 --connect-timeout=60 https://raw.githubusercontent.com/km4ack/pi-scripts/master/converttemp
+chmod +x converttemp
+
+cat > converttemp.desktop <<EOF
+[Desktop Entry]
+Name=Temperature Converter
+GenericName=Temperature Converter
+Comment=Utility to convert temperature
+Exec=$HOME/bin/converttemp
+Icon=/usr/share/icons/Adwaita/22x22/actions/mark-location.png
+Terminal=false
+Type=Application
+Categories=HamRadio;
+EOF
+
+sudo mv converttemp.desktop /usr/share/applications/
+}
+
+##################################
+#	GPARTED
+##################################
+GPARTED(){
+sudo apt-get install -y gparted
+}
+
+##################################
+#	Log Viewer | Showlog
+##################################
+SHOWLOG(){
+
+cd $HOME/bin
+wget https://raw.githubusercontent.com/km4ack/pi-scripts/master/showlog
+chmod +x showlog
+
+cat > showlog.desktop <<EOF
+[Desktop Entry]
+Name=Log Viewer
+GenericName=KM4ACK Log Viewer
+Comment=Log File Viewer
+Exec=$HOME/bin/showlog
+Icon=/usr/share/icons/PiXflat/48x48/apps/fm-details.png
+Terminal=false
+Type=Application
+Categories=Utility
+EOF
+
+sudo mv showlog.desktop /usr/share/applications/
+}
+
+##################################
+#	Real Time Clock
+##################################
+#Based on directions from the following web site
+#https://thepihut.com/blogs/raspberry-pi-tutorials/17209332-adding-a-real-time-clock-to-your-raspberry-pi
+RTC(){
+DOUBLE=$(sudo i2cdetect -y 1 | grep UU)
+
+if [ -n "$DOUBLE" ]; then
+yad --form --width=500 --text-align=center --center --title="Build-a-Pi" --text-align=center \
+--image $LOGO --window-icon=$LOGO --image-on-top --separator="|" --item-separator="|" \
+--text="Real Time Clock already installed" \
+--button=gtk-close
+exit 1
+fi
+
+IC2ACTIVE=$(ls /dev/*i2c*)
+
+if [ $IC2ACTIVE = '/dev/i2c-1' ]
+then
+echo "IC2 is active"
+else 
+yad --form --width=500 --text-align=center --center --title="Build-a-Pi" --text-align=center \
+--image $LOGO --window-icon=$LOGO --image-on-top --separator="|" --item-separator="|" \
+--text="Please enable IC2 interface in the Raspberry Pi Configuration and try again" \
+--button=gtk-close
+exit 1
+fi
+
+NOW=$(date)
+
+INFO=$(yad --form --width=500 --text-align=center --center --title="Build-a-Pi" --text-align=center \
+--image $LOGO --window-icon=$LOGO --image-on-top --separator="|" --item-separator="|" \
+--text="<b>System time is $NOW</b>" \
+--field="Is this Correct":CB "yes|no" \
+--button="Continue")
+echo $?
+
+TIME=$(echo $INFO | awk -F "|" '{print $1}')
+
+
+if [ $TIME = 'no' ]; then
+yad --form --width=500 --text-align=center --center --title="Build-a-Pi" --text-align=center \
+--image $LOGO --window-icon=$LOGO --image-on-top --separator="|" --item-separator="|" \
+--text="Please set time on the Raspberry Pi and try again. You can set time \
+by connecting to the internet or attaching a GPS" \
+--button=gtk-close
+exit 1
+fi
+
+CLOCK=$(sudo i2cdetect -y 1 | grep 68)
+
+
+if [ -z "$CLOCK" ]; then
+yad --form --width=500 --text-align=center --center --title="Build-a-Pi" --text-align=center \
+--image $LOGO --window-icon=$LOGO --image-on-top --separator="|" --item-separator="|" \
+--text="Real Time Clock not detected. Please be sure the RTC is installed and seated firmly" \
+--button=gtk-close
+exit 1
+else
+sudo modprobe rtc-ds1307
+echo "ds1307 0x68" | sudo tee -a /sys/class/i2c-adapter/i2c-1/new_device
+sudo hwclock -w
+echo rtc-ds1307 | sudo tee -a /etc/modules
+
+sudo sed -i 's/exit\ 0//' /etc/rc.local
+echo "echo ds1307 0x68 > /sys/class/i2c-adapter/i2c-1/new_device" | sudo tee -a /etc/rc.local > /dev/null 2>&1
+echo "sudo hwclock -s" | sudo tee -a /etc/rc.local > /dev/null 2>&1
+echo "date" | sudo tee -a /etc/rc.local > /dev/null 2>&1
+echo "exit 0" | sudo tee -a /etc/rc.local > /dev/null 2>&1
+
+yad --form --width=500 --text-align=center --center --title="Build-a-Pi" --text-align=center \
+--image $LOGO --window-icon=$LOGO --image-on-top --separator="|" --item-separator="|" \
+--text="Real Time Clock has been installed and configured" \
+--button=gtk-close
+fi
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
