@@ -1,0 +1,151 @@
+#!/bin/bash
+
+#20200515 km4ack 
+
+MYPATH=$HOME/pi-build
+LOGO=$MYPATH/logo.png
+
+
+yad --width=400 --height=200 --title="KM4ACK Fun Facts" --timeout=30 --image $LOGO --text-align=center --skip-taskbar --image-on-top \
+--wrap --no-buttons --center --window-icon=$LOGO --undecorated --text="<big><big><big><b>\r\rKM4ACK\rFun Facts</b></big></big></big>\r\r \
+There are over 1500 lines of code in Build-a-Pi" 
+
+yad --width=400 --height=200 --title="Fun Facts" --timeout=30 --image $LOGO --text-align=center --skip-taskbar --image-on-top \
+--wrap --no-buttons --center --window-icon=$LOGO --undecorated --text="<big><big><big><b>\r\rKM4ACK\rFun Facts</b></big></big></big>\r\r \
+When he released his first video, he had never written a bash script"
+
+yad --width=400 --height=200 --title="Fun Facts" --timeout=30 --image $LOGO --text-align=center --skip-taskbar --image-on-top \
+--wrap --no-buttons --center --window-icon=$LOGO --undecorated --text="<big><big><big><b>\r\rKM4ACK\rFun Facts</b></big></big></big>\r\r \
+He studied for a week and then drove 1 1/2 hours to take the technician exam because it was the closest test location that weekend."
+
+yad --width=400 --height=200 --title="Fun Facts" --timeout=30 --image $LOGO --text-align=center --skip-taskbar --image-on-top \
+--wrap --no-buttons --center --window-icon=$LOGO --undecorated --text="<big><big><big><b>\r\rKM4ACK\rFun Facts</b></big></big></big>\r\r \
+A year after passing the tech exam, he passed the extra exam"
+
+yad --width=400 --height=200 --title="Fun Facts" --timeout=30 --image $LOGO --text-align=center --skip-taskbar --image-on-top \
+--wrap --no-buttons --center --window-icon=$LOGO --undecorated --text="<big><big><big><b>\r\rKM4ACK\rFun Facts</b></big></big></big>\r\r \
+He doesn't know CW. dit dit"
+
+yad --width=400 --height=200 --title="Fun Facts" --timeout=30 --image $LOGO --text-align=center --skip-taskbar --image-on-top \
+--wrap --no-buttons --center --window-icon=$LOGO --undecorated --text="<big><big><big><b>\r\rKM4ACK\rFun Facts</b></big></big></big>\r\r \
+He released his first ham radio video on YouTube in 2018" 
+
+yad --width=400 --height=200 --title="Fun Facts" --timeout=30 --image $LOGO --text-align=center --skip-taskbar --image-on-top \
+--wrap --no-buttons --center --window-icon=$LOGO --undecorated --text="<big><big><big><b>\r\rKM4ACK\rFun Facts</b></big></big></big>\r\r \
+The Emergency Email Server was the first and last thing he programmed in PHP" 
+
+yad --width=400 --height=200 --title="Fun Facts" --timeout=30 --image $LOGO --text-align=center --skip-taskbar --image-on-top \
+--wrap --no-buttons --center --window-icon=$LOGO --undecorated --text="<big><big><big><b>\r\rKM4ACK\rFun Facts</b></big></big></big>\r\r \
+Patrons get to test his very latest software before they go public. Join in on the fun. https://patreon.com/km4ack" 
+
+yad --width=400 --height=200 --title="Fun Facts" --timeout=30 --image $LOGO --text-align=center --skip-taskbar --image-on-top \
+--wrap --no-buttons --center --window-icon=$LOGO --undecorated --text="<big><big><big><b>\r\rKM4ACK\rFun Facts</b></big></big></big>\r\r \
+His Jeep is a trail rated 2007 Wrangler X" 
+
+yad --width=400 --height=200 --title="Fun Facts" --timeout=30 --image $LOGO --text-align=center --skip-taskbar --image-on-top \
+--wrap --no-buttons --center --window-icon=$LOGO --undecorated --text="<big><big><big><b>\r\rKM4ACK\rFun Facts</b></big></big></big>\r\r \
+Yes. He has a Raspberry Pi in the Jeep"
+
+yad --width=400 --height=200 --title="Fun Facts" --timeout=30 --image $LOGO --text-align=center --skip-taskbar --image-on-top \
+--wrap --no-buttons --center --window-icon=$LOGO --undecorated --text="<big><big><big><b>\r\rKM4ACK\rFun Facts</b></big></big></big>\r\r \
+The Jeep also houses an 857D for HF and a FTM400 for 2M and 440"
+
+yad --width=400 --height=200 --title="Fun Facts" --timeout=30 --image $LOGO --text-align=center --skip-taskbar --image-on-top \
+--wrap --no-buttons --center --window-icon=$LOGO --undecorated --text="<big><big><big><b>\r\rKM4ACK\rFun Facts</b></big></big></big>\r\r \
+There is also a Yaesu FT65r on the sun visor ready to grab and go"
+
+yad --width=400 --height=200 --title="Fun Facts" --timeout=30 --image $LOGO --text-align=center --skip-taskbar --image-on-top \
+--wrap --no-buttons --center --window-icon=$LOGO --undecorated --text="<big><big><big><b>\r\rKM4ACK\rFun Facts</b></big></big></big>\r\r \
+The Yaesu 891 was the first HF rig he purchased new"
+
+yad --width=400 --height=200 --title="Fun Facts" --timeout=30 --image $LOGO --text-align=center --skip-taskbar --image-on-top \
+--wrap --no-buttons --center --window-icon=$LOGO --undecorated --text="<big><big><big><b>\r\rKM4ACK\rFun Facts</b></big></big></big>\r\r \
+He built a copper J-Pole as his first 2M 440 antenna"
+
+yad --width=400 --height=200 --title="Fun Facts" --timeout=30 --image $LOGO --text-align=center --skip-taskbar --image-on-top \
+--wrap --no-buttons --center --window-icon=$LOGO --undecorated --text="<big><big><big><b>\r\rKM4ACK\rFun Facts</b></big></big></big>\r\r \
+The J-Pole is still in use today"
+
+yad --width=400 --height=200 --title="Fun Facts" --timeout=30 --image $LOGO --text-align=center --skip-taskbar --image-on-top \
+--wrap --no-buttons --center --window-icon=$LOGO --undecorated --text="<big><big><big><b>\r\rKM4ACK\rFun Facts</b></big></big></big>\r\r \
+He has never had formal computer programming training"
+
+yad --width=400 --height=200 --title="Fun Facts" --timeout=30 --image $LOGO --text-align=center --skip-taskbar --image-on-top \
+--wrap --no-buttons --center --window-icon=$LOGO --undecorated --text="<big><big><big><b>\r\rKM4ACK\rFun Facts</b></big></big></big>\r\r \
+Yet continues his studies at <b>The School of Hard Knocks</b>"
+
+yad --width=400 --height=200 --title="Fun Facts" --timeout=30 --image $LOGO --text-align=center --skip-taskbar --image-on-top \
+--wrap --no-buttons --center --window-icon=$LOGO --undecorated --text="<big><big><big><b>\r\rKM4ACK\rFun Facts</b></big></big></big>\r\r \
+He grew up in North Alabama. ROLL TIDE!!" 
+
+yad --width=400 --height=200 --title="Fun Facts" --timeout=30 --image $LOGO --text-align=center --skip-taskbar --image-on-top \
+--wrap --no-buttons --center --window-icon=$LOGO --undecorated --text="<big><big><big><b>\r\rKM4ACK\rFun Facts</b></big></big></big>\r\r \
+He moved to Tennessee after meeting his wife Pj" 
+
+yad --width=400 --height=200 --title="Fun Facts" --timeout=30 --image $LOGO --text-align=center --skip-taskbar --image-on-top \
+--wrap --no-buttons --center --window-icon=$LOGO --undecorated --text="<big><big><big><b>\r\rKM4ACK\rFun Facts</b></big></big></big>\r\r \
+His first radio was a Baofeng that he purchased before he had a license"
+
+yad --width=400 --height=200 --title="Fun Facts" --timeout=30 --image $LOGO --text-align=center --skip-taskbar --image-on-top \
+--wrap --no-buttons --center --window-icon=$LOGO --undecorated --text="<big><big><big><b>\r\rKM4ACK\rFun Facts</b></big></big></big>\r\r \
+As of June 2020 he owns 9 Raspberry Pi's. All but 1 is in use."
+
+yad --width=400 --height=200 --title="Fun Facts" --timeout=30 --image $LOGO --text-align=center --skip-taskbar --image-on-top \
+--wrap --no-buttons --center --window-icon=$LOGO --undecorated --text="<big><big><big><b>\r\rKM4ACK\rFun Facts</b></big></big></big>\r\r \
+One pi runs a PBX server over AREDN serving roughly 40 hams VOIP phone service"
+
+yad --width=400 --height=200 --title="Fun Facts" --timeout=30 --image $LOGO --text-align=center --skip-taskbar --image-on-top \
+--wrap --no-buttons --center --window-icon=$LOGO --undecorated --text="<big><big><big><b>\r\rKM4ACK\rFun Facts</b></big></big></big>\r\r \
+Another pi runs an APRS digipeater"
+
+yad --width=400 --height=200 --title="Fun Facts" --timeout=30 --image $LOGO --text-align=center --skip-taskbar --image-on-top \
+--wrap --no-buttons --center --window-icon=$LOGO --undecorated --text="<big><big><big><b>\r\rKM4ACK\rFun Facts</b></big></big></big>\r\r \
+His favorite digital mode is JS8Call"
+
+yad --width=400 --height=200 --title="Fun Facts" --timeout=30 --image $LOGO --text-align=center --skip-taskbar --image-on-top \
+--wrap --no-buttons --center --window-icon=$LOGO --undecorated --text="<big><big><big><b>\r\rKM4ACK\rFun Facts</b></big></big></big>\r\r \
+He got interested in EMCOMM because he lost cell service after a tornado outbreak in his home town"
+
+yad --width=400 --height=200 --title="Fun Facts" --timeout=30 --image $LOGO --text-align=center --skip-taskbar --image-on-top \
+--wrap --no-buttons --center --window-icon=$LOGO --undecorated --text="<big><big><big><b>\r\rKM4ACK\rFun Facts</b></big></big></big>\r\r \
+He used Windows from 3.1 to WIN10. He now runs a Mac as his \
+work machine and Raspberry Pi's for all things ham radio"
+
+yad --width=400 --height=200 --title="Fun Facts" --timeout=30 --image $LOGO --text-align=center --skip-taskbar --image-on-top \
+--wrap --no-buttons --center --window-icon=$LOGO --undecorated --text="<big><big><big><b>\r\rKM4ACK\rFun Facts</b></big></big></big>\r\r \
+Two of his favorite ham YouTubers are Ham Radio Crash Course and K8MRD Radio"
+
+yad --width=400 --height=200 --title="Fun Facts" --timeout=30 --image $LOGO --text-align=center --skip-taskbar --image-on-top \
+--wrap --no-buttons --center --window-icon=$LOGO --undecorated --text="<big><big><big><b>\r\rKM4ACK\rFun Facts</b></big></big></big>\r\r \
+His favorite non ham Youtuber is Wranglerstar"
+
+yad --width=400 --height=200 --title="Fun Facts" --timeout=30 --image $LOGO --text-align=center --skip-taskbar --image-on-top \
+--wrap --no-buttons --center --window-icon=$LOGO --undecorated --text="<big><big><big><b>\r\rKM4ACK\rFun Facts</b></big></big></big>\r\r \
+Enough about KM4ACK! Go grab a coffee or do something fun while your pi is built"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
