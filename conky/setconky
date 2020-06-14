@@ -1,42 +1,67 @@
 #!/bin/bash
 
-#set conky display size per user env
+#set conky display size &/or update call sign
 #20200123 km4ack
+#20200514 edit km4ack
 
-read -p "What is your call sign? " CALL
+MYPATH=$HOME/pi-build/conky
+TEMPFILE=/run/user/1000/conky.tmp
 
-RES=$(xdpyinfo | grep "dimensions" | awk '{ print $2 }' | sed 's/x.*$//')
+CALL=$(cat ~/.conkyrc | grep "{color Yellow}" | sed s'/.*{alignc}//' | head -1)
 
-if [ $RES = "1920" ]
-then 
-CS=conky-large
-elif [ $RES = "1280" ]
-then
-CS=conky-medium
-elif [ $RES = "800" ]
-then
-CS=conky-small
-else
-echo "Unable to determine screen resolution automatically"
-read -p "Would you like to try conky in small, medium, or large? s/m/l " ANS
-	if [ $ANS = "s" ] || [ $ANS = "S" ]
-	then
-	CS=conky-small
-	elif [ $ANS = "m" ] || [ $ANS = "M" ]
-	then
-	CS=conky-medium
-	elif [ $ANS = "l" ] || [ $ANS = "L" ]
-	then
-	CS=conky-large
-	fi
+
+INFO=$(yad --form --width=420 --text-align=center --center --title="Preferences" \
+--image $LOGO --window-icon=$LOGO --image-on-top --separator="|" --item-separator="|" \
+--text="<b>Conky Preferences</b>\r\rThis only changes the call sign in conky." \
+--field="Call Sign" "$CALL" \
+--field="Conky Size":CB "conky-small|conky-medium|conky-large" \
+--field="C or F":CB "C|F" \
+--button="Exit":1 \
+--button="Continue":2)
+BUT=$?
+if [ $BUT = 252 ] || [ $BUT = 1 ]; then
+exit
+fi
+CALL=$(echo $INFO | awk -F "|" '{ print $1 }')
+CALL=${CALL^^}
+CS=$(echo $INFO | awk -F "|" '{ print $2 }')
+TEMP=$(echo $INFO | awk -F "|" '{ print $3 }')
+
+
+cp $MYPATH/$CS $TEMPFILE
+
+sed -i "s/N0CALL/$CALL/" $TEMPFILE
+
+if [ "$TEMP" = 'C' ] && [ "$CS" = 'conky-large' ]; then
+#delete F line
+echo
+sed -i '/vcgencmd/d' $TEMPFILE
+#add cel line
+sed -i '/#TEMP/a \
+${font Arial:bold:size=14}${color White}Temp: $alignr ${exec /opt/vc/bin/vcgencmd measure_temp | cut -c6-9} C' $TEMPFILE
+elif [ "$TEMP" = 'C' ] && [ "$CS" = 'conky-medium' ]; then
+#delete F line
+echo
+sed -i '/vcgencmd/d' $TEMPFILE
+#add cel line
+sed -i '/#TEMP/a \
+${font Arial:bold:size=10}${color White}Temp: $alignr ${exec /opt/vc/bin/vcgencmd measure_temp | cut -c6-9} C' $TEMPFILE
+elif [ "$TEMP" = 'C' ] && [ "$CS" = 'conky-small' ]; then
+#delete F line
+echo
+sed -i '/vcgencmd/d' $TEMPFILE
+#add cel line
+sed -i '/#TEMP/a \
+${font Arial:bold:size=08}${color White}Temp: $alignr ${exec /opt/vc/bin/vcgencmd measure_temp | cut -c6-9} C' $TEMPFILE
 fi
 
-echo "Setting new conky size and restarting conky"
-
-cp $HOME/bin/conky/$CS $HOME/.conkyrc
-
-sed -i "s/N0CALL/$CALL/" $HOME/.conkyrc
+cp $TEMPFILE $HOME/.conkyrc
 
 sudo killall conky > /dev/null 2>&1
 
 conky > /dev/null 2>&1
+
+yad --form --width=420 --text-align=center --center --title="Preferences" \
+--image $LOGO --window-icon=$LOGO --image-on-top --separator="|" --item-separator="|" \
+--text="<b>Conky Preferences</b>\r\rConky is being restarted" \
+--button=gtk-ok

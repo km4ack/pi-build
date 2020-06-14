@@ -3,7 +3,7 @@
 #get freq of radio to display in conky
 #20191217 km4ack
 
-source $HOME/patmenu/config
+source $HOME/patmenu2/config
 
 MAIN () {
 
