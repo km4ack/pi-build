@@ -383,6 +383,9 @@ $MYPATH/.funfacts &
 sudo apt-get upgrade
 sudo apt -y full-upgrade
 
+#set wallpaper
+pcmanfm --set-wallpaper $HOME/pi-build/bap-wallpaper.jpg
+
 #add virtual sound card link for pulse audio
 cd $DIR
 cat > tempsound <<EOF
