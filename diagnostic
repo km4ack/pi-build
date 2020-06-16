@@ -1,0 +1,77 @@
+#! /bin/bash
+
+#script to gather some system information
+#to help diagnose issues
+#20200616 km4ack
+
+read -p "What is your call sign? " CALL
+
+DIR=$HOME/Desktop/$CALL-diagnostic-report
+
+
+#create temp dir
+mkdir -p $DIR
+
+#get system info
+cat /etc/os-release > $DIR/systeminfo.txt
+
+#get direwolf.conf file
+cat $HOME/direwolf.conf > $DIR/direwolf.conf
+
+#get pat config file
+cat $HOME/.wl2k/config.json > $DIR/patconfig.txt
+#remove winlink password
+sed -i 's/"secure_login_password":.*$/PASSWORD-WAS-HERE/' $DIR/patconfig.txt
+
+#get pat menu config file
+cat $HOME/patmenu2/config > $DIR/patmenu.conf
+
+#get sound info
+echo "ARECORD INFO" > $DIR/sound.info
+arecord -l >> $DIR/sound.info
+echo;echo;echo "APLAY INFO" >> $DIR/sound.info
+aplay -l >> $DIR/sound.info
+
+#Get hotspot info
+HS=$(systemctl is-active autohotspot)
+CURRENTNAME=$(sudo cat /etc/hostapd/hostapd.conf | grep ssid= | head -1 | sed 's/ssid=//')
+CURRENTPASS=$(sudo cat /etc/hostapd/hostapd.conf | grep wpa_passphrase= | sed 's/wpa_passphrase=//')
+HSIP=$(sudo cat /usr/bin/autohotspotN | grep "ip a add" | sed 's/ip\ a\ add\ //' | sed 's/\/24.*$//' | tr -d " ")
+HSS=$(sudo cat /usr/bin/autohotspotN | grep "ip a add" | awk '{ print $4 }' | sed 's/\/24//')
+CIP=$(ifconfig | grep -A 1 wlan0 | grep inet | awk '{ print $2 }')
+CHECK=$(ls /etc/wpa_supplicant/ | grep FORCE)
+AUTORUN=$(crontab -l | grep autohotspotN | awk '{print $1}' | sed 's/*\///')
+if [ -z "$CHECK" ]; then
+FORCE="Hotspot Not in force mode"
+else
+FORCE="Hotspot IS in force mode"
+fi
+
+FILE=$DIR/hotspot.info
+
+echo "Hotspot is $HS" > $FILE
+echo "Hotspot Name is $CURRENTNAME" >> $FILE
+echo "Hotspot IP = $HSIP" >> $FILE
+echo "Wireless IP is $CIP" >> $FILE
+echo "$FORCE" >> $FILE
+echo "crontab set to auto run ever $AUTORUN minutes" >> $FILE
+
+cd $HOME/Desktop
+zip -r $CALL-diagnostic.zip $DIR > /dev/null 2>&1
+
+rm -rf $DIR > /dev/null 2>&1
+
+echo "DONE"
+echo "Email the diagnostic.zip file located on your desktop"
+echo "to km4ack@arrl.net"
+echo "73, de KM4ACK"
+
+
+
+
+
+
+
+
+
+
