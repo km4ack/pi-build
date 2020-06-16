@@ -255,8 +255,8 @@ fi
 
 FILE=$DIR/hotspot.info
 
-echo "Hotspot is $HS" > $FILE
-echo "Hotspot is $HSS" >> $FILE
+echo "Hotspot status $HS" > $FILE
+echo "Hotspot state $HSS" >> $FILE
 echo "Hotspot Name is $CURRENTNAME" >> $FILE
 echo "Hotspot IP = $HSIP" >> $FILE
 echo "Wireless IP = $CIP" >> $FILE
