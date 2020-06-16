@@ -4,6 +4,7 @@
 #to help diagnose issues
 #20200616 km4ack
 
+clear;echo;echo
 read -p "What is your call sign? " CALL
 
 DIR=$HOME/Desktop/$CALL-diagnostic-report
@@ -56,14 +57,27 @@ echo "Wireless IP is $CIP" >> $FILE
 echo "$FORCE" >> $FILE
 echo "crontab set to auto run ever $AUTORUN minutes" >> $FILE
 
+#get gps info
+GPSD=$(systemctl is-active gpsd)
+CHRONY=$(systemctl is-active chronyd)
+echo "/etc/default/gpsd file contents" > $DIR/gps.info
+echo;echo >> $DIR/gps.info
+cat /etc/default/gpsd >> $DIR/gps.info
+echo;echo;echo >> $DIR/gps.info
+echo "GPSD is $GPSD" >> $DIR/gps.info
+echo "Chrony is $CHRONY" >> $DIR/gps.info
+echo;echo;echo "#####TIME SOURCES#####" >> $DIR/gps.info
+chronyc sources -v >> $DIR/gps.info
+
 cd $HOME/Desktop
 zip -r $CALL-diagnostic.zip $DIR > /dev/null 2>&1
 
 rm -rf $DIR > /dev/null 2>&1
-
+clear;echo;echo
 echo "DONE"
 echo "Email the diagnostic.zip file located on your desktop"
-echo "to km4ack@arrl.net"
+echo "to km4ack@arrl.net along with a description of your issue."
+echo
 echo "73, de KM4ACK"
 
 
