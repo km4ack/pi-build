@@ -225,10 +225,17 @@ sed -i 's/"secure_login_password":.*$/PASSWORD-REMOVED-FOR-YOUR-SECURITY/' $DIR/
 cat $HOME/patmenu2/config > $DIR/patmenu.conf
 
 #get sound info
+echo "" >> $DIR/sound.info
 echo "ARECORD INFO" > $DIR/sound.info
 arecord -l >> $DIR/sound.info
-echo;echo;echo "APLAY INFO" >> $DIR/sound.info
+echo "" >> $DIR/sound.info
+echo "" >> $DIR/sound.info
+echo "APLAY INFO" >> $DIR/sound.info
 aplay -l >> $DIR/sound.info
+echo "" >> $DIR/sound.info
+echo "" >> $DIR/sound.info
+echo "Using sound card" >> $DIR/sound.info
+sudo lsof /dev/snd/* >> $DIR/sound.info
 
 #Get hotspot info
 HS=$(systemctl is-active autohotspot)
