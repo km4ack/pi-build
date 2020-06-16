@@ -246,9 +246,17 @@ else
 FORCE="Hotspot IS in force mode"
 fi
 
+if [ $HSS = $CIP ]
+then
+HSS=ACTIVE
+else
+HSS=INACTIVE
+fi
+
 FILE=$DIR/hotspot.info
 
 echo "Hotspot is $HS" > $FILE
+echo "Hotspot is $HSS" >> $FILE
 echo "Hotspot Name is $CURRENTNAME" >> $FILE
 echo "Hotspot IP = $HSIP" >> $FILE
 echo "Wireless IP = $CIP" >> $FILE
