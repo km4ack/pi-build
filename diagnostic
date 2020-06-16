@@ -235,6 +235,7 @@ HS=$(systemctl is-active autohotspot)
 CURRENTNAME=$(sudo cat /etc/hostapd/hostapd.conf | grep ssid= | head -1 | sed 's/ssid=//')
 CURRENTPASS=$(sudo cat /etc/hostapd/hostapd.conf | grep wpa_passphrase= | sed 's/wpa_passphrase=//')
 HSIP=$(sudo cat /usr/bin/autohotspotN | grep "ip a add" | sed 's/ip\ a\ add\ //' | sed 's/\/24.*$//' | tr -d " ")
+WIREIP$(ifconfig eth0 | grep inet | head -1 | sed 's/inet //' | sed 's/netmask.*$//')
 HSS=$(sudo cat /usr/bin/autohotspotN | grep "ip a add" | awk '{ print $4 }' | sed 's/\/24//')
 CIP=$(ifconfig | grep -A 1 wlan0 | grep inet | awk '{ print $2 }')
 CHECK=$(ls /etc/wpa_supplicant/ | grep FORCE)
@@ -250,9 +251,13 @@ FILE=$DIR/hotspot.info
 echo "Hotspot is $HS" > $FILE
 echo "Hotspot Name is $CURRENTNAME" >> $FILE
 echo "Hotspot IP = $HSIP" >> $FILE
-echo "Wireless IP is $CIP" >> $FILE
+echo "Wireless IP = $CIP" >> $FILE
+echo "CAT5 IP = $WIREIP" >> $FILE
 echo "$FORCE" >> $FILE
 echo "crontab set to auto run ever $AUTORUN minutes" >> $FILE
+
+#get cron contents
+crontab -l > $DIR/cron.txt
 
 #get gps info
 GPSD=$(systemctl is-active gpsd)
