@@ -65,7 +65,7 @@ if [ $WSJ = 'y' ] || [ $WSJ = 'Y' ];then
 echo "removing old WSJTX"
 sudo apt-get remove -y wsjtx
 echo "installing new WSJTX"
-WSPKG=$(curl -s https://physics.princeton.edu/pulsar/k1jt/wsjtx.html | grep armhf.deb | sed 's/^.*wsjtx/wsjtx/' | sed 's/deb.*$/deb/')
+WSPKG=$(curl -s https://physics.princeton.edu/pulsar/k1jt/wsjtx.html | grep armhf.deb | sed 's/^.*wsjtx/wsjtx/' | sed 's/deb.*$/deb/' | sed '/-rc/d')
 cd $HOME/Downloads
 wget https://physics.princeton.edu/pulsar/k1jt/$WSPKG
 sudo dpkg -i $WSPKG
