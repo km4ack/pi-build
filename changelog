@@ -1,6 +1,7 @@
-version=3.0.0rc6
+version=3.0.0
 
-TODO:	
+3.0.0		Clean up leftover notes in code
+	
 3.0.0rc6	add RTC to update script
 		add Showlog log file viewer
 		add autoremove to main script
@@ -15,7 +16,7 @@ TODO:
 		add timeout to all wget command 2 tries for 60 seconds each
 		change reboot to optional at end of update script
 		touch mylogo.txt during conky install to keep conky from failing to start		
-		add snd-usb-audio index=2 to /etc/modprobe.d/alsa.conf to assign USB sound to card 2 ***FIX FOR BUSTER CARD NUMBERING***
+		add snd-usb-audio index=2 to /etc/modprobe.d/alsa.conf to assign USB sound to card 2 (Thanks Daftcho Tabakov) ***FIX FOR BUSTER CARD NUMBERING***
 		change sound card to 2,0 in direwolf.conf during direwolf install (base.functions)
 		change sound card to 2,0 in pat menu config file during install (additional.functions)
 		
