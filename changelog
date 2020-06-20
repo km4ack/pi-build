@@ -1,6 +1,7 @@
 version=3.0.0
 
 3.0.0		Clean up leftover notes in code
+		Add README.md
 	
 3.0.0rc6	add RTC to update script
 		add Showlog log file viewer
