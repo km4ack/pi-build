@@ -124,7 +124,7 @@ sudo ldconfig
 ##################################
 FLMSG(){
 #Determine latest FLMSG
-MSGTAR=$(curl -s http://www.w1hkj.com/files/flmsg/ | grep .tar.gz | sed 's/<li><a\ href="//' | sed 's/">\ flmsg.*$//' | head -1)
+MSGTAR=$(curl -s http://www.w1hkj.com/files/flmsg/ | grep .tar.gz | sed 's/<li><a\ href="//' | sed 's/">\ flmsg.*$//' | tail -1)
 MSGPKG=$(echo $MSGTAR | sed 's/.tar.gz//')
 
 #download FLMSG
