@@ -41,8 +41,8 @@ ${color DarkSlateGray}${hr 2}
 ${voffset -35}
 ${font Arial:bold:size=25}${color White}${time %H:%M:%S}\
 ${alignr}${tztime Zulu %H:%M:%S}
-${font Arial:bold:size=25}${color White}${time %d%b%y}\
-${alignr}${tztime Zulu %d%b%y}
+${font Arial:bold:size=25}${color White}${time %m-%d-%y}\
+${alignr}${tztime Zulu %m-%d-%y}
 
 
 ${voffset -245}
@@ -53,7 +53,8 @@ ${font}
 ${font Arial:bold:size=14}${color Yellow}SYSTEM ${color DarkSlateGray} ${hr 2}
 ${font Arial:bold:size=14}${color White}Frequency $alignr${freq_g cpu0}Ghz
 ${font Arial:bold:size=14}${color White}Uptime $alignr${uptime}
-${font Arial:bold:size=14}${color White}Temp: $alignr ${exec /opt/vc/bin/vcgencmd measure_temp | cut -c6-9} C
+#TEMP
+${font Arial:bold:size=14}${color White}Temp: $alignr ${exec /opt/vc/bin/vcgencmd measure_temp | awk -F "[=\']" '{print($2 * 1.8)+32}'} F
 ${voffset -15}
 ${font Arial:bold:size=10}${color White}CPU${alignr}${cpu}%
 ${cpubar cpu}

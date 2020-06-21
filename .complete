@@ -1,0 +1,34 @@
+#!/bin/bash
+
+MYPATH=$HOME/pi-build
+LOGO=$MYPATH/logo.png
+
+cat <<EOF > $MYPATH/boot.txt
+Build-a-Pi Build Complete.
+
+If you found this script helpful 
+consider a donation to encourage
+future development.
+
+https://paypal.me/km4ack
+
+73, de KM4ACK
+
+EOF
+
+OUT=$(yad --width=550 --height=300 --text-align=center --center --title="Build-a-Pi"  --show-uri \
+--image $LOGO --window-icon=$LOGO --image-on-top --separator="|" --item-separator="|" \
+--text-info<$MYPATH/boot.txt \
+--button="CLOSE":2 > /dev/null 2>&1)
+BUT=$?
+if [ $BUT = 252 ]; then
+rm $MYPATH/boot.txt
+crontab -l > $HOME/Documents/cron.tmp
+sed -i 's/@reboot\ sleep\ 10.*//' $HOME/Documents/cron.tmp
+crontab $HOME/Documents/cron.tmp
+exit
+fi
+rm $MYPATH/boot.txt
+crontab -l > $HOME/Documents/cron.tmp
+sed -i 's/@reboot\ sleep\ 10.*//' $HOME/Documents/cron.tmp
+crontab $HOME/Documents/cron.tmp

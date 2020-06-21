@@ -1,7 +1,72 @@
+version=3.0.0
+
+3.0.0		Clean up leftover notes in code
+		Add README.md
+	
+3.0.0rc6	add RTC to update script
+		add Showlog log file viewer
+		add autoremove to main script
+		add autoremove to update script
+		fix FLWRAP not installing (Thanks KD7UM for finding the bug)
+		add menu icon for dipole calculator
+		add icon for callsign lookup
+
+3.0.0rc5	
+		allow special characters in HotSpot password (Thanks Andew Buskov for suggestion)
+		fix FLMSG download
+		add timeout to all wget command 2 tries for 60 seconds each
+		change reboot to optional at end of update script
+		touch mylogo.txt during conky install to keep conky from failing to start		
+		add snd-usb-audio index=2 to /etc/modprobe.d/alsa.conf to assign USB sound to card 2 (Thanks Daftcho Tabakov) ***FIX FOR BUSTER CARD NUMBERING***
+		change sound card to 2,0 in direwolf.conf during direwolf install (base.functions)
+		change sound card to 2,0 in pat menu config file during install (additional.functions)
+		
+3.0.0rc4	
+		fix variables in utilities array. This mistake was causing install issues.		
+		Create finish trap in BAP
+		Update finish trap in update script
+		change reboot to be optional
+
+3.0.0rc3	Fix typo date --> data in ax25 section
+		Set user call in pat menu if installed
+		Fix Winlink password to accommadate special character "$" (Thanks KJ7DMV for finding the bug)
+		Add FLWRAP application
+		Add HamClock application
+		correct pat info so it only shows when needed in BAP script
+		fix wsjtx certificate error
+		add verify user is pi to main script
+		fix for SSIDs that contain spaces. (Thanks to KK4IKK for the fix)
+		fix hotspot tools not updating
+		fix patmenu not updating
+
+3.0.0rc2	move pat login to new screen
+		add check all and continue button
+		Rename buttons for clarification
+		Add refresh wifi to hotspot info screen
+		change wording for HS info and resize screen
+
+3.0.0rc1	Major rewrite of script with new GUI interface
+		add ability to run script multiple times to install additional apps and update existing apps
+		eliminate update-bap
+		add official version number
+		add pi-aprs
+		add dipole calculator
+		add call lookup
+		add gparted
+---------------------------------------------------------------------------------------------------------------------------------------------
 20200319	Add gridtracker to update script
 20200316	Add bap-update script (beta)
-
-20200117 	Initial Release on Youtube
+20200229	add beta version of hotspot tools ------------------need to change to master checkout at some point in the future
+		update EES install to include new way of modding index.html with ghost writer-----------------EES is checking out DEV version
+		add ghost writer install to EES section
+20200228	Version 2 release on YouTube
+20200220	include add-wifi script
+		update M0IAX tools to latest version
+		remove old MOIAX tools
+		change date format in conky
+		add real time clock install to app choices
+		update pat winlink to latest version 0.9.0
+20200214	add conky resize script
 20200122	Add option to build FLDIGI suite from source
 		split app selection to two boxes
 		backup cron just in case script is run twice
@@ -10,14 +75,4 @@
 		add GPREDICT from repository
 		add CQRLOG from repository
 		add QSSTV from source
-20200214	add conky resize script
-20200220	include add-wifi script
-		update M0IAX tools to latest version
-		remove old MOIAX tools
-		change date format in conky
-		add real time clock install to app choices
-		update pat winlink to latest version 0.9.0
-20200228	Version 2 release on YouTube
-20200229	add beta version of hotspot tools ------------------need to change to master checkout at some point in the future
-		update EES install to include new way of modding index.html with ghost writer-----------------EES is checking out DEV version
-		add ghost writer install to EES section
+20200117 	Initial Release on Youtube

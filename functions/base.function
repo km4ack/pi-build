@@ -1,0 +1,168 @@
+#this installs the basic software for build-a-pi
+#km4ack 20200513
+
+MYPATH=$HOME/pi-build
+TEMPCRON=$MYPATH/cron.tmp
+DIR=$MYPATH/temp
+mkdir -p $DIR
+
+source $MYPATH/config
+
+################################
+#	HOTSPOT
+################################
+HOTSPOT(){
+HS=$(ls /usr/bin/ | grep autohotspotN)
+if [ -z "$HS" ]; then
+#pass variables with script because run as root
+sudo bash $MYPATH/functions/autohotspot "$SHACKSSID" "$SHACKPASS" "$HSPASS"
+echo "*/5 * * * * sudo /usr/bin/autohotspotN >/dev/null 2>&1" >> $TEMPCRON
+else
+echo ################################
+echo ################################
+echo "        FATAL ERROR"
+echo "HOTSPOT ALREADY INSTALLED ONCE"
+echo "   CANNOT INSTALL AGAIN"
+echo " WILL CONTINUE IN 10 SECONDS"
+echo ################################
+echo ################################
+sleep 10
+fi
+}
+
+################################
+#	HOTSPOT TOOLS
+################################
+HSTOOLS(){
+if [ -d $HOME/hotspot-tools2 ]; then
+rm -rf $HOME/hotspot-tools2
+fi
+git clone https://github.com/km4ack/hotspot-tools2.git $HOME/hotspot-tools2
+sudo cp $HOME/hotspot-tools2/hstools.desktop /usr/share/applications/hotspot-tools.desktop
+}
+
+################################
+#	GPS
+################################
+GPS(){
+cd $DIR
+wget --tries 2 --connect-timeout=60 https://raw.githubusercontent.com/km4ack/pi-scripts/master/gpsinstall
+chmod +x $DIR/gpsinstall
+sudo $DIR/gpsinstall
+rm $DIR/gpsinstall
+}
+
+################################
+#	ARDOP
+################################
+ARDOP(){
+mkdir -p $HOME/ardop
+cd $HOME/ardop
+wget --tries 2 --connect-timeout=60 https://www.cantab.net/users/john.wiseman/Downloads/Beta/piardopc
+sudo chmod +x $HOME/ardop/piardopc
+}
+
+################################
+#	ARDOP GUI
+################################
+ARDOPGUI(){
+mkdir -p $HOME/ardop
+cd $HOME/ardop
+wget --tries 2 --connect-timeout=60 https://www.cantab.net/users/john.wiseman/Downloads/Beta/piARDOP_GUI
+sudo chmod +x $HOME/ardop/piARDOP_GUI
+cat > ardopgui.desktop <<EOF
+[Desktop Entry]
+Name=ARDOP GUI
+GenericName=ARDOP GUI
+Comment=Graphical User Interface for ARDOP modem
+Exec=$HOME/ardop/piARDOP_GUI
+Terminal=false
+Type=Application
+Categories=Network;HamRadio;
+EOF
+
+sudo mv ardopgui.desktop /usr/share/applications/
+FILE=$HOME/.config/G8BPQ/ARDOP_GUI.conf
+mkdir -p $HOME/.config/G8BPQ
+touch $FILE
+echo "[General]" >> $FILE
+echo "Host=local" >> $FILE
+echo "Port=8515" >> $FILE
+}
+
+################################
+#	HAMLIB
+################################
+HAMLIB(){
+cd $DIR
+wget --tries 2 --connect-timeout=60 https://sourceforge.net/projects/hamlib/files/hamlib/3.3/hamlib-3.3.tar.gz 
+tar -xzf $DIR/hamlib-3.3.tar.gz
+rm $DIR/hamlib-3.3.tar.gz
+cd $DIR/hamlib-3.3
+./configure
+make 
+sudo make install
+sudo ldconfig
+}
+
+################################
+#	DIREWOLF
+################################
+DIREWOLF(){
+cd $HOME
+git clone https://www.github.com/wb2osz/direwolf
+cd $HOME/direwolf
+sudo apt-get install -y libasound2-dev
+make
+sudo make install
+make install-conf
+sed -i "s/N0CALL/$CALL/" "$HOME/direwolf.conf"
+sed -i 's/# ADEVICE  plughw:1,0/ADEVICE  plughw:2,0/' $HOME/direwolf.conf
+rm -rf $HOME/direwolf
+}
+
+################################
+#	AX25
+################################
+AX25(){
+sudo apt-get install -y ax25-tools
+echo "wl2k "$CALL" 1200 255 7 Winlink" | sudo tee -a /etc/ax25/axports
+sudo apt-get install -y ax25-apps
+}
+
+################################
+#	PULSE AUDIO
+################################
+PULSE(){
+sudo apt-get install -y pulseaudio
+sudo apt-get install -y pavucontrol
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

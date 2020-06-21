@@ -5,8 +5,8 @@ Rather than downloading a pre-built image where you have no choices in the build
 Pi gives you complete control over the build. It allows you to choose the applications you 
 want to install and skip the ones you don’t need. This keeps your pi as lean and mean as
 possible. A list of applications available using Build-a-Pi can be found below on this 
-page. Use it as your base and add additional applications as needed down the road. Be sure 
-to check out the videos. They will help you get things configured after the build.
+page. Use it as your base and add additional applications as needed down the road. Videos 
+coming soon
 
 # Needed info for pi build
 
@@ -28,14 +28,10 @@ Flash a fresh copy of  Buster to a SD card and run the following command
 # Issue Reporting - Feature Requests
 Please report issues & feature requests here https://github.com/km4ack/pi-build/issues
 
-# Video
-[![Build-a-Pi](http://img.youtube.com/vi/gBokG9FI-NM/0.jpg)](https://youtu.be/gBokG9FI-NM "Build-a-Pi")
-[![Build-a-Pi V2](https://img.youtube.com/vi/-jAZh2dYTuA/0.jpg)](https://youtu.be/-jAZh2dYTuA "Build-a-Pi")
-
 # Available Apps to Install
 
 #### RTC | Real Time Clock
-Software for DS3231 real time clock
+Software for DS3231 real time clock (Available through update script after initial install)
 
 #### HOTSPOT:
 Hotspot is used to generate a wifi hotspot that you can connect to with other wireless devices. This is useful when in the field so you can connect to and contol the pi from a wireless device.
@@ -55,17 +51,20 @@ Forms manager for FLDIGI http://www.w1hkj.com/
 #### FLAMP:
 Amateur Multicast Protocol - file transfer program http://www.w1hkj.com/
 
+#### FLWRAP
+file encapsulation / compression
+
 #### PAT:
 Winlink client for Raspberry Pi https://getpat.io/
+
+#### PATMENU:
+Menu for configuring Pat. Recommended if installing Pat. https://github.com/km4ack/patmenu
 
 #### ARDOPC:
 HF modem for Pat. Recommended if installing Pat https://www.cantab.net/users/john.wiseman/Documents/ARDOPC.html
 
 #### ARDOPGUI:
 GUI interface for ARDOPC. Recommended if installing Pat 
-
-#### PATMENU:
-Menu for configuring Pat. Recommended if installing Pat. https://github.com/km4ack/patmenu
 
 #### DIREWOLF:
 Software TNC. In this setup, direwolf is used for 2M packet connection with Pat and can be used for APRS connection with Xastir. Recommneded if installing Pat or Xastir https://github.com/wb2osz/direwolf/tree/master/doc
@@ -124,4 +123,14 @@ Admin credentials are admin/admin by default but can be changed in the file foun
 /var/www/html/config.php \
 For more configuration options - https://youtu.be/KaEeCq50Mno
 
+#### Call Sign Lookup
+Look amateur radio call signs
 
+#### Dipole Calculator
+Calculate lengths needed for dipole legs
+
+#### Log Viewer
+Graphic viewer to view/manage log files
+
+#### Gparted
+Disk utility
