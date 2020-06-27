@@ -423,6 +423,8 @@ sudo apt -y full-upgrade
 #set wallpaper
 pcmanfm --set-wallpaper $HOME/pi-build/bap-wallpaper.jpg
 
+mkdir -p $DIR 2> /dev/null
+
 #add virtual sound card link for pulse audio
 cd $DIR
 cat > tempsound <<EOF
