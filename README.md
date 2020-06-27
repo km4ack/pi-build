@@ -21,7 +21,11 @@ Winlink Password & Grid Square
 # Install
 This script is intended to run on a brand new installation of Buster. It should not be run on a pi that you have already started installing applications on. Install additional apps that you require after running this script.\
 \
-Flash a fresh copy of  Buster to a SD card and run the following command
+Get Debian Buster from https://cdimage.debian.org/debian-cd/current/arm64/iso-cd/ file debian-10.4.0-arm64-xfce-CD-1.iso
+
+Use a USB flash application such as Balena Etcher, get it at https://www.balena.io/etcher/
+
+Power up your Raspberry Pi, login, and in your home directory, run the following command
 
      git clone https://github.com/km4ack/pi-build.git $HOME/pi-build && bash $HOME/pi-build/build-a-pi
      
