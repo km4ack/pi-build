@@ -209,7 +209,10 @@ CHECK
 
 
 #get system info
-cat /etc/os-release > $DIR/systeminfo.txt
+WHO=$(whoami)
+echo "User Name is $WHO" > $DIR/systeminfo.txt
+echo "" >> $DIR/systeminfo.txt
+cat /etc/os-release >> $DIR/systeminfo.txt
 echo;echo;echo "#####uname######" >> $DIR/systeminfo.txt
 uname -a >> $DIR/systeminfo.txt
 
@@ -223,6 +226,10 @@ sed -i 's/"secure_login_password":.*$/PASSWORD-REMOVED-FOR-YOUR-SECURITY/' $DIR/
 
 #get pat menu config file
 cat $HOME/patmenu2/config > $DIR/patmenu.conf
+
+#Get wpa_supplicant
+sudo cat /etc/wpa_supplicant/wpa_supplicant.conf > $DIR/wpa.txt
+sed -i 's/psk=.*$/PASSWORD-REMOVED/' $DIR/wpa.txt
 
 #get sound info
 echo "" >> $DIR/sound.info
