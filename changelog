@@ -1,6 +1,7 @@
 version=3.0.1
 
 3.0.1		Fix FLMSG download
+		Fix FLRIG to download latest version
 		Add WPA data to diagnostic report
 		Change Conky Date format https://github.com/km4ack/pi-build/issues/79
 
