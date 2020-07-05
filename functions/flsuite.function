@@ -58,7 +58,7 @@ FLX=$(ldconfig -p | grep flxmlrpc)
 ##################################
 FLRIG(){
 #Determine latest FLRIG
-RIGTAR=$(curl -s http://www.w1hkj.com/files/flrig/ | grep .tar.gz | sed 's/<li><a\ href="//' | sed 's/">\ flrig.*$//')
+RIGTAR=$(curl -s http://www.w1hkj.com/files/flrig/ | grep .tar.gz | sed 's/<li><a\ href="//' | sed 's/">\ flrig.*$//' | tail -1)
 RIGPKG=$(echo $RIGTAR | sed 's/.tar.gz//')
 
 #Download latest FLRIG
