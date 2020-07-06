@@ -43,7 +43,57 @@ fi
 
 trap FINISH EXIT
 
+#Check for BAP updates
+#Check for build a pi updates
+echo "Checking for Build a Pi updates"
+CURRENT=$(cat $MYPATH/changelog | head -1 | sed s'/version=//')
 
+LATEST=$(curl -s https://raw.githubusercontent.com/km4ack/pi-build/master/changelog | head -1 | sed 's/version=//')
+
+if (( $(echo "$LATEST $CURRENT" | awk '{print ($1 > $2)}') ))
+then
+cat <<EOF > $MYPATH/updatebap.txt
+Build a Pi update available. Current version is $CURRENT and
+the lateest version is $LATEST. Would you like to update?
+
+Change log - https://github.com/km4ack/pi-build/blob/master/changelog
+EOF
+BAP=$(yad --width=650 --height=250 --text-align=center --center --title="Build-a-Pi"  --show-uri \
+--image $LOGO --window-icon=$LOGO --image-on-top --separator="|" --item-separator="|" \
+--text-info<$MYPATH/updatebap.txt \
+--button="Yes":2 \
+--button="No":3)
+BUT=$?
+echo $BUT
+##########
+	if [ $BUT = 252 ]; then 
+	exit
+	elif [ $BUT = 2 ]; then
+	echo "Updating Build a Pi to $LATEST"
+	mv $MYPATH/config $HOME/Documents/config.bap
+	rm -rf $HOME/pi-build
+	cd ~
+	git clone https://github.com/km4ack/pi-build.git
+	mv $HOME/Documents/config.bap $MYPATH/config
+
+cat <<EOF > $MYPATH/updatebap.txt
+Build a Pi has been updated to $LATEST. Please restart Build a Pi.
+EOF
+	BAP=$(yad --width=650 --height=250 --text-align=center --center --title="Build-a-Pi"  --show-uri \
+	--image $LOGO --window-icon=$LOGO --image-on-top --separator="|" --item-separator="|" \
+	--text-info<$MYPATH/updatebap.txt \
+	--button="OK":2)
+	BUT=$?
+	exit 0
+	fi
+##########
+fi
+rm $MYPATH/updatebap.txt >> /dev/null 2>&1
+rm $MYPATH/complete.txt >> /dev/null 2>&1
+clear
+
+
+#Scan system for updated applications
 yad  --width=550 --height=250 --text-align=center --center --title="Update" \
 --image $LOGO --window-icon=$LOGO --image-on-top --separator="|" --item-separator="|" \
 --text="\r\r\r\rFirst we need to scan the system to see what is installed, \
