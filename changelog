@@ -1,4 +1,6 @@
-version=3.0.1
+version=3.0.2
+
+3.0.2		Add BAP update check to update script
 
 3.0.1		Fix FLMSG download
 		Fix FLRIG to download latest version
