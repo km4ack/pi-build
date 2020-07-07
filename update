@@ -637,7 +637,9 @@ if [ $BUT = 1 ] || [ $BUT = 252 ];then
 exit
 fi
 
-#check if hotspot is chosen for install & get info if needed
+#############################################################
+#check if hotspot is chosen for install & get info if needed#
+#############################################################
 HS=$(cat $BASE | grep HOTSPOT)
 if [ -n "$HS" ]; then
 HSINFO(){
@@ -698,6 +700,39 @@ echo "SHACKSSID=$SHACKSSID" >> $CONFIG
 echo "SHACKPASS=$SHACKPASS" >> $CONFIG
 echo "HSPASS=$HSPASS" >> $CONFIG
 
+###################################
+#CHECK IF GPS IS CHOSEN TO INSTALL#
+###################################
+GPSINSTALL=$(cat $BASE | grep GPS)
+if [ -n "$GPSINSTALL ]; then
+USB=$(ls /dev/serial/by-id)
+USB=$(echo $USB | sed "s/\s/|/g")
+
+yad --center --height="300" --width="300" --form --separator="|" --item-separator="|" --title="GPS" \
+--image $LOGO --window-icon=$LOGO --image-on-top \
+--text="\r\r\r\r\r<b><big>Connect your GPS to the pi</big></b>" \
+--button="Exit":1 \
+--button="Continue":2
+
+BUT=$?
+if [ $BUT = 1 ] || [ $BUT = 252 ]; then
+exit
+fi
+
+GPS=$(yad --center --height="600" --width="300" --form --separator="|" --item-separator="|" --title="GPS" \
+--image $LOGO --window-icon=$LOGO --image-on-top \
+--text="Choose Your GPS" \
+--field="GPS":CB "$USB")
+BUT=$?
+if [ $BUT = 252 ] || [ $BUT = 1 ]; then
+echo exiting
+exit
+fi
+
+GPS=$(echo $GPS | awk -F "|" '{print $1}')
+GPS=/dev/serial/by-id/$GPS
+echo "GPS=$GPS" >> $CONFIG
+fi
 
 #----------------------------------------------------#
 #		FLSUITE APP MENU
