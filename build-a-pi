@@ -114,6 +114,13 @@ exit
 fi
 rm $MYPATH/intro.txt
 #####################################
+#	Create autostart dir
+#used to autostart conky at boot
+#####################################
+mkdir -p $HOME/.config/autostart
+
+
+#####################################
 #	Get User Call
 #####################################
 CALL(){
