@@ -1,4 +1,6 @@
-version=3.0.2
+version=3.0.3
+
+3.0.3		Add GPS by-id to allow for different GPS units to be used
 
 3.0.2		Add BAP update check to update script
 
