@@ -50,6 +50,10 @@ wget --tries 2 --connect-timeout=60 https://raw.githubusercontent.com/km4ack/pi-
 chmod +x $DIR/gpsinstall
 sudo $DIR/gpsinstall
 rm $DIR/gpsinstall
+#Set GPS by serial ID
+#GPS Variable set by main script or update script
+#and placed in config file
+sudo sed -i "s|DEVICES.*$|DEVICES=\"$GPS\"|g" /etc/default/gpsd
 }
 
 ################################
