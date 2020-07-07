@@ -43,6 +43,12 @@ fi
 
 trap FINISH EXIT
 
+#####################################
+#	Create autostart dir
+#used to autostart conky at boot
+#####################################
+mkdir -p $HOME/.config/autostart
+
 #Check for BAP updates
 #Check for build a pi updates
 echo "Checking for Build a Pi updates"
