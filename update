@@ -704,7 +704,7 @@ echo "HSPASS=$HSPASS" >> $CONFIG
 #CHECK IF GPS IS CHOSEN TO INSTALL#
 ###################################
 GPSINSTALL=$(cat $BASE | grep GPS)
-if [ -n "$GPSINSTALL ]; then
+if [ -n "$GPSINSTALL" ]; then
 USB=$(ls /dev/serial/by-id)
 USB=$(echo $USB | sed "s/\s/|/g")
 
