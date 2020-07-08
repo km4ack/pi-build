@@ -438,8 +438,13 @@ sudo mv $HOME/Downloads/hamclock.desktop /usr/share/applications/
 }
 
 
+##################################
+#	Gpredict
+##################################
+GPREDICT(){
+sudo apt install -y gpredict
 
-
+}
 
 
 
