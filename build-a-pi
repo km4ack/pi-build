@@ -533,7 +533,7 @@ done < $UTILITY
 rm $BASE $ADDITIONAL $UTILITY $FLSUITE > /dev/null 2>&1
 rm -rf $DIR > /dev/null 2>&1
 rm -rf $HOME/Downloads/* > /dev/null 2>&1
-sudo apt -y autoremove
+sudo apt -y autoremove > /dev/null 2>&1
 
 #restore crontab
 crontab $TEMPCRON
