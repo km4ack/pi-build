@@ -417,7 +417,7 @@ crontab -l > $TEMPCRON
 echo "@reboot sleep 10 && export DISPLAY=:0 && $MYPATH/.complete" >> $TEMPCRON
 $MYPATH/.funfacts &
 #upgrade the system
-sudo apt-get upgrade
+sudo apt-get -y upgrade
 sudo apt -y full-upgrade
 
 #set wallpaper
