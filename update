@@ -874,8 +874,8 @@ fi
 crontab -l > $TEMPCRON
 echo "@reboot sleep 10 && export DISPLAY=:0 && $MYPATH/.complete" >> $TEMPCRON
 #update/upgrade the system
-sudo apt-get update
-sudo apt-get upgrade
+sudo apt-get -y update
+sudo apt-get -y upgrade
 sudo apt -y full-upgrade
 
 #####################################
