@@ -73,10 +73,25 @@ WSJTX(){
 cd $DIR
 WSPKG=$(curl -s https://physics.princeton.edu/pulsar/k1jt/wsjtx.html | grep armhf.deb | sed 's/^.*wsjtx/wsjtx/' | sed 's/deb.*$/deb/' | head -1)
 wget --tries 2 --connect-timeout=60 --no-check-certificate https://physics.princeton.edu/pulsar/k1jt/$WSPKG
+WSJTXSUCCESS=$?
 sudo dpkg -i $WSPKG
 sudo apt-get --fix-broken -y install
 sudo dpkg -i $WSPKG
+	#try sourcegorge if princeton.edu fails
+	WSJTX2(){
+	if [ "$WSJTXSUCCESS" ! = 0 ]; then
+	cd $DIR
+	wget --tries 2 --connect-timeout=60 https://sourceforge.net/projects/wsjt/files/wsjtx-2.2.2/wsjtx_2.2.2_armhf.deb
+	sudo dpkg -i wsjtx_2.2.2_armhf.deb
+	sudo apt-get --fix-broken -y install
+	sudo dpkg -i wsjtx_2.2.2_armhf.deb
+	fi
+	}
+	WSJTX2
+
 }
+
+
 
 ##################################
 #	CONKY
