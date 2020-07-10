@@ -6,6 +6,7 @@
 
 MYPATH=$HOME/pi-build/conky
 TEMPFILE=/run/user/1000/conky.tmp
+LOGO=$MYPATH/conky-logo.png
 
 CALL=$(cat ~/.conkyrc | grep "{color Yellow}" | sed s'/.*{alignc}//' | head -1)
 
