@@ -25,6 +25,10 @@ Flash a fresh copy of  Buster to a SD card and run the following command
 
      git clone https://github.com/km4ack/pi-build.git $HOME/pi-build && bash $HOME/pi-build/build-a-pi
      
+# Video
+[![IMAGE ALT TEXT](https://img.youtube.com/vi/l4M9VVqGxoc/0.jpg)](https://youtu.be/l4M9VVqGxoc "Build a Pi")
+
+
 # Issue Reporting - Feature Requests
 Please report issues & feature requests here https://github.com/km4ack/pi-build/issues
 
@@ -39,6 +43,9 @@ Software for DS3231 real time clock (Available through update script after initi
 
 #### HOTSPOT:
 Hotspot is used to generate a wifi hotspot that you can connect to with other wireless devices. This is useful when in the field so you can connect to and contol the pi from a wireless device.
+
+#### Hotspot Tools:
+Hotspot tools is a collection of tools designed to make managing the hotspot easier through a GUI interface. https://youtu.be/O_eihSN_ES8
 
 #### GPS:
 This will install the needed utilities to get a GPS device configured as a time source on the pi. Helpful when you are not connected to the internet since the pi doesn't have a real time clock and therefore will NOT keep accurate time when powered off. Confirmed to work with this GPS https://amzn.to/2R9Muup Other GPS units may work but have not been tested.
