@@ -28,6 +28,10 @@ Flash a fresh copy of  Buster to a SD card and run the following command
 # Issue Reporting - Feature Requests
 Please report issues & feature requests here https://github.com/km4ack/pi-build/issues
 
+# BOINC FREE
+
+Build a Pi has never and will not ever try to force any user to run BOINC (Berkeley Open Infrastructure for Network Computing). Build a pi has been always been about giving the end user a choice in the software they run. It is the reason Build a Pi isn't distrubuted as a pre built image. You have the final say in what you run on your pi. Install as little or as much as you choose. While it doesn't include as many apps as some of the pre-built images, it should give you a great base to work with and then you can add additional applications that may be important to you on top of Build a Pi. Want to run BOINC? Feel free because freedom is the basis of Build a Pi. The power is yours and yours alone.
+
 # Available Apps to Install
 
 #### RTC | Real Time Clock
