@@ -12,7 +12,7 @@
 #                                                                #
 ##################################################################
 
-MYPATH=$HOME/pi-build
+MYPATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 BASE=$MYPATH/base.txt
 FUNCTIONS=$MYPATH/functions
 ADDITIONAL=$MYPATH/additional.txt
@@ -21,7 +21,7 @@ FLSUITE=$MYPATH/flsuite.txt
 CONFIG=$MYPATH/config
 LOGO=$MYPATH/logo.png
 TEMPCRON=$MYPATH/cron.tmp
-VERSION=$(cat $MYPATH/changelog | grep version= | sed 's/version=//')
+VERSION=$(grep "version=" $MYPATH/changelog | sed 's/version=//')
 
 FINISH(){
 if [ -f "$BASE" ]; then
@@ -46,7 +46,7 @@ trap FINISH EXIT
 #Check for BAP updates
 #Check for build a pi updates
 echo "Checking for Build a Pi updates"
-CURRENT=$(cat $MYPATH/changelog | head -1 | sed s'/version=//')
+CURRENT=$(head -1 $MYPATH/changelog | sed s'/version=//')
 
 LATEST=$(curl -s https://raw.githubusercontent.com/km4ack/pi-build/master/changelog | head -1 | sed 's/version=//')
 
@@ -71,7 +71,7 @@ echo $BUT
 	elif [ $BUT = 2 ]; then
 	echo "Updating Build a Pi to $LATEST"
 	mv $MYPATH/config $HOME/Documents/config.bap
-	rm -rf $HOME/pi-build
+	rm -rf $MYPATH
 	cd ~
 	git clone https://github.com/km4ack/pi-build.git
 	mv $HOME/Documents/config.bap $MYPATH/config
@@ -109,8 +109,8 @@ CHECK(){
 #----------------------------------------------------#
 #		Hotspot
 #----------------------------------------------------#
-HOTSPOT=$(ls /usr/bin/ | grep autohotspotN)
-if [ -z "$HOTSPOT" ]; then
+HOTSPOT="/usr/bin/autohotspotN"
+if [ ! -f "$HOTSPOT" ]; then
 HOTSPOT="Not Installed"
 else
 HOTSPOT="Installed"
@@ -439,8 +439,8 @@ fi
 #----------------------------------------------------#
 #		XASTIR
 #----------------------------------------------------#
-XA=$(ls /usr/bin/ | grep xastir)
-if [ -z "$XA" ]; then
+XA="/usr/bin/xastir"
+if [ ! -f "$XA" ]; then
 XASTIR="Not Installed"
 else
 XASTIR="Installed"
@@ -449,8 +449,8 @@ fi
 #----------------------------------------------------#
 #		YAAC
 #----------------------------------------------------#
-YAAC=$(ls $HOME | grep YAAC)
-if [ -z "$YAAC" ]; then
+YAAC="$HOME/YAAC"
+if [ ! -d "$YAAC" ]; then
 YAAC="Not Installed"
 else
 YAAC="Installed"
@@ -477,8 +477,8 @@ fi
 #----------------------------------------------------#
 #		GRIDTRACKER
 #----------------------------------------------------#
-GT=$(ls $HOME | grep GridTracker)
-if [ -z "$GT" ]; then
+GT="$HOME/GridTracker"
+if [ ! -d "$GT" ]; then
 GRIDTRACK="Not Installed"
 else
 GRIDTRACK="Installed"
