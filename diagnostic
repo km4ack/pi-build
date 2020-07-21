@@ -18,21 +18,13 @@ CHECK(){
 #----------------------------------------------------#
 #		Hotspot
 #----------------------------------------------------#
-HOTSPOT=$(ls /usr/bin/ | grep autohotspotN)
-if [ -z "$HOTSPOT" ]; then
+HOTSPOT="/usr/bin/autohotspotN"
+if [ ! -f "$HOTSPOT" ]; then
 HOTSPOT="Not Installed"
 else
 HOTSPOT="Installed"
 fi
 
-#----------------------------------------------------#
-#		Hotspot tools
-#----------------------------------------------------#
-if [ ! -d $HOME/hotspot-tools2 ]; then
-HSTOOLS="Not Installed"
-else
-HSTOOLS="Installed"
-fi
 #----------------------------------------------------#
 #		AX25
 #----------------------------------------------------#
