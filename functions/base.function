@@ -1,7 +1,6 @@
 #this installs the basic software for build-a-pi
 #km4ack 20200513
 
-MYPATH=$HOME/pi-build
 TEMPCRON=$MYPATH/cron.tmp
 DIR=$MYPATH/temp
 mkdir -p $DIR
@@ -12,8 +11,8 @@ source $MYPATH/config
 #	HOTSPOT
 ################################
 HOTSPOT(){
-HS=$(ls /usr/bin/ | grep autohotspotN)
-if [ -z "$HS" ]; then
+HS="/usr/bin/autohotspotN"
+if [ ! -f "$HS" ]; then
 #pass variables with script because run as root
 sudo bash $MYPATH/functions/autohotspot "$SHACKSSID" "$SHACKPASS" "$HSPASS"
 echo "*/5 * * * * sudo /usr/bin/autohotspotN >/dev/null 2>&1" >> $TEMPCRON
