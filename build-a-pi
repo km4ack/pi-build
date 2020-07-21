@@ -496,8 +496,8 @@ sudo mv build-a-pi.desktop /usr/share/applications/
 #	Install Base Apps
 #####################################
 touch $RB
-while read i ; do
 source $FUNCTIONS/base.function
+while read i ; do
 $i
 done < $BASE
 
