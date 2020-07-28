@@ -49,7 +49,7 @@ trap FINISH EXIT
 if [ -d $HOME/pi-build/temp ]; then
 rm -rf $HOME/pi-build/temp
 fi
-exit
+
 
 #####################################
 #	Create autostart dir
