@@ -210,7 +210,10 @@ CHECK
 
 #get system info
 WHO=$(whoami)
+KERNAL=$(uname -r)
 echo "User Name is $WHO" > $DIR/systeminfo.txt
+echo "" >> $DIR/systeminfo.txt
+echo "Kernal version is $KERNAL" >> $DIR/systeminfo.txt
 echo "" >> $DIR/systeminfo.txt
 cat /etc/os-release >> $DIR/systeminfo.txt
 echo;echo;echo "#####uname######" >> $DIR/systeminfo.txt
