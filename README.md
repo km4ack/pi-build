@@ -55,6 +55,7 @@ Hotspot is used to generate a wifi hotspot that you can connect to with other wi
 If enabled, the hotspot will only activate IF the Pi is not connected to a wireless network.  The hotspot will either activate at bootup, OR a maximum of 5 minutes AFTER you have forcefully disconnected from a wireless network. You can tune that detection delay in the settings.
 The hotspot default SSID is *RpiHotspot* and the default IP address of the Pi is 10.10.10.10.
 Make sure to enable either VNC or SSH server in order to remotely connect to your Pi at that address.
+
 #### Hotspot Tools:
 Hotspot tools is a collection of tools designed to make managing the hotspot easier through a GUI interface. https://youtu.be/O_eihSN_ES8
 
