@@ -5,7 +5,7 @@
 #20191217 km4ack
 #20200428 modified
 
-source $HOME/patmenu2/config
+source "$HOME/patmenu2/config"
 
 MAIN () {
 
