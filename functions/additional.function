@@ -27,7 +27,7 @@ FIG=$HOME/.wl2k/config.json
 #set callsign
 sed -i "s/\"mycall\": \".*\",/\"mycall\": \"$CALL\",/" $FIG
 #set password
-WL2KPASS=$(cat $HOME/pi-build/config | grep WL2KPASS | sed 's/"//g' | sed 's/WL2KPASS=//')
+WL2KPASS=$(grep "WL2KPASS" $MYPATH/config | sed 's/"//g' | sed 's/WL2KPASS=//')
 sed -i "s/\"secure_login_password\": \".*\",/\"secure_login_password\": \""$WL2KPASS"\",/" $FIG
 #set locator
 sed -i "s/\"locator\": \".*\",/\"locator\": \"$GRID\",/" $FIG
