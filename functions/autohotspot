@@ -9,10 +9,6 @@
 #km4ack 20190923
 #km4ack 20200513 mod for BAP script
 
-MYPATH=$HOME/pi-build
-
-
-
 shackwifi=$1
 shackpass=$2
 wifipasswd=$3
