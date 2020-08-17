@@ -1,4 +1,16 @@
-version=3.0.2
+version=3.0.3
+
+3.0.3		Add GPS by-id to allow for different GPS units to be used (Thanks pleasantone for suggestion) https://github.com/km4ack/pi-build/issues/40
+		Change conky auto start. Fix https://github.com/km4ack/pi-build/issues/83
+		Add gpredict satellite tracking software
+		Add version number to update splash screen (Thanks N5RKE)
+		send auto remove to dev/null
+		resolve https://github.com/km4ack/pi-build/issues/92 in wsjtx section (hardcoded for 2.2.2)
+		add conky-logo.png
+		add conky logo to setconky
+		fix issue 108 https://github.com/km4ack/pi-build/issues/108 Thanks N5RKS!
+		add kernal version only line to diagnostic script
+		add 7inch conky setting (Thanks VK4GRA)
 
 3.0.2		Add BAP update check to update script
 

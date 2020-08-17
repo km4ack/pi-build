@@ -6,6 +6,7 @@
 
 MYPATH=$HOME/pi-build/conky
 TEMPFILE=/run/user/1000/conky.tmp
+LOGO=$MYPATH/conky-logo.png
 
 CALL=$(cat ~/.conkyrc | grep "{color Yellow}" | sed s'/.*{alignc}//' | head -1)
 
@@ -14,7 +15,7 @@ INFO=$(yad --form --width=420 --text-align=center --center --title="Preferences"
 --image $LOGO --window-icon=$LOGO --image-on-top --separator="|" --item-separator="|" \
 --text="<b>Conky Preferences</b>\r\rThis only changes the call sign in conky." \
 --field="Call Sign" "$CALL" \
---field="Conky Size":CB "conky-small|conky-medium|conky-large" \
+--field="Conky Size":CB "conky-small|conky-medium|conky-large|conky-7inch" \
 --field="C or F":CB "C|F" \
 --button="Exit":1 \
 --button="Continue":2)
@@ -47,6 +48,9 @@ sed -i '/vcgencmd/d' $TEMPFILE
 sed -i '/#TEMP/a \
 ${font Arial:bold:size=10}${color White}Temp: $alignr ${exec /opt/vc/bin/vcgencmd measure_temp | cut -c6-9} C' $TEMPFILE
 elif [ "$TEMP" = 'C' ] && [ "$CS" = 'conky-small' ]; then
+#delete F line
+echo
+elif [ "$TEMP" = 'C' ] && [ "$CS" = 'conky-7inch' ]; then
 #delete F line
 echo
 sed -i '/vcgencmd/d' $TEMPFILE

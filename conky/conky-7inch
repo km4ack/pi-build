@@ -1,0 +1,90 @@
+background yes
+use_xft yes
+xftfont 123:size=6
+xftalpha 0.5
+update_interval 0.5
+total_run_times 0
+own_window yes
+own_window_type normal
+own_window_transparent yes
+own_window_hints undecorated,below,sticky,skip_taskbar,skip_pager
+double_buffer yes
+minimum_size 120 5
+maximum_width 200
+draw_shades no
+draw_outline no
+draw_borders no
+draw_graph_borders no
+default_color gray
+default_shade_color red
+default_outline_color green
+alignment top_right
+gap_x 5
+gap_y 10
+no_buffers yes
+uppercase no
+cpu_avg_samples 2
+net_avg_samples 1
+override_utf8_locale no
+use_spacer right
+TEXT
+
+${font Arial:size=12}${color Yellow}${alignc}N0CALL
+${voffset -30}
+${font Arial:bold:size=08}${color White}Gridsquare ${alignr}${color Yellow}${execi 25 $HOME/bin/conky/grid | cut -c1-8}
+#${font Arial:bold:size=12}${color White}Radio Freq ${alignr}${color Yellow}${execi 5 $HOME/bin/conky/get-freq | cut -c1-6}
+${color Yellow}LOCAL${alignr}ZULU
+${voffset -20}
+${color DarkSlateGray}${hr 2}
+${font Arial:bold:size=08}${color White}${time %H:%M:%S}\
+${alignr}${tztime Zulu %H:%M:%S}
+${font Arial:bold:size=08}${color White}${time %d%b%y}\
+${alignr}${tztime Zulu %d%b%y}
+
+
+${voffset -85}
+
+
+${color grey}
+${font}
+${font Arial:bold:size=08}${color Yellow}SYSTEM ${color DarkSlateGray} ${hr 2}
+${font Arial:bold:size=08}${color White}Frequency $alignr${freq_g cpu0}Ghz
+${font Arial:bold:size=08}${color White}Uptime $alignr${uptime}
+#TEMP
+${font Arial:bold:size=08}${color White}Temp: $alignr ${exec /opt/vc/bin/vcgencmd measure_temp | awk -F "[=\']" '{print($2 * 1.8)+32}'} F
+${voffset -10}
+${font Arial:bold:size=6}${color White}CPU${alignr}${cpu}%
+${cpubar cpu}
+${font Arial:bold:size=6}${color White}MEM $alignc $mem / $memmax $alignr $memperc%
+$membar
+${font Arial:bold:size=6}${color White}SWAP $alignc $swap / $swapmax $alignr $swapperc%
+$swapbar
+${font Arial:bold:size=6}${color White}HDD $alignc ${fs_used /home} / ${fs_size /home} $alignr ${fs_free_perc /home}%
+${fs_bar /home}
+#
+${font Arial:bold:size=8}${color Yellow}NETWORK/HOTSPOT ${color DarkSlateGray}${hr 2}
+${font Arial:bold:size=8}${color White}Wireless IP address $alignr ${addr wlan0}
+${font Arial:bold:size=8}${color White}Wired IP address $alignr ${addr eth0}
+${font Arial:bold:size=8}${color Yellow}DHCP ADDRESSES FOR HOTSPOT ${color DarkSlateGray}${hr 2}
+${font Arial:bold:size=8}${color White}${execi 5 cat /var/lib/misc/dnsmasq.leases | awk '{ print $3"   "$4 }'}
+${voffset 25}
+${font Arial:bold:size=8}${color Yellow}RADIO TOOLS ${color DarkSlateGray}${hr 2}
+${font Arial:size=08}${if_running piardopc}${color green}ARDOP ACTIVE${else}${color red}ARDOP OFF$endif \
+${alignr}${if_running rigctld}${color green}RIGCTL ACTIVE${else}${color red}RIGCTL OFF$endif
+${if_running kissattach}${color green}KISSATCH ACTIVE${else}${color red}KISSATCH OFF$endif \
+${alignr}${if_running direwolf}${color green}DIREWOLF ACTIVE${else}${color red}DIREWOLF OFF$endif
+#
+${font Arial:bold:size=8}${color Yellow}DIGITAL APPS ${color DarkSlateGray}${hr 2}
+${font Arial:size=08}${if_running js8call}${color green}JS8 ACTIVE${else}${color red}JS8 OFF$endif \
+${alignr}${if_running flrig}${color green}FLRIG ACTIVE${else}${color red}FLRIG OFF$endif
+${if_running garim}${color green}GARIM ACTIVE${else}${color red}GARIM OFF$endif \
+${alignr}${if_running fldigi}${color green}FLDIGI ACTIVE${else}${color red}FLDIGI OFF$endif
+${if_running pavucontrol}${color green}PULSE ACTIVE${else}${color red}PULSE OFF$endif \
+${alignr}${if_running pat}${color green}PAT ACTIVE${else}${color red}PAT OFF$endif
+#
+${font Arial:bold:size=8}${color Yellow}RECENT LOG ENTRIES ${color DarkSlateGray}${hr 2}
+${font Arial:bold:size=6}${color White}${tail ~/Documents/mylog.txt 5}
+
+
+
+#$diskio

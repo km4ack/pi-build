@@ -114,6 +114,13 @@ exit
 fi
 rm $MYPATH/intro.txt
 #####################################
+#	Create autostart dir
+#used to autostart conky at boot
+#####################################
+mkdir -p $HOME/.config/autostart
+
+
+#####################################
 #	Get User Call
 #####################################
 CALL(){
@@ -176,7 +183,9 @@ echo "$i" >> $BASE
 done
 fi
 
-#check if hotspot is chosen for install & get info if needed
+#############################################################
+#check if hotspot is chosen for install & get info if needed#
+#############################################################
 HS=$(cat $BASE | grep HOTSPOT)
 if [ -n "$HS" ]; then
 HSINFO(){
@@ -238,6 +247,40 @@ fi
 echo "SHACKSSID=$SHACKSSID" >> $CONFIG
 echo "SHACKPASS=\"$SHACKPASS\"" >> $CONFIG
 echo "HSPASS=\"$HSPASS\"" >> $CONFIG
+###################################
+#CHECK IF GPS IS CHOSEN TO INSTALL#
+###################################
+GPSINSTALL=$(cat $BASE | grep GPS)
+if [ -n "$GPSINSTALL" ]; then
+USB=$(ls /dev/serial/by-id)
+USB=$(echo $USB | sed "s/\s/|/g")
+
+yad --center --height="300" --width="300" --form --separator="|" --item-separator="|" --title="GPS" \
+--image $LOGO --window-icon=$LOGO --image-on-top \
+--text="\r\r\r\r\r<b><big>Connect your GPS to the pi</big></b>" \
+--button="Exit":1 \
+--button="Continue":2
+
+BUT=$?
+if [ $BUT = 1 ] || [ $BUT = 252 ]; then
+exit
+fi
+
+
+GPS=$(yad --center --height="600" --width="300" --form --separator="|" --item-separator="|" --title="GPS" \
+--image $LOGO --window-icon=$LOGO --image-on-top \
+--text="Choose Your GPS" \
+--field="GPS":CB "$USB")
+BUT=$?
+if [ $BUT = 252 ] || [ $BUT = 1 ]; then
+echo exiting
+exit
+fi
+
+GPS=$(echo $GPS | awk -F "|" '{print $1}')
+GPS=/dev/serial/by-id/$GPS
+echo "GPS=$GPS" >> $CONFIG
+fi
 
 #####################################
 #	FLSUITE
@@ -292,6 +335,7 @@ false "HAMCLOCK" "Clock for Ham Radio Ops" \
 false "PROPAGATION" "Propagation Prediction Software" \
 false "YAAC" "Yet Another APRS Client" \
 false "XASTIR" "APRS Client" \
+false "GPREDICT" "Satellite Tracking" \
 --button="Exit":1 \
 --button="Check All and Continue":3 \
 --button="Next":2 > $ADDITIONAL
@@ -302,7 +346,7 @@ fi
 
 if [ $BUT = 3 ]; then
 ADDAPPS=(CONKY PI-APRS CHIRP GARIM PAT PAT-MENU JS8CALL M0IAX WSJTX PYQSO \
-CQRLOG EES QSSTV GRIDTRACKER HAMCLOCK PROPAGATION YAAC XASTIR)
+CQRLOG EES QSSTV GRIDTRACKER HAMCLOCK PROPAGATION YAAC XASTIR GPREDICT)
 
 for i in "${ADDAPPS[@]}"
 do
@@ -373,7 +417,7 @@ crontab -l > $TEMPCRON
 echo "@reboot sleep 10 && export DISPLAY=:0 && $MYPATH/.complete" >> $TEMPCRON
 $MYPATH/.funfacts &
 #upgrade the system
-sudo apt-get upgrade
+sudo apt-get -y upgrade
 sudo apt -y full-upgrade
 
 #set wallpaper
@@ -489,7 +533,7 @@ done < $UTILITY
 rm $BASE $ADDITIONAL $UTILITY $FLSUITE > /dev/null 2>&1
 rm -rf $DIR > /dev/null 2>&1
 rm -rf $HOME/Downloads/* > /dev/null 2>&1
-sudo apt -y autoremove
+sudo apt -y autoremove > /dev/null 2>&1
 
 #restore crontab
 crontab $TEMPCRON

@@ -73,10 +73,25 @@ WSJTX(){
 cd $DIR
 WSPKG=$(curl -s https://physics.princeton.edu/pulsar/k1jt/wsjtx.html | grep armhf.deb | sed 's/^.*wsjtx/wsjtx/' | sed 's/deb.*$/deb/' | head -1)
 wget --tries 2 --connect-timeout=60 --no-check-certificate https://physics.princeton.edu/pulsar/k1jt/$WSPKG
+WSJTXSUCCESS=$?
 sudo dpkg -i $WSPKG
 sudo apt-get --fix-broken -y install
 sudo dpkg -i $WSPKG
+	#try sourcegorge if princeton.edu fails
+	WSJTX2(){
+	if [ "$WSJTXSUCCESS" ! = 0 ]; then
+	cd $DIR
+	wget --tries 2 --connect-timeout=60 https://sourceforge.net/projects/wsjt/files/wsjtx-2.2.2/wsjtx_2.2.2_armhf.deb
+	sudo dpkg -i wsjtx_2.2.2_armhf.deb
+	sudo apt-get --fix-broken -y install
+	sudo dpkg -i wsjtx_2.2.2_armhf.deb
+	fi
+	}
+	WSJTX2
+
 }
+
+
 
 ##################################
 #	CONKY
@@ -94,7 +109,25 @@ mkdir -p $HOME/bin/conky
 cp $MYPATH/conky/* $HOME/bin/conky/
 chmod +x $HOME/bin/conky/get-grid $HOME/bin/conky/temp-conv $HOME/bin/conky/get-freq $HOME/bin/conky/grid
 sed -i "s/N0CALL/$CALL/" $HOME/.conkyrc
-echo "@reboot sleep 20 && export DISPLAY=:0 && /usr/bin/conky" >> $TEMPCRON
+#echo "@reboot sleep 20 && export DISPLAY=:0 && /usr/bin/conky" >> $TEMPCRON
+
+#Create files needed for autostart at login
+#Fix issue https://github.com/km4ack/pi-build/issues/83
+
+cat <<EOF > $HOME/.local/share/applications/conky.desktop
+[Desktop Entry]
+Name=Conky
+Comment=Conky
+GenericName=Conky Screen Background Monitor
+Exec=conky
+Type=Application
+Encoding=UTF-8
+Terminal=false
+Categories=HamRadio
+Keywords=Radio
+EOF
+
+ln -sf $HOME/.local/share/applications/conky.desktop $HOME/.config/autostart/conky.desktop
 }
 
 ##################################
@@ -420,8 +453,13 @@ sudo mv $HOME/Downloads/hamclock.desktop /usr/share/applications/
 }
 
 
+##################################
+#	Gpredict
+##################################
+GPREDICT(){
+sudo apt install -y gpredict
 
-
+}
 
 
 

@@ -43,6 +43,20 @@ fi
 
 trap FINISH EXIT
 
+#remove temp dir if exist
+#fix issue 108 https://github.com/km4ack/pi-build/issues/108
+#Thanks to N5RKS for finding the bug
+if [ -d $HOME/pi-build/temp ]; then
+rm -rf $HOME/pi-build/temp
+fi
+
+
+#####################################
+#	Create autostart dir
+#used to autostart conky at boot
+#####################################
+mkdir -p $HOME/.config/autostart
+
 #Check for BAP updates
 #Check for build a pi updates
 echo "Checking for Build a Pi updates"
@@ -96,8 +110,8 @@ clear
 #Scan system for updated applications
 yad  --width=550 --height=250 --text-align=center --center --title="Update" \
 --image $LOGO --window-icon=$LOGO --image-on-top --separator="|" --item-separator="|" \
---text="\r\r\r\rFirst we need to scan the system to see what is installed, \
-then check for updates on the web. This should take less than a minute Ready when you are." \
+--text="<b>Version $VERSION</b>\r\r\r\rFirst we need to scan the system to see what is installed, \
+then check for updates on the web. This should take less than a minute. Ready when you are." \
 --button="Exit":1 \
 --button="Start Scan":2
 BUT=$?
@@ -581,6 +595,15 @@ fi
 RTC="Unknown"
 
 }
+
+#----------------------------------------------------#
+#		Gpredict
+#----------------------------------------------------#
+if ! hash gpredict 2>/dev/null; then
+GPREDICT="Not Installed"
+else
+GPREDICT="Installed"
+fi
 CHECK
 #####################################
 #	Get User Call
@@ -637,7 +660,9 @@ if [ $BUT = 1 ] || [ $BUT = 252 ];then
 exit
 fi
 
-#check if hotspot is chosen for install & get info if needed
+#############################################################
+#check if hotspot is chosen for install & get info if needed#
+#############################################################
 HS=$(cat $BASE | grep HOTSPOT)
 if [ -n "$HS" ]; then
 HSINFO(){
@@ -698,6 +723,39 @@ echo "SHACKSSID=$SHACKSSID" >> $CONFIG
 echo "SHACKPASS=$SHACKPASS" >> $CONFIG
 echo "HSPASS=$HSPASS" >> $CONFIG
 
+###################################
+#CHECK IF GPS IS CHOSEN TO INSTALL#
+###################################
+GPSINSTALL=$(cat $BASE | grep GPS)
+if [ -n "$GPSINSTALL" ]; then
+USB=$(ls /dev/serial/by-id)
+USB=$(echo $USB | sed "s/\s/|/g")
+
+yad --center --height="300" --width="300" --form --separator="|" --item-separator="|" --title="GPS" \
+--image $LOGO --window-icon=$LOGO --image-on-top \
+--text="\r\r\r\r\r<b><big>Connect your GPS to the pi</big></b>" \
+--button="Exit":1 \
+--button="Continue":2
+
+BUT=$?
+if [ $BUT = 1 ] || [ $BUT = 252 ]; then
+exit
+fi
+
+GPS=$(yad --center --height="600" --width="300" --form --separator="|" --item-separator="|" --title="GPS" \
+--image $LOGO --window-icon=$LOGO --image-on-top \
+--text="Choose Your GPS" \
+--field="GPS":CB "$USB")
+BUT=$?
+if [ $BUT = 252 ] || [ $BUT = 1 ]; then
+echo exiting
+exit
+fi
+
+GPS=$(echo $GPS | awk -F "|" '{print $1}')
+GPS=/dev/serial/by-id/$GPS
+echo "GPS=$GPS" >> $CONFIG
+fi
 
 #----------------------------------------------------#
 #		FLSUITE APP MENU
@@ -743,6 +801,7 @@ false "GRIDTRACKER" "$GRIDTRACK" "Track grids in WSJTX" \
 false "HAMCLOCK" "$HAMCLOCK" "Clock for Ham Radio Ops" \
 false "PROPAGATION" "$PROP" "Propagation prediction" \
 false "EES" "$EES" "KM4ACK Emergency Email Server" \
+false "GPREDICT" "$GPREDICT" "Satellite Tracking" \
 --button="Exit":1 \
 --button="Next":2 > $ADDITIONAL
 BUT=$?
@@ -823,8 +882,8 @@ fi
 crontab -l > $TEMPCRON
 echo "@reboot sleep 10 && export DISPLAY=:0 && $MYPATH/.complete" >> $TEMPCRON
 #update/upgrade the system
-sudo apt-get update
-sudo apt-get upgrade
+sudo apt-get -y update
+sudo apt-get -y upgrade
 sudo apt -y full-upgrade
 
 #####################################
@@ -878,7 +937,7 @@ done < $UTILITY
 #####################################
 #Remove temp files
 rm $BASE $ADDITIONAL $UTILITY $FLSUITE > /dev/null 2>&1
-sudo apt -y autoremove
+sudo apt -y autoremove > /dev/null 2>&1
 
 #restore crontab
 crontab $TEMPCRON
