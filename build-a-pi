@@ -423,6 +423,8 @@ sudo apt -y full-upgrade
 #set wallpaper
 pcmanfm --set-wallpaper $HOME/pi-build/bap-wallpaper.jpg
 
+mkdir -p $DIR 2> /dev/null
+
 #add virtual sound card link for pulse audio
 cd $DIR
 cat > tempsound <<EOF
@@ -538,6 +540,9 @@ sudo apt -y autoremove > /dev/null 2>&1
 #restore crontab
 crontab $TEMPCRON
 rm $TEMPCRON
+
+echo "WE ARE ALL DONE HERE.  If you close this window, you will have to reboot manually."
+
 #reboot when done
 yad --width=400 --height=200 --title="Reboot" --image $LOGO \
 --text-align=center --skip-taskbar --image-on-top \
