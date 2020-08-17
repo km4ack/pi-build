@@ -128,6 +128,23 @@ Keywords=Radio
 EOF
 
 ln -sf $HOME/.local/share/applications/conky.desktop $HOME/.config/autostart/conky.desktop
+
+#####Add setconky to main menu
+chmod +x $HOME/pi-build/conky/setconky
+
+cat <<EOF > $HOME/.local/share/applications/setconky.desktop
+[Desktop Entry]
+Name=Conky-Prefs
+Comment=Conky-Prefs
+GenericName=Change Conky Preferences
+Exec=/home/pi/pi-build/conky/setconky
+Type=Application
+Encoding=UTF-8
+Terminal=false
+Categories=Settings;DesktopSettings;GTK;X-LXDE-Settings;
+Keywords=Radio,Conky
+EOF
+
 }
 
 ##################################
