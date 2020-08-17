@@ -187,6 +187,7 @@ tar -xzf $CHIRPBUILD
 CHIRPDIR=$(echo $CHIRPBUILD | sed 's/[.].*$//')
 cd $CHIRPDIR
 sudo python setup.py install
+pip install future
 }
 
 ##################################
