@@ -336,6 +336,7 @@ false "PROPAGATION" "Propagation Prediction Software" \
 false "YAAC" "Yet Another APRS Client" \
 false "XASTIR" "APRS Client" \
 false "GPREDICT" "Satellite Tracking" \
+false "TQSL" "LOTW Software" \
 --button="Exit":1 \
 --button="Check All and Continue":3 \
 --button="Next":2 > $ADDITIONAL
@@ -346,7 +347,7 @@ fi
 
 if [ $BUT = 3 ]; then
 ADDAPPS=(CONKY PI-APRS CHIRP GARIM PAT PAT-MENU JS8CALL M0IAX WSJTX PYQSO \
-CQRLOG EES QSSTV GRIDTRACKER HAMCLOCK PROPAGATION YAAC XASTIR GPREDICT)
+CQRLOG EES QSSTV GRIDTRACKER HAMCLOCK PROPAGATION YAAC XASTIR GPREDICT TQSL)
 
 for i in "${ADDAPPS[@]}"
 do
