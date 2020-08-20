@@ -130,14 +130,8 @@ else
 HOTSPOT="Installed"
 fi
 
-#----------------------------------------------------#
-#		Hotspot tools
-#----------------------------------------------------#
-if [ ! -d $HOME/hotspot-tools2 ]; then
-HSTOOLS="Not Installed"
-else
-HSTOOLS="Installed"
-fi
+#remove duplicate HST check
+
 #----------------------------------------------------#
 #		AX25
 #----------------------------------------------------#
@@ -594,8 +588,6 @@ fi
 #----------------------------------------------------#
 RTC="Unknown"
 
-}
-
 #----------------------------------------------------#
 #		Gpredict
 #----------------------------------------------------#
@@ -604,6 +596,19 @@ GPREDICT="Not Installed"
 else
 GPREDICT="Installed"
 fi
+
+#----------------------------------------------------#
+#		TQSL
+#----------------------------------------------------#
+if ! hash tqsl 2>/dev/null; then
+TQSL="Not Installed"
+else
+TQSL="Installed"
+fi
+
+}
+
+
 CHECK
 #####################################
 #	Get User Call
@@ -802,6 +807,7 @@ false "HAMCLOCK" "$HAMCLOCK" "Clock for Ham Radio Ops" \
 false "PROPAGATION" "$PROP" "Propagation prediction" \
 false "EES" "$EES" "KM4ACK Emergency Email Server" \
 false "GPREDICT" "$GPREDICT" "Satellite Tracking" \
+false "TQSL" "$TQSL" "LOTW Software" \
 --button="Exit":1 \
 --button="Next":2 > $ADDITIONAL
 BUT=$?
