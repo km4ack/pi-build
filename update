@@ -609,7 +609,7 @@ fi
 #----------------------------------------------------#
 #		PISTATS
 #----------------------------------------------------#
-if ! hash tqsl 2>/dev/null; then
+if ! hash pistats 2>/dev/null; then
 PISTATS="Not Installed"
 else
 PISTATS="Installed"
