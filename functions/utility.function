@@ -186,8 +186,24 @@ fi
 }
 
 
-
-
+##################################
+#	PISTATS
+##################################
+PISTATS(){
+cd $HOME
+CUR=$(curl -s http://www.w1hkj.com/pi3/ | grep .tgz | sed 's/.*pistats//' | sed 's/<\/a><br>//')
+wget http://www.w1hkj.com/pi3/pistats$CUR
+tar -xzvf pistats$CUR
+rm pistats$CUR
+PISTATDIR=$(ls $HOME | grep pistats)
+cd $PISTATDIR
+sudo apt-get install -y libfltk1.3-dev
+make
+sudo mv pistats /usr/local/bin
+sudo mv $HOME/$PISTATDIR/data/pistats.desktop /usr/share/applications/
+cd $HOME
+rm -rf $PISTATDIR
+}
 
 
 
