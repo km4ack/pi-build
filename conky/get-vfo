@@ -1,0 +1,22 @@
+#!/bin/bash
+
+#get VFO of radio to display in conky
+#20200428
+
+source "$HOME/patmenu/config"
+
+MAIN () {
+
+VFO=$($RIG v)
+VFOCH=$(echo "$VFO" | grep error)
+
+if [ -z "$VFOCH" ]
+then
+echo "$VFO"
+else
+MAIN
+fi
+
+}
+
+MAIN
