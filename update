@@ -606,6 +606,15 @@ else
 TQSL="Installed"
 fi
 
+#----------------------------------------------------#
+#		PISTATS
+#----------------------------------------------------#
+if ! hash tqsl 2>/dev/null; then
+PISTATS="Not Installed"
+else
+PISTATS="Installed"
+fi
+
 }
 
 
@@ -859,6 +868,7 @@ false "TEMPCONVERT" "$TEMPCONVERT" "Temperature Converter" \
 false "GPARTED" "$GPARTED" "Disk Utility Application" \
 false "RTC" "$RTC" "Real Time Clock" \
 false "SHOWLOG" "$SHOWLOG" "Log File Viewer" \
+false "PISTATS" "$PISTATS" "Pi3/4 Stats Monitor" \
 --button="Exit":1 \
 --button="Install/Update Selected":2 > $UTILITY
 BUT=$?
