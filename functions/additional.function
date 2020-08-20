@@ -44,6 +44,12 @@ fi
 #	PAT MENU
 ##################################
 PAT-MENU(){
+#backup config files (Issue #119)
+if [ -f $HOME/patmenu2/config ]; then
+mkdir -p $DIR/patconfig
+cp $HOME/patmenu2/*config* $DIR/patconfig/
+fi
+#update pat menu
 if [ -d $HOME/patmenu2 ]; then
 rm -rf $HOME/patmenu2
 fi
@@ -51,7 +57,10 @@ cd $HOME
 git clone https://github.com/km4ack/patmenu2.git $HOME/patmenu2 && bash $HOME/patmenu2/setup
 sed -i "s/N0CALL/$CALL/" $HOME/patmenu2/config
 sed -i 's/1,0/2,0/g' $HOME/patmenu2/config
-
+#restore config files
+if [ -d $DIR/patconfig/ ]; then
+mv $DIR/patconfig/* $HOME/patmenu2/
+fi
 }
 ##################################
 #	JS8Call
