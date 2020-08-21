@@ -1,7 +1,6 @@
 #additional software to install with build-a-pi
 #20200513 km4ack
 
-MYPATH=$HOME/pi-build
 TEMPCRON=$MYPATH/cron.tmp
 DIR=$MYPATH/temp
 WHO=$(whoami)
@@ -28,7 +27,7 @@ FIG=$HOME/.wl2k/config.json
 #set callsign
 sed -i "s/\"mycall\": \".*\",/\"mycall\": \"$CALL\",/" $FIG
 #set password
-WL2KPASS=$(cat $HOME/pi-build/config | grep WL2KPASS | sed 's/"//g' | sed 's/WL2KPASS=//')
+WL2KPASS=$(grep "WL2KPASS" $MYPATH/config | sed 's/"//g' | sed 's/WL2KPASS=//')
 sed -i "s/\"secure_login_password\": \".*\",/\"secure_login_password\": \""$WL2KPASS"\",/" $FIG
 #set locator
 sed -i "s/\"locator\": \".*\",/\"locator\": \"$GRID\",/" $FIG
@@ -270,9 +269,9 @@ cat > gridtracker.desktop <<EOF
 Name=GridTracker
 Comment=GridTracker
 GenericName=GridTracker, a WSJT-X Companion
-Exec=/home/pi/GridTracker/GridTracker --disable-accelerated-2d-canvas --num-raster-threads=2
-Icon=/home/pi/GridTracker/gridtracker.png
-Path=/home/pi/GridTracker
+Exec=$HOME/GridTracker/GridTracker --disable-accelerated-2d-canvas --num-raster-threads=2
+Icon=$HOME/GridTracker/gridtracker.png
+Path=$HOME/GridTracker
 Type=Application
 Encoding=UTF-8
 Terminal=false
@@ -384,15 +383,15 @@ sudo killall pat
 sudo systemctl start pat@$WHO
 
 #Move info.markdown from EES folder to Documents
-sudo mv /var/www/html/info.markdown /home/pi/Documents/
-sudo chown pi:pi /home/pi/Documents/info.markdown
+sudo mv /var/www/html/info.markdown $HOME/Documents/
+sudo chown $WHO:$WHO $HOME/Documents/info.markdown
 #move info.html to pi documents folder
-sudo cp /var/www/html/index.html /home/pi/Documents/info.html
-sudo chown pi:pi /home/pi/Documents/info.html
+sudo cp /var/www/html/index.html $HOME/Documents/info.html
+sudo chown $WHO:$WHO $HOME/Documents/info.html
 #move script to be run by cron to bin dir
-sudo mv /var/www/html/webcopy /home/pi/bin/
-sudo chown pi:pi /home/pi/bin/webcopy
-sudo chmod +x /home/pi/bin/webcopy
+sudo mv /var/www/html/webcopy $HOME/bin/
+sudo chown $WHO:$WHO $HOME/bin/webcopy
+sudo chmod +x $HOME/bin/webcopy
 
 #set up cron job for EES
 echo "#-----Start EES Server Options------" >> $TEMPCRON
@@ -403,7 +402,7 @@ echo "#Auto post replies for EES server" >> $TEMPCRON
 echo "#Default is off. Activate by removing # on line below" >> $TEMPCRON
 echo "#*/1 * * * * /var/www/html/autopostreply" >> $TEMPCRON
 echo "#Line below moves info.html to index.html when modified" >> $TEMPCRON
-echo "*/1 * * * * /home/pi/bin/webcopy" >> $TEMPCRON
+echo "*/1 * * * * $HOME/bin/webcopy" >> $TEMPCRON
 echo "#-----End EES Server Options------" >> $TEMPCRON
 
 
