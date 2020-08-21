@@ -13,9 +13,9 @@
 
 
 DESK=$(printenv | grep DISPLAY)
-MYPATH=$HOME/pi-build
+MYPATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 LOGO=$MYPATH/logo.png
-RB=$( ls $HOME/.config | grep KM4ACK)
+RB=$HOME/.config/KM4ACK
 BASE=$MYPATH/base.txt
 ADDITIONAL=$MYPATH/additional.txt
 UTILITY=$MYPATH/utility.txt
@@ -25,7 +25,7 @@ FUNCTIONS=$MYPATH/functions
 TEMPCRON=$MYPATH/cron.tmp
 DIR=$MYPATH/temp
 WHO=$(whoami)
-VERSION=$(cat $MYPATH/changelog | grep version= | sed 's/version=//')
+VERSION=$(grep "version=" $MYPATH/changelog | sed 's/version=//')
 
 FINISH(){
 if [ -f "$BASE" ]; then
@@ -75,7 +75,7 @@ sudo apt-get update
 #####################################
 #	Check if run before
 #####################################
-if [ -n "$RB" ]; then
+if [ -f "$RB" ]; then
 bash $MYPATH/update &
 exit
 fi
@@ -139,17 +139,31 @@ CALL
 CALL=$(echo $INFO | awk -F "|" '{print $1}')
 CALL=${CALL^^}
 
-echo "CALL=$CALL" > $CONFIG
-
 #Verify call not empty
-if [ -z "$CALL" ]; then
-yad --form --width=420 --text-align=center --center --title="Build-a-Pi" --text-align=center \
---image $LOGO --window-icon=$LOGO --image-on-top --separator="|" --item-separator="|" \
---text="<b>Call Can't be Blank</b>" \
---button=gtk-ok
-CALL
-fi
+ATTEMPTS=0
+while [ -z "$CALL" ];
+do
+	if [ $ATTEMPTS -eq 3 ]
+	then
+		yad --form --width=420 --text-align=center --center --title="Build-a-Pi" --text-align=center \
+		--image $LOGO --window-icon=$LOGO --image-on-top --separator="|" --item-separator="|" \
+		--text="<b>Empty callsign after 3 attempts. Quiting!</b>" \
+		--button=gtk-ok
+		exit
+	fi
 
+	yad --form --width=420 --text-align=center --center --title="Build-a-Pi" --text-align=center \
+	--image $LOGO --window-icon=$LOGO --image-on-top --separator="|" --item-separator="|" \
+	--text="<b>Call Can't be Blank</b>" \
+	--button=gtk-ok
+
+	((ATTEMPTS=ATTEMPTS+1))
+	CALL
+	CALL=$(echo $INFO | awk -F "|" '{print $1}')
+	CALL=${CALL^^}
+done
+
+echo "CALL=$CALL" > $CONFIG
 
 #####################################
 #	Base Apps
@@ -183,10 +197,8 @@ echo "$i" >> $BASE
 done
 fi
 
-#############################################################
-#check if hotspot is chosen for install & get info if needed#
-#############################################################
-HS=$(cat $BASE | grep HOTSPOT)
+#check if hotspot is chosen for install & get info if needed
+HS=$(grep "HOTSPOT" $BASE)
 if [ -n "$HS" ]; then
 HSINFO(){
 #unblock wifi
@@ -195,7 +207,7 @@ sudo rfkill unblock all > /dev/null 2>&1
 sudo ifconfig wlan0 up
 #LIST=$(sudo iw dev "wlan0" scan ap-force | egrep "^BSS|SSID:" | grep SSID: | sed 's/SSID://' | awk '{ print $1 }')
 #LIST=$(echo $LIST | sed 's/ /|/g')
-LIST=$(sudo iw dev "wlan0" scan ap-force | egrep "^BSS|SSID:" | grep SSID: | sed 's/SSID://')
+LIST=$(sudo iw dev "wlan0" scan ap-force | grep "SSID:" | awk '{print $2}')
 LIST=$(echo "$LIST" | tr '\n' '|')
 
 
@@ -356,7 +368,7 @@ done
 fi
 
 #check if hamclock is being installed
-HCCHECK=$(cat $ADDITIONAL | grep HAMCLOCK)
+HCCHECK=$(grep "HAMCLOCK" $ADDITIONAL)
 if [ -n "$HCCHECK" ]; then
 
 HC=$(yad --form --width=420 --text-align=center --center --title="Build-a-Pi" \
@@ -369,7 +381,7 @@ sed -i 's/HAMCLOCK//' $ADDITIONAL
 echo $HC >> $ADDITIONAL
 fi
 
-PATCHECK=$(cat $ADDITIONAL | grep PAT)
+PATCHECK=$(grep "PAT" $ADDITIONAL)
 if [ -n "$PATCHECK" ]; then
 INFO=$(yad --form --width=420 --text-align=center --center --title="Build-a-Pi" \
 --image $LOGO --window-icon=$LOGO --image-on-top --separator="|" --item-separator="|" \
@@ -423,7 +435,7 @@ sudo apt-get -y upgrade
 sudo apt -y full-upgrade
 
 #set wallpaper
-pcmanfm --set-wallpaper $HOME/pi-build/bap-wallpaper.jpg
+pcmanfm --set-wallpaper $MYPATH/bap-wallpaper.jpg
 
 mkdir -p $DIR 2> /dev/null
 
@@ -471,8 +483,8 @@ cat > build-a-pi.desktop <<EOF
 Name=Build-a-Pi
 GenericName=KM4ACK Build-a-Pi
 Comment=Build-a-Pi App Manager
-Exec=$HOME/pi-build/update
-Icon=$HOME/pi-build/logo.png
+Exec=$MYPATH/update
+Icon=$MYPATH/logo.png
 Terminal=true
 Type=Application
 Categories=Settings;DesktopSettings;GTK;X-LXDE-Settings;
@@ -483,9 +495,9 @@ sudo mv build-a-pi.desktop /usr/share/applications/
 #####################################
 #	Install Base Apps
 #####################################
-touch $HOME/.config/KM4ACK
-while read i ; do
+touch $RB
 source $FUNCTIONS/base.function
+while read i ; do
 $i
 done < $BASE
 
@@ -495,19 +507,17 @@ done < $BASE
 #####################################
 source $FUNCTIONS/flsuite.function
 #perform memory increase if needed
-CHECKFL=$(cat $MYPATH/flsuite.txt)
-if [ -n "$CHECKFL" ]; then
+CHECKFL="$MYPATH/flsuite.txt"
+if [ -s "$CHECKFL" ]; then
 FLSTART
 fi
-touch $HOME/.config/KM4ACK
+touch $RB
 while read i ; do
-source $FUNCTIONS/flsuite.function
 $i
 done < $FLSUITE
 
-source $FUNCTIONS/flsuite.function
 #Perform memory reset if needed
-if [ -n "$CHECKFL" ]; then
+if [ -s "$CHECKFL" ]; then
 FLSTOP
 fi
 
@@ -515,8 +525,8 @@ fi
 #####################################
 #	Install ADDITIONAL Apps
 #####################################
-while read i ; do
 source $FUNCTIONS/additional.function
+while read i ; do
 $i
 done < $ADDITIONAL
 
@@ -524,8 +534,8 @@ done < $ADDITIONAL
 #####################################
 #	Install KM4ACK Utilites
 #####################################
-while read i ; do
 source $FUNCTIONS/utility.function
+while read i ; do
 $i
 done < $UTILITY
 
