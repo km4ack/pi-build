@@ -615,6 +615,28 @@ else
 PISTATS="Installed"
 fi
 
+#----------------------------------------------------#
+#		XLOG CHECK
+#----------------------------------------------------#
+if ! hash xlog 2>/dev/null; then
+XLOG="Not_Installed"
+else
+
+XLOGCUR=$(xlog -version | sed 's/xlog\ version\ //')
+
+XLOGLATEST=$(curl -s https://download.savannah.nongnu.org/releases/xlog/ | \
+grep 2.[0-9].[0-9][0-9].tar | sort | tail -1 | sed 's/.*xlog/xlog/' | sed 's/.sig.*$//' | \
+sed 's/xlog-//' | sed 's/.tar.gz//')
+
+	if (( $(echo "$XLOGLATEST $XLOGCUR" | awk '{print ($1 > $2)}') ))
+	then
+	XLOG="NEEDS-UPDATE"
+	else
+	XLOG=is_latest_version
+	fi
+fi
+
+
 }
 
 
@@ -810,6 +832,7 @@ false "YAAC" "$YAAC" "Yet Another APRS Client" \
 false "PI-APRS" "$PIAPRS" "APRS Messaging Client" \
 false "PYQSO" "$PYQSO" "Logging Software" \
 false "CQRLOG" "$CQRLOG" "Logging Software" \
+false "XLOG" "$XLOG" "Logging Software" \
 false "QSSTV" "$QSSTV" "Slow scan TV" \
 false "GRIDTRACKER" "$GRIDTRACK" "Track grids in WSJTX" \
 false "HAMCLOCK" "$HAMCLOCK" "Clock for Ham Radio Ops" \
