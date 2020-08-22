@@ -538,10 +538,9 @@ rm -rf $DIRXLOG
 JTDX(){
 cd $HOME
 #curl won't work here. Returns "forbidden" Use wget instead
-wget -q https://www.jtdx.tech/en/
-VER=$(grep armhf.deb index.html | awk '{print $2}' | sed 's/"//g' | sed 's/href=\/downloads\/Linux\///')
-echo $VER
-rm index.html
+wget -qO jtdx.txt https://www.jtdx.tech/en/
+VER=$(grep armhf.deb jtdx.txt | awk '{print $2}' | sed 's/"//g' | sed 's/href=\/downloads\/Linux\///')
+rm jtdx.txt
 
 wget https://www.jtdx.tech/downloads/Linux/$VER
 
