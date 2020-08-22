@@ -636,6 +636,14 @@ sed 's/xlog-//' | sed 's/.tar.gz//')
 	fi
 fi
 
+#----------------------------------------------------#
+#		JTDX
+#----------------------------------------------------#
+if ! hash jtdx 2>/dev/null; then
+JTDX="Not_Installed"
+else
+JTDX=Installed
+fi
 
 }
 
@@ -826,6 +834,7 @@ false "GARIM" "$GARIM" "File Transfer Program " \
 false "M0IAX" "$M0IAX" "Tools for JS8Call messages" \
 false "CONKY" "$CONKY" "System Information Display" \
 false "WSJTX" "$FT8" "Weak signal digital mode software" \
+false "JTDX" "$JTDX" "Weak signal digital mode software" \
 false "JS8CALL" "$JS8" "Weak signal digital mode software" \
 false "XASTIR" "$XASTIR" "APRS Client" \
 false "YAAC" "$YAAC" "Yet Another APRS Client" \
