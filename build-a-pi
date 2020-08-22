@@ -338,6 +338,7 @@ false "PAT-MENU" "Control for Pat Winlink" \
 false "JS8CALL" "Weak Signal Digital Mode Software" \
 false "M0IAX" "Tools for JS8Call Messages" \
 false "WSJTX" "Weak Signal Digital Mode Software" \
+false "JTDX" "Weak Signal Digital Mode Software" \
 false "PYQSO" "Logging Software" \
 false "CQRLOG" "Logging Software" \
 false "XLOG" "Logging Software" \
@@ -361,7 +362,7 @@ fi
 if [ $BUT = 3 ]; then
 ADDAPPS=(CONKY PI-APRS CHIRP GARIM PAT PAT-MENU JS8CALL M0IAX WSJTX PYQSO \
 CQRLOG EES QSSTV GRIDTRACKER HAMCLOCK PROPAGATION YAAC XASTIR GPREDICT TQSL \
-XLOG)
+XLOG JTDX)
 
 for i in "${ADDAPPS[@]}"
 do
