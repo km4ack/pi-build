@@ -340,6 +340,7 @@ false "M0IAX" "Tools for JS8Call Messages" \
 false "WSJTX" "Weak Signal Digital Mode Software" \
 false "PYQSO" "Logging Software" \
 false "CQRLOG" "Logging Software" \
+false "XLOG" "Logging Software" \
 false "EES" "KM4ACK Emergency Email Server" \
 false "QSSTV" "Slow Scan TV" \
 false "GRIDTRACKER" "Track Grids in WSJTX" \
@@ -359,7 +360,8 @@ fi
 
 if [ $BUT = 3 ]; then
 ADDAPPS=(CONKY PI-APRS CHIRP GARIM PAT PAT-MENU JS8CALL M0IAX WSJTX PYQSO \
-CQRLOG EES QSSTV GRIDTRACKER HAMCLOCK PROPAGATION YAAC XASTIR GPREDICT TQSL)
+CQRLOG EES QSSTV GRIDTRACKER HAMCLOCK PROPAGATION YAAC XASTIR GPREDICT TQSL \
+XLOG)
 
 for i in "${ADDAPPS[@]}"
 do
