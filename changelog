@@ -8,6 +8,8 @@ version=3.0.4
 		add PISTATS - https://github.com/km4ack/pi-build/issues/9
 		add JTDX https://github.com/km4ack/pi-build/issues/15
 		add xlog https://github.com/km4ack/pi-build/issues/45
+		fix issue 101 https://github.com/km4ack/pi-build/issues/101
+		update ruby install to 2.5
 
 3.0.3		Add GPS by-id to allow for different GPS units to be used (Thanks pleasantone for suggestion) https://github.com/km4ack/pi-build/issues/40
 		Change conky auto start. Fix https://github.com/km4ack/pi-build/issues/83
