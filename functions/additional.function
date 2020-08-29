@@ -109,7 +109,7 @@ CONKY(){
 	sudo apt install -y conky
 	fi
 touch $HOME/Documents/mylog.txt		#conky will fail to load if this file doesn't exist
-sudo apt-get install -y ruby2.3
+sudo apt-get install -y ruby2.5
 sudo gem install gpsd_client
 sudo gem install maidenhead
 cp $MYPATH/conky/.conkyrc $HOME/.conkyrc
