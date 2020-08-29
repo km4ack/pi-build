@@ -161,19 +161,6 @@ EOF
 #	M0IAX Tools
 ##################################
 M0IAX(){
-#comment out old way while testing new install method
-#pip3 install gps
-#pip3 install maidenhead
-#pip3 install psutil
-#pip3 install OSGridConverter
-#cd $HOME/bin
-#git clone https://github.com/m0iax/JS8CallUtilities_V2.git
-#chmod +x $HOME/bin/JS8CallUtilities_V2/gpsdGPSListener.py $HOME/bin/JS8CallUtilities_V2.git/JS8CallUtils_v2.py
-#mv $HOME/bin/JS8CallUtilities_V2/* $HOME/bin
-#rm -rf JS8CallUtilities_V2
-#Exec=$HOME/bin/JS8CallUtils_v2.py
-
-#Start new install method
 cd $DIR
 wget http://m0iax.com/wp-content/uploads/2020/08/JS8CallUtils_RaspberryPi.zip
 unzip JS8CallUtils_RaspberryPi.zip
@@ -181,7 +168,7 @@ rm JS8CallUtils_RaspberryPi.zip
 chmod +x JS8CallUtils_v2
 sudo mv JS8CallUtils_v2 /usr/local/bin
 
-cat > js8tools.desktop <<EOF
+cat > m0iax.desktop <<EOF
 [Desktop Entry]
 Name=M0IAX JS8 Utils
 GenericName=M0IAX JS8 Utils
@@ -192,7 +179,7 @@ Type=Application
 Categories=Network;HamRadio;
 EOF
 
-sudo mv js8tools.desktop /usr/share/applications/
+sudo mv m0iax.desktop /usr/share/applications/
 }
 
 ##################################
