@@ -772,8 +772,7 @@ echo "HSPASS=$HSPASS" >> $CONFIG
 ###################################
 GPSINSTALL=$(cat $BASE | grep GPS)
 if [ -n "$GPSINSTALL" ]; then
-USB=$(ls /dev/serial/by-id)
-USB=$(echo $USB | sed "s/\s/|/g")
+
 
 yad --center --height="300" --width="300" --form --separator="|" --item-separator="|" --title="GPS" \
 --image $LOGO --window-icon=$LOGO --image-on-top \
@@ -785,6 +784,9 @@ BUT=$?
 if [ $BUT = 1 ] || [ $BUT = 252 ]; then
 exit
 fi
+
+USB=$(ls /dev/serial/by-id)
+USB=$(echo $USB | sed "s/\s/|/g")
 
 GPS=$(yad --center --height="600" --width="300" --form --separator="|" --item-separator="|" --title="GPS" \
 --image $LOGO --window-icon=$LOGO --image-on-top \
