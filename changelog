@@ -11,6 +11,7 @@ version=3.0.4
 		fix issue 101 https://github.com/km4ack/pi-build/issues/101
 		update ruby install to 2.5
 		update M0IAX JS8Call Utils install method
+		improve GPS selection section to handle GPS not plugged in at boot
 
 3.0.3		Add GPS by-id to allow for different GPS units to be used (Thanks pleasantone for suggestion) https://github.com/km4ack/pi-build/issues/40
 		Change conky auto start. Fix https://github.com/km4ack/pi-build/issues/83
