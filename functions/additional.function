@@ -14,7 +14,6 @@ source $MYPATH/config
 ##################################
 PAT(){
 PORT=8080
-if ! hash pat 2>/dev/null; then
 cd $DIR
 NEWPATV=$(curl -s https://github.com/la5nta/pat/releases | grep armhf | head -1 | sed 's/.*pat_/pat_/' | sed 's/<\/a>.*$//')
 NEWPAT=$(echo $NEWPATV | sed 's/pat_//' | sed 's/_linux_armhf.deb//' | sed 's/0\.//')
@@ -39,7 +38,6 @@ jq '.ax25.rig = '\"my-rig\"'' $HOME/.wl2k/config.json | jq '.ardop.rig = '\"my-r
 mv $HOME/Desktop/config.json $FIG
 sed -i 's/"enable_http": false,/"enable_http": true,/' $FIG
 
-fi
 }
 ##################################
 #	PAT MENU
