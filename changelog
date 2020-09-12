@@ -12,6 +12,11 @@ version=3.0.4
 		update ruby install to 2.5
 		update M0IAX JS8Call Utils install method
 		improve GPS selection section to handle GPS not plugged in at boot
+		add bc install to build a pi script
+		add bc install to update script
+		update pat winlink check
+		update pat winlink install
+		backup/restore pat config file if it exist
 
 3.0.3		Add GPS by-id to allow for different GPS units to be used (Thanks pleasantone for suggestion) https://github.com/km4ack/pi-build/issues/40
 		Change conky auto start. Fix https://github.com/km4ack/pi-build/issues/83

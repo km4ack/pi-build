@@ -119,6 +119,11 @@ if [ $BUT = 252 ] || [ $BUT = 1 ]; then
 exit
 fi
 
+#install bc if not installed
+if ! hash bc>/dev/null; then
+sudo apt install -y bc
+fi
+
 CHECK(){
 #----------------------------------------------------#
 #		Hotspot
@@ -342,16 +347,17 @@ echo "Checking Pat Winlink"
 if ! hash pat 2>/dev/null; then
 PAT="Not_Installed"
 else
-PAT=$(pat version | awk -F 'v' '{print $2}' | head -c 5)
-NEWPAT=$(curl -s https://github.com/la5nta/pat/releases | grep -m 1 "amd64.deb"\
- | awk -F '_' '{print $2}')
+PAT=$(pat version | awk '{print $2}' | sed 's/v//' | sed 's/0\.//')
+NEWPATV=$(curl -s https://github.com/la5nta/pat/releases | grep armhf | head -1 | sed 's/.*pat_/pat_/' | sed 's/<\/a>.*$//')
+NEWPAT=$(echo $NEWPATV | sed 's/pat_//' | sed 's/_linux_armhf.deb//' | sed 's/0\.//')
+VERTEST=$(echo "$NEWPAT>$PAT" | bc)
 
-	if (( $(echo "$NEWPAT $PAT" | awk '{print ($1 > $2)}') ))
+	if [ "$VERTEST" = 1 ]
 	then
 	PAT=NEEDS-UPDATE
 	else
 	PAT="is_latest_version"
-fi
+	fi
 fi
 #----------------------------------------------------#
 #		CHRIP
