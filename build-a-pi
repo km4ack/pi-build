@@ -71,6 +71,9 @@ sudo apt-get update
 	if ! hash jq 2>/dev/null; then
 	sudo apt install -y jq
 	fi
+	if ! hash bc>/dev/null; then
+	sudo apt install -y bc
+	fi
 
 #####################################
 #	Check if run before
