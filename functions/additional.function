@@ -16,8 +16,10 @@ PAT(){
 PORT=8080
 if ! hash pat 2>/dev/null; then
 cd $DIR
-wget --tries 2 --connect-timeout=60 https://github.com/la5nta/pat/releases/download/v0.9.0/pat_0.9.0_linux_armhf.deb
-sudo dpkg -i $DIR/pat_0.9.0_linux_armhf.deb
+NEWPATV=$(curl -s https://github.com/la5nta/pat/releases | grep armhf | head -1 | sed 's/.*pat_/pat_/' | sed 's/<\/a>.*$//')
+NEWPAT=$(echo $NEWPATV | sed 's/pat_//' | sed 's/_linux_armhf.deb//' | sed 's/0\.//')
+wget --tries 2 --connect-timeout=60 https://github.com/la5nta/pat/releases/download/v0.$NEWPAT/$NEWPATV
+sudo dpkg -i $DIR/$NEWPATV
 pat http &
 sudo killall pat
 sudo systemctl start pat@$WHO
