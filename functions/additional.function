@@ -268,7 +268,7 @@ sudo sed -i 's/Education;/Network;HamRadio;/' /usr/local/share/applications/qsst
 GRIDTRACKER(){
 cd $HOME
 sudo apt-get install -y libgconf-2-4
-GRIDDLL=$(curl -s https://tagloomis.com/downloads/ | grep Arm | head -1 | sed 's/<p><a\ href="//' | sed 's/?.*$//')
+GRIDDLL=$(curl -s https://tagloomis.com/downloads/ | grep Arm | head -1 | sed 's/.*href="//' | sed 's/.gz.*$/.gz/')
 wget --tries 2 --connect-timeout=60 $GRIDDLL
 GRIDTAR=$(echo $GRIDDLL | sed 's/.*\///g')
 tar -xzvf $GRIDTAR
