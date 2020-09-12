@@ -13,13 +13,18 @@ source $MYPATH/config
 #	PAT WINLINK
 ##################################
 PAT(){
+echo "##################"
+echo "installing pat"
+echo "##################"
 PORT=8080
 cd $DIR
 if [ -f $HOME/.wl2k/config.json ]; then
-cp $HOME/.wl2k/config.json $DIR
+cp $HOME/.wl2k/config.json $DIR/config.json
 fi
 NEWPATV=$(curl -s https://github.com/la5nta/pat/releases | grep armhf | head -1 | sed 's/.*pat_/pat_/' | sed 's/<\/a>.*$//')
 NEWPAT=$(echo $NEWPATV | sed 's/pat_//' | sed 's/_linux_armhf.deb//' | sed 's/0\.//')
+echo "new pat v $NEWPATV"
+echo "new pat $NEWPAT"
 wget --tries 2 --connect-timeout=60 https://github.com/la5nta/pat/releases/download/v0.$NEWPAT/$NEWPATV
 sudo dpkg -i $DIR/$NEWPATV
 pat http &
