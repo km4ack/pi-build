@@ -41,7 +41,7 @@ jq '.ax25.rig = '\"my-rig\"'' $HOME/.wl2k/config.json | jq '.ardop.rig = '\"my-r
 mv $HOME/Desktop/config.json $FIG
 sed -i 's/"enable_http": false,/"enable_http": true,/' $FIG
 
-if [ -f $DIR/config.json }; then
+if [ -f $DIR/config.json ]; then
 mv $DIR/config.json $HOME/.wl2k/
 fi
 
