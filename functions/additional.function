@@ -234,8 +234,8 @@ GPKG=$(curl -s https://www.whitemesa.net/garim/src/ | grep tar.gz | tail -1 | se
 cd $DIR
 wget --tries 2 --connect-timeout=60 https://www.whitemesa.net/garim/src/$GPKG
 tar -xzvf $GPKG
-DIR=$(echo $GPKG | sed 's/.tar.gz//')
-cd $DIR
+DIRR=$(echo $GPKG | sed 's/.tar.gz//')
+cd $DIRR
 ./configure
 make
 sudo make install
