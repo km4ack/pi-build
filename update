@@ -204,7 +204,7 @@ fi
 #----------------------------------------------------#
 #		M0IAX
 #----------------------------------------------------#
-if [ -f $HOME/bin/JS8CallUtils_v2.py ]; then
+if [ -f /usr/local/bin/JS8CallUtils_v2 ]; then
 M0IAX=Installed
 else
 M0IAX="Not Installed"
