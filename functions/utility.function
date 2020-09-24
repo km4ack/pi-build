@@ -119,8 +119,10 @@ yad --form --width=500 --text-align=center --center --title="Build-a-Pi" --text-
 --image $LOGO --window-icon=$LOGO --image-on-top --separator="|" --item-separator="|" \
 --text="Real Time Clock already installed" \
 --button=gtk-close
-exit 1
-fi
+#exit statement here causes script to exit without finishing. Reference link next line
+#https://github.com/km4ack/pi-build/issues/139
+
+else
 
 IC2ACTIVE=$(ls /dev/*i2c*)
 
@@ -183,6 +185,7 @@ yad --form --width=500 --text-align=center --center --title="Build-a-Pi" --text-
 --button=gtk-close
 fi
 
+fi #close first if/then statement
 }
 
 
