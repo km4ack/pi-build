@@ -662,6 +662,15 @@ else
 TEL="Installed"
 fi
 
+#----------------------------------------------------#
+#		piQtTermTCP
+#----------------------------------------------------#
+if [ -f /usr/local/bin/piQtTermTCP ]; then
+PITERM="Installed"
+else
+PITERM="Not Installed"
+fi
+
 CHECK
 ####################################################################
 ####################################################################
@@ -928,6 +937,7 @@ false "RTC" "$RTC" "Real Time Clock" \
 false "SHOWLOG" "$SHOWLOG" "Log File Viewer" \
 false "PISTATS" "$PISTATS" "Pi3/4 Stats Monitor" \
 false "TELNET" "$TEL" "Telnet Protocol" \
+false "PITERM" "$PITERM" "PiQTermTCP Terminal Program" \
 --button="Exit":1 \
 --button="Install/Update Selected":2 > $UTILITY
 BUT=$?
