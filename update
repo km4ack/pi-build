@@ -12,7 +12,7 @@
 #                                                                #
 ##################################################################
 
-MYPATH=$HOME/pi-build
+MYPATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 BASE=$MYPATH/base.txt
 FUNCTIONS=$MYPATH/functions
 ADDITIONAL=$MYPATH/additional.txt
@@ -21,7 +21,7 @@ FLSUITE=$MYPATH/flsuite.txt
 CONFIG=$MYPATH/config
 LOGO=$MYPATH/logo.png
 TEMPCRON=$MYPATH/cron.tmp
-VERSION=$(cat $MYPATH/changelog | grep version= | sed 's/version=//')
+VERSION=$(grep "version=" $MYPATH/changelog | sed 's/version=//')
 
 FINISH(){
 if [ -f "$BASE" ]; then
@@ -60,7 +60,7 @@ mkdir -p $HOME/.config/autostart
 #Check for BAP updates
 #Check for build a pi updates
 echo "Checking for Build a Pi updates"
-CURRENT=$(cat $MYPATH/changelog | head -1 | sed s'/version=//')
+CURRENT=$(head -1 $MYPATH/changelog | sed s'/version=//')
 
 LATEST=$(curl -s https://raw.githubusercontent.com/km4ack/pi-build/master/changelog | head -1 | sed 's/version=//')
 
@@ -85,7 +85,7 @@ echo $BUT
 	elif [ $BUT = 2 ]; then
 	echo "Updating Build a Pi to $LATEST"
 	mv $MYPATH/config $HOME/Documents/config.bap
-	rm -rf $HOME/pi-build
+	rm -rf $MYPATH
 	cd ~
 	git clone https://github.com/km4ack/pi-build.git
 	mv $HOME/Documents/config.bap $MYPATH/config
@@ -119,25 +119,24 @@ if [ $BUT = 252 ] || [ $BUT = 1 ]; then
 exit
 fi
 
+#install bc if not installed
+if ! hash bc>/dev/null; then
+sudo apt install -y bc
+fi
+
 CHECK(){
 #----------------------------------------------------#
 #		Hotspot
 #----------------------------------------------------#
-HOTSPOT=$(ls /usr/bin/ | grep autohotspotN)
-if [ -z "$HOTSPOT" ]; then
+HOTSPOT="/usr/bin/autohotspotN"
+if [ ! -f "$HOTSPOT" ]; then
 HOTSPOT="Not Installed"
 else
 HOTSPOT="Installed"
 fi
 
-#----------------------------------------------------#
-#		Hotspot tools
-#----------------------------------------------------#
-if [ ! -d $HOME/hotspot-tools2 ]; then
-HSTOOLS="Not Installed"
-else
-HSTOOLS="Installed"
-fi
+#remove duplicate HST check
+
 #----------------------------------------------------#
 #		AX25
 #----------------------------------------------------#
@@ -205,7 +204,7 @@ fi
 #----------------------------------------------------#
 #		M0IAX
 #----------------------------------------------------#
-if [ -f $HOME/bin/JS8CallUtils_v2.py ]; then
+if [ -f /usr/local/bin/JS8CallUtils_v2 ]; then
 M0IAX=Installed
 else
 M0IAX="Not Installed"
@@ -348,16 +347,17 @@ echo "Checking Pat Winlink"
 if ! hash pat 2>/dev/null; then
 PAT="Not_Installed"
 else
-PAT=$(pat version | awk -F 'v' '{print $2}' | head -c 5)
-NEWPAT=$(curl -s https://github.com/la5nta/pat/releases | grep -m 1 "amd64.deb"\
- | awk -F '_' '{print $2}')
+PAT=$(pat version | awk '{print $2}' | sed 's/v//' | sed 's/0\.//')
+NEWPATV=$(curl -s https://github.com/la5nta/pat/releases | grep armhf | head -1 | sed 's/.*pat_/pat_/' | sed 's/<\/a>.*$//')
+NEWPAT=$(echo $NEWPATV | sed 's/pat_//' | sed 's/_linux_armhf.deb//' | sed 's/0\.//')
+VERTEST=$(echo "$NEWPAT>$PAT" | bc)
 
-	if (( $(echo "$NEWPAT $PAT" | awk '{print ($1 > $2)}') ))
+	if [ "$VERTEST" = 1 ]
 	then
 	PAT=NEEDS-UPDATE
 	else
 	PAT="is_latest_version"
-fi
+	fi
 fi
 #----------------------------------------------------#
 #		CHRIP
@@ -453,8 +453,8 @@ fi
 #----------------------------------------------------#
 #		XASTIR
 #----------------------------------------------------#
-XA=$(ls /usr/bin/ | grep xastir)
-if [ -z "$XA" ]; then
+XA="/usr/bin/xastir"
+if [ ! -f "$XA" ]; then
 XASTIR="Not Installed"
 else
 XASTIR="Installed"
@@ -463,8 +463,8 @@ fi
 #----------------------------------------------------#
 #		YAAC
 #----------------------------------------------------#
-YAAC=$(ls $HOME | grep YAAC)
-if [ -z "$YAAC" ]; then
+YAAC="$HOME/YAAC"
+if [ ! -d "$YAAC" ]; then
 YAAC="Not Installed"
 else
 YAAC="Installed"
@@ -491,8 +491,8 @@ fi
 #----------------------------------------------------#
 #		GRIDTRACKER
 #----------------------------------------------------#
-GT=$(ls $HOME | grep GridTracker)
-if [ -z "$GT" ]; then
+GT="$HOME/GridTracker"
+if [ ! -d "$GT" ]; then
 GRIDTRACK="Not Installed"
 else
 GRIDTRACK="Installed"
@@ -594,8 +594,6 @@ fi
 #----------------------------------------------------#
 RTC="Unknown"
 
-}
-
 #----------------------------------------------------#
 #		Gpredict
 #----------------------------------------------------#
@@ -604,6 +602,58 @@ GPREDICT="Not Installed"
 else
 GPREDICT="Installed"
 fi
+
+#----------------------------------------------------#
+#		TQSL
+#----------------------------------------------------#
+if ! hash tqsl 2>/dev/null; then
+TQSL="Not Installed"
+else
+TQSL="Installed"
+fi
+
+#----------------------------------------------------#
+#		PISTATS
+#----------------------------------------------------#
+if ! hash pistats 2>/dev/null; then
+PISTATS="Not Installed"
+else
+PISTATS="Installed"
+fi
+
+#----------------------------------------------------#
+#		XLOG CHECK
+#----------------------------------------------------#
+if ! hash xlog 2>/dev/null; then
+XLOG="Not_Installed"
+else
+
+XLOGCUR=$(xlog -version | sed 's/xlog\ version\ //')
+
+XLOGLATEST=$(curl -s https://download.savannah.nongnu.org/releases/xlog/ | \
+grep 2.[0-9].[0-9][0-9].tar | sort | tail -1 | sed 's/.*xlog/xlog/' | sed 's/.sig.*$//' | \
+sed 's/xlog-//' | sed 's/.tar.gz//')
+
+	if (( $(echo "$XLOGLATEST $XLOGCUR" | awk '{print ($1 > $2)}') ))
+	then
+	XLOG="NEEDS-UPDATE"
+	else
+	XLOG=is_latest_version
+	fi
+fi
+
+#----------------------------------------------------#
+#		JTDX
+#----------------------------------------------------#
+if ! hash jtdx 2>/dev/null; then
+JTDX="Not_Installed"
+else
+JTDX=Installed
+fi
+
+}
+
+
 CHECK
 #####################################
 #	Get User Call
@@ -728,8 +778,7 @@ echo "HSPASS=$HSPASS" >> $CONFIG
 ###################################
 GPSINSTALL=$(cat $BASE | grep GPS)
 if [ -n "$GPSINSTALL" ]; then
-USB=$(ls /dev/serial/by-id)
-USB=$(echo $USB | sed "s/\s/|/g")
+
 
 yad --center --height="300" --width="300" --form --separator="|" --item-separator="|" --title="GPS" \
 --image $LOGO --window-icon=$LOGO --image-on-top \
@@ -741,6 +790,9 @@ BUT=$?
 if [ $BUT = 1 ] || [ $BUT = 252 ]; then
 exit
 fi
+
+USB=$(ls /dev/serial/by-id)
+USB=$(echo $USB | sed "s/\s/|/g")
 
 GPS=$(yad --center --height="600" --width="300" --form --separator="|" --item-separator="|" --title="GPS" \
 --image $LOGO --window-icon=$LOGO --image-on-top \
@@ -790,18 +842,21 @@ false "GARIM" "$GARIM" "File Transfer Program " \
 false "M0IAX" "$M0IAX" "Tools for JS8Call messages" \
 false "CONKY" "$CONKY" "System Information Display" \
 false "WSJTX" "$FT8" "Weak signal digital mode software" \
+false "JTDX" "$JTDX" "Weak signal digital mode software" \
 false "JS8CALL" "$JS8" "Weak signal digital mode software" \
 false "XASTIR" "$XASTIR" "APRS Client" \
 false "YAAC" "$YAAC" "Yet Another APRS Client" \
 false "PI-APRS" "$PIAPRS" "APRS Messaging Client" \
 false "PYQSO" "$PYQSO" "Logging Software" \
 false "CQRLOG" "$CQRLOG" "Logging Software" \
+false "XLOG" "$XLOG" "Logging Software" \
 false "QSSTV" "$QSSTV" "Slow scan TV" \
 false "GRIDTRACKER" "$GRIDTRACK" "Track grids in WSJTX" \
 false "HAMCLOCK" "$HAMCLOCK" "Clock for Ham Radio Ops" \
 false "PROPAGATION" "$PROP" "Propagation prediction" \
 false "EES" "$EES" "KM4ACK Emergency Email Server" \
 false "GPREDICT" "$GPREDICT" "Satellite Tracking" \
+false "TQSL" "$TQSL" "LOTW Software" \
 --button="Exit":1 \
 --button="Next":2 > $ADDITIONAL
 BUT=$?
@@ -853,6 +908,7 @@ false "TEMPCONVERT" "$TEMPCONVERT" "Temperature Converter" \
 false "GPARTED" "$GPARTED" "Disk Utility Application" \
 false "RTC" "$RTC" "Real Time Clock" \
 false "SHOWLOG" "$SHOWLOG" "Log File Viewer" \
+false "PISTATS" "$PISTATS" "Pi3/4 Stats Monitor" \
 --button="Exit":1 \
 --button="Install/Update Selected":2 > $UTILITY
 BUT=$?
@@ -937,7 +993,7 @@ done < $UTILITY
 #####################################
 #Remove temp files
 rm $BASE $ADDITIONAL $UTILITY $FLSUITE > /dev/null 2>&1
-sudo apt -y autoremove > /dev/null 2>&1
+
 
 #restore crontab
 crontab $TEMPCRON

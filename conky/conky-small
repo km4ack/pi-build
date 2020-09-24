@@ -1,38 +1,45 @@
-background yes
-use_xft yes
-xftfont 123:size=8
-xftalpha 0.5
-update_interval 0.5
-total_run_times 0
-own_window yes
-own_window_type normal
-own_window_transparent yes
-own_window_hints undecorated,below,sticky,skip_taskbar,skip_pager
-double_buffer yes
-minimum_size 200 5
-maximum_width 200
-draw_shades no
-draw_outline no
-draw_borders no
-draw_graph_borders no
-default_color gray
-default_shade_color red
-default_outline_color green
-alignment top_right
-gap_x 10
-gap_y 10
-no_buffers yes
-uppercase no
-cpu_avg_samples 2
-net_avg_samples 1
-override_utf8_locale no
-use_spacer right
-TEXT
+conky.config = {
+	background = true,
+	use_xft = true,
+	font = '123:size=8',
+	xftalpha = 0.5,
+	update_interval = 0.5,
+	total_run_times = 0,
+	own_window = true,
+	own_window_type = 'normal',
+	own_window_transparent = true,
+	own_window_hints = 'undecorated,below,sticky,skip_taskbar,skip_pager',
+	double_buffer = true,
+	minimum_width = 200, minimum_height = 5,
+	maximum_width = 200,
+	draw_shades = false,
+	draw_outline = false,
+	draw_borders = false,
+	draw_graph_borders = false,
+	default_color = 'gray',
+	default_shade_color = 'red',
+	default_outline_color = 'green',
+	alignment = 'top_right',
+	gap_x = 10,
+	gap_y = 10,
+	no_buffers = true,
+	uppercase = false,
+	cpu_avg_samples = 2,
+	net_avg_samples = 1,
+	override_utf8_locale = false,
+	use_spacer = 'right',
+};
+
+conky.text = [[
 
 ${font Arial:size=12}${color Yellow}${alignc}N0CALL
 ${voffset -20}
 ${font Arial:bold:size=08}${color White}Gridsquare ${alignr}${color Yellow}${execi 25 $HOME/bin/conky/grid | cut -c1-8}
 #${font Arial:bold:size=12}${color White}Radio Freq ${alignr}${color Yellow}${execi 5 $HOME/bin/conky/get-freq | cut -c1-6}
+#${font Arial:bold:size=12}${color White}Radio Freq A ${if_match "VFOA" == "${execi 5 $HOME/bin/conky/get-vfo}"}*$endif\
+#${alignr}${color Yellow}${execi 5 $HOME/bin/conky/get-freq VFOA | cut -c1-7}
+#${font Arial:bold:size=12}${color White}Radio Freq B ${if_match "VFOB" == "${execi 5 $HOME/bin/conky/get-vfo}"}*$endif\
+#${alignr}${color Yellow}${execi 5 $HOME/bin/conky/get-freq VFOB | cut -c1-7}
 ${color Yellow}LOCAL${alignr}ZULU
 ${voffset -20}
 ${color DarkSlateGray}${hr 2}
@@ -88,3 +95,4 @@ ${font Arial:bold:size=6}${color White}${tail ~/Documents/mylog.txt 5}
 
 
 #$diskio
+]];

@@ -1,4 +1,24 @@
-version=3.0.3
+version=3.0.4
+
+3.0.4		Add gitignore
+		Fix Issue #109 https://github.com/km4ack/pi-build/issues/109
+		add setconky to main menu in pref sub catagory
+		fix issue #119 https://github.com/km4ack/pi-build/issues/119
+		add TQSL - resolve https://github.com/km4ack/pi-build/issues/93
+		add PISTATS - https://github.com/km4ack/pi-build/issues/9
+		add JTDX https://github.com/km4ack/pi-build/issues/15
+		add xlog https://github.com/km4ack/pi-build/issues/45
+		fix issue 101 https://github.com/km4ack/pi-build/issues/101
+		update ruby install to 2.5
+		update M0IAX JS8Call Utils install method
+		improve GPS selection section to handle GPS not plugged in at boot
+		add bc install to build a pi script
+		add bc install to update script
+		update pat winlink check
+		update pat winlink install
+		backup/restore pat config file if it exist
+		fix grid tracker download (Thanks KN4QLH for finding the bug!)
+		fix pat install (Thanks KD7UM for finding the bug!)
 
 3.0.3		Add GPS by-id to allow for different GPS units to be used (Thanks pleasantone for suggestion) https://github.com/km4ack/pi-build/issues/40
 		Change conky auto start. Fix https://github.com/km4ack/pi-build/issues/83

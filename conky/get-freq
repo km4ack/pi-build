@@ -1,22 +1,40 @@
 #!/bin/bash
 
 #get freq of radio to display in conky
+#optional parameter: VFOA VFOB
 #20191217 km4ack
+#20200428 modified
 
-source $HOME/patmenu2/config
+source "$HOME/patmenu2/config"
 
 MAIN () {
 
-FREQ=$($RIG f)
-FREQCH=$(echo $FREQ | grep error)
+# If first argument, $1, is empty or unset, use 'VFOA' as its value.
+VFO=${1:-'VFOA'}
+
+FREQ=$($RIG -o f "$VFO")
+FREQCH=$(echo "$FREQ" | grep error)
 
 if [ -z "$FREQCH" ]
 then
-echo $FREQ
+HZ_TO_MHZ "$FREQ"
 else
-MAIN
+MAIN "$1"
 fi
 
 }
 
-MAIN
+HZ_TO_MHZ () {
+
+#Inject decimal into number six places from right.
+#First, and only, parameter expected to be a string of six or more digits
+
+DP=.
+SIX_DIGITS='[0-9][0-9][0-9][0-9][0-9][0-9]'
+MHZ="${1%%$SIX_DIGITS}"
+HZ="${1##$MHZ}"
+printf "%s$DP%s\n" "$MHZ" "$HZ"
+
+}
+
+MAIN "$1"

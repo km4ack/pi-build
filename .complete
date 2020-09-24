@@ -1,6 +1,6 @@
 #!/bin/bash
 
-MYPATH=$HOME/pi-build
+MYPATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 LOGO=$MYPATH/logo.png
 
 cat <<EOF > $MYPATH/boot.txt

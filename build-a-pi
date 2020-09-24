@@ -13,9 +13,9 @@
 
 
 DESK=$(printenv | grep DISPLAY)
-MYPATH=$HOME/pi-build
+MYPATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 LOGO=$MYPATH/logo.png
-RB=$( ls $HOME/.config | grep KM4ACK)
+RB=$HOME/.config/KM4ACK
 BASE=$MYPATH/base.txt
 ADDITIONAL=$MYPATH/additional.txt
 UTILITY=$MYPATH/utility.txt
@@ -25,7 +25,7 @@ FUNCTIONS=$MYPATH/functions
 TEMPCRON=$MYPATH/cron.tmp
 DIR=$MYPATH/temp
 WHO=$(whoami)
-VERSION=$(cat $MYPATH/changelog | grep version= | sed 's/version=//')
+VERSION=$(grep "version=" $MYPATH/changelog | sed 's/version=//')
 
 FINISH(){
 if [ -f "$BASE" ]; then
@@ -71,11 +71,14 @@ sudo apt-get update
 	if ! hash jq 2>/dev/null; then
 	sudo apt install -y jq
 	fi
+	if ! hash bc>/dev/null; then
+	sudo apt install -y bc
+	fi
 
 #####################################
 #	Check if run before
 #####################################
-if [ -n "$RB" ]; then
+if [ -f "$RB" ]; then
 bash $MYPATH/update &
 exit
 fi
@@ -139,17 +142,31 @@ CALL
 CALL=$(echo $INFO | awk -F "|" '{print $1}')
 CALL=${CALL^^}
 
-echo "CALL=$CALL" > $CONFIG
-
 #Verify call not empty
-if [ -z "$CALL" ]; then
-yad --form --width=420 --text-align=center --center --title="Build-a-Pi" --text-align=center \
---image $LOGO --window-icon=$LOGO --image-on-top --separator="|" --item-separator="|" \
---text="<b>Call Can't be Blank</b>" \
---button=gtk-ok
-CALL
-fi
+ATTEMPTS=0
+while [ -z "$CALL" ];
+do
+	if [ $ATTEMPTS -eq 3 ]
+	then
+		yad --form --width=420 --text-align=center --center --title="Build-a-Pi" --text-align=center \
+		--image $LOGO --window-icon=$LOGO --image-on-top --separator="|" --item-separator="|" \
+		--text="<b>Empty callsign after 3 attempts. Quiting!</b>" \
+		--button=gtk-ok
+		exit
+	fi
 
+	yad --form --width=420 --text-align=center --center --title="Build-a-Pi" --text-align=center \
+	--image $LOGO --window-icon=$LOGO --image-on-top --separator="|" --item-separator="|" \
+	--text="<b>Call Can't be Blank</b>" \
+	--button=gtk-ok
+
+	((ATTEMPTS=ATTEMPTS+1))
+	CALL
+	CALL=$(echo $INFO | awk -F "|" '{print $1}')
+	CALL=${CALL^^}
+done
+
+echo "CALL=$CALL" > $CONFIG
 
 #####################################
 #	Base Apps
@@ -183,10 +200,8 @@ echo "$i" >> $BASE
 done
 fi
 
-#############################################################
-#check if hotspot is chosen for install & get info if needed#
-#############################################################
-HS=$(cat $BASE | grep HOTSPOT)
+#check if hotspot is chosen for install & get info if needed
+HS=$(grep "HOTSPOT" $BASE)
 if [ -n "$HS" ]; then
 HSINFO(){
 #unblock wifi
@@ -195,7 +210,7 @@ sudo rfkill unblock all > /dev/null 2>&1
 sudo ifconfig wlan0 up
 #LIST=$(sudo iw dev "wlan0" scan ap-force | egrep "^BSS|SSID:" | grep SSID: | sed 's/SSID://' | awk '{ print $1 }')
 #LIST=$(echo $LIST | sed 's/ /|/g')
-LIST=$(sudo iw dev "wlan0" scan ap-force | egrep "^BSS|SSID:" | grep SSID: | sed 's/SSID://')
+LIST=$(sudo iw dev "wlan0" scan ap-force | grep "SSID:" | awk '{print $2}')
 LIST=$(echo "$LIST" | tr '\n' '|')
 
 
@@ -252,8 +267,7 @@ echo "HSPASS=\"$HSPASS\"" >> $CONFIG
 ###################################
 GPSINSTALL=$(cat $BASE | grep GPS)
 if [ -n "$GPSINSTALL" ]; then
-USB=$(ls /dev/serial/by-id)
-USB=$(echo $USB | sed "s/\s/|/g")
+
 
 yad --center --height="300" --width="300" --form --separator="|" --item-separator="|" --title="GPS" \
 --image $LOGO --window-icon=$LOGO --image-on-top \
@@ -265,7 +279,8 @@ BUT=$?
 if [ $BUT = 1 ] || [ $BUT = 252 ]; then
 exit
 fi
-
+USB=$(ls /dev/serial/by-id)
+USB=$(echo $USB | sed "s/\s/|/g")
 
 GPS=$(yad --center --height="600" --width="300" --form --separator="|" --item-separator="|" --title="GPS" \
 --image $LOGO --window-icon=$LOGO --image-on-top \
@@ -326,8 +341,10 @@ false "PAT-MENU" "Control for Pat Winlink" \
 false "JS8CALL" "Weak Signal Digital Mode Software" \
 false "M0IAX" "Tools for JS8Call Messages" \
 false "WSJTX" "Weak Signal Digital Mode Software" \
+false "JTDX" "Weak Signal Digital Mode Software" \
 false "PYQSO" "Logging Software" \
 false "CQRLOG" "Logging Software" \
+false "XLOG" "Logging Software" \
 false "EES" "KM4ACK Emergency Email Server" \
 false "QSSTV" "Slow Scan TV" \
 false "GRIDTRACKER" "Track Grids in WSJTX" \
@@ -336,6 +353,7 @@ false "PROPAGATION" "Propagation Prediction Software" \
 false "YAAC" "Yet Another APRS Client" \
 false "XASTIR" "APRS Client" \
 false "GPREDICT" "Satellite Tracking" \
+false "TQSL" "LOTW Software" \
 --button="Exit":1 \
 --button="Check All and Continue":3 \
 --button="Next":2 > $ADDITIONAL
@@ -346,7 +364,8 @@ fi
 
 if [ $BUT = 3 ]; then
 ADDAPPS=(CONKY PI-APRS CHIRP GARIM PAT PAT-MENU JS8CALL M0IAX WSJTX PYQSO \
-CQRLOG EES QSSTV GRIDTRACKER HAMCLOCK PROPAGATION YAAC XASTIR GPREDICT)
+CQRLOG EES QSSTV GRIDTRACKER HAMCLOCK PROPAGATION YAAC XASTIR GPREDICT TQSL \
+XLOG JTDX)
 
 for i in "${ADDAPPS[@]}"
 do
@@ -355,7 +374,7 @@ done
 fi
 
 #check if hamclock is being installed
-HCCHECK=$(cat $ADDITIONAL | grep HAMCLOCK)
+HCCHECK=$(grep "HAMCLOCK" $ADDITIONAL)
 if [ -n "$HCCHECK" ]; then
 
 HC=$(yad --form --width=420 --text-align=center --center --title="Build-a-Pi" \
@@ -368,7 +387,7 @@ sed -i 's/HAMCLOCK//' $ADDITIONAL
 echo $HC >> $ADDITIONAL
 fi
 
-PATCHECK=$(cat $ADDITIONAL | grep PAT)
+PATCHECK=$(grep "PAT" $ADDITIONAL)
 if [ -n "$PATCHECK" ]; then
 INFO=$(yad --form --width=420 --text-align=center --center --title="Build-a-Pi" \
 --image $LOGO --window-icon=$LOGO --image-on-top --separator="|" --item-separator="|" \
@@ -396,6 +415,7 @@ false "CALLSIGN" "Call sign lookup" \
 false "TEMPCONVERT" "Temperature Converter" \
 false "GPARTED" "Disk Utility Tool" \
 false "SHOWLOG" "Log file viewer" \
+false "PISTATS" "Pi3/4 Stats Monitor" \
 --button="Exit":1 \
 --button="Check All and Continue":3 \
 --button="Install Selected":2 > $UTILITY
@@ -405,7 +425,7 @@ exit
 fi
 
 if [ $BUT = 3 ]; then
-UTILAPPS=(DIPOLE CALLSIGN TEMPCONVERT GPARTED SHOWLOG)
+UTILAPPS=(DIPOLE CALLSIGN TEMPCONVERT GPARTED SHOWLOG PISTATS)
 for i in "${UTILAPPS[@]}"
 do
 echo "$i" >> $UTILITY
@@ -421,7 +441,9 @@ sudo apt-get -y upgrade
 sudo apt -y full-upgrade
 
 #set wallpaper
-pcmanfm --set-wallpaper $HOME/pi-build/bap-wallpaper.jpg
+pcmanfm --set-wallpaper $MYPATH/bap-wallpaper.jpg
+
+mkdir -p $DIR 2> /dev/null
 
 #add virtual sound card link for pulse audio
 cd $DIR
@@ -467,8 +489,8 @@ cat > build-a-pi.desktop <<EOF
 Name=Build-a-Pi
 GenericName=KM4ACK Build-a-Pi
 Comment=Build-a-Pi App Manager
-Exec=$HOME/pi-build/update
-Icon=$HOME/pi-build/logo.png
+Exec=$MYPATH/update
+Icon=$MYPATH/logo.png
 Terminal=true
 Type=Application
 Categories=Settings;DesktopSettings;GTK;X-LXDE-Settings;
@@ -479,9 +501,9 @@ sudo mv build-a-pi.desktop /usr/share/applications/
 #####################################
 #	Install Base Apps
 #####################################
-touch $HOME/.config/KM4ACK
-while read i ; do
+touch $RB
 source $FUNCTIONS/base.function
+while read i ; do
 $i
 done < $BASE
 
@@ -491,19 +513,17 @@ done < $BASE
 #####################################
 source $FUNCTIONS/flsuite.function
 #perform memory increase if needed
-CHECKFL=$(cat $MYPATH/flsuite.txt)
-if [ -n "$CHECKFL" ]; then
+CHECKFL="$MYPATH/flsuite.txt"
+if [ -s "$CHECKFL" ]; then
 FLSTART
 fi
-touch $HOME/.config/KM4ACK
+touch $RB
 while read i ; do
-source $FUNCTIONS/flsuite.function
 $i
 done < $FLSUITE
 
-source $FUNCTIONS/flsuite.function
 #Perform memory reset if needed
-if [ -n "$CHECKFL" ]; then
+if [ -s "$CHECKFL" ]; then
 FLSTOP
 fi
 
@@ -511,8 +531,8 @@ fi
 #####################################
 #	Install ADDITIONAL Apps
 #####################################
-while read i ; do
 source $FUNCTIONS/additional.function
+while read i ; do
 $i
 done < $ADDITIONAL
 
@@ -520,8 +540,8 @@ done < $ADDITIONAL
 #####################################
 #	Install KM4ACK Utilites
 #####################################
-while read i ; do
 source $FUNCTIONS/utility.function
+while read i ; do
 $i
 done < $UTILITY
 
@@ -532,12 +552,14 @@ done < $UTILITY
 #Remove temp files
 rm $BASE $ADDITIONAL $UTILITY $FLSUITE > /dev/null 2>&1
 rm -rf $DIR > /dev/null 2>&1
-rm -rf $HOME/Downloads/* > /dev/null 2>&1
 sudo apt -y autoremove > /dev/null 2>&1
 
 #restore crontab
 crontab $TEMPCRON
 rm $TEMPCRON
+
+echo "WE ARE ALL DONE HERE.  If you close this window, you will have to reboot manually."
+
 #reboot when done
 yad --width=400 --height=200 --title="Reboot" --image $LOGO \
 --text-align=center --skip-taskbar --image-on-top \
