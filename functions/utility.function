@@ -208,8 +208,12 @@ cd $HOME
 rm -rf $PISTATDIR
 }
 
-
-
+##################################
+#	TELNET
+##################################
+TELNET(){
+sudo apt install -y telnet
+}
 
 
 
