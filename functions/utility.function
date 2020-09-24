@@ -240,9 +240,30 @@ sudo mv piqttermtcp.desktop /usr/share/applications/
 
 }
 
+##################################
+#	Security Tools
+##################################
+SECURITY(){
+cd $DIR
+wget https://raw.githubusercontent.com/km4ack/pi-scripts/master/security-tools
+bash security-tools
 
+sudo mv $HOME/bin/securefile /usr/local/bin
 
+cat > secure-file.desktop <<EOF
+[Desktop Entry]
+Name=SSE File Encryptor
+GenericName=SSE File Encryptor
+Comment=A program to encrypt files on the pi
+Exec=/usr/local/bin/securefile
+Icon=/usr/share/icons/gnome/22x22/actions/lock.png
+Terminal=false
+Type=Application
+Categories=Utility
+EOF
 
+sudo mv secure-file.desktop /usr/share/applications/
+}
 
 
 
