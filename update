@@ -671,6 +671,15 @@ else
 PITERM="Not Installed"
 fi
 
+#----------------------------------------------------#
+#		Security Tools
+#----------------------------------------------------#
+if [ -f /usr/local/bin/securefile ]; then
+SECURITY="Installed"
+else
+SECURITY="Not Installed"
+fi
+
 CHECK
 ####################################################################
 ####################################################################
@@ -938,6 +947,7 @@ false "SHOWLOG" "$SHOWLOG" "Log File Viewer" \
 false "PISTATS" "$PISTATS" "Pi3/4 Stats Monitor" \
 false "TELNET" "$TEL" "Telnet Protocol" \
 false "PITERM" "$PITERM" "PiQTermTCP Terminal Program" \
+false "SECURITY" "$SECURITY" "File Encryption Software" \
 --button="Exit":1 \
 --button="Install/Update Selected":2 > $UTILITY
 BUT=$?
