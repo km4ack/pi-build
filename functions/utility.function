@@ -215,8 +215,30 @@ TELNET(){
 sudo apt install -y telnet
 }
 
+##################################
+#	PiQtTermTCP
+##################################
+PITERM(){
+cd $DIR
+wget https://www.cantab.net/users/john.wiseman/Downloads/Beta/piQtTermTCP
+sudo chmod +x piQtTermTCP
+sudo mv piQtTermTCP /usr/local/bin/
 
+cat > piqttermtcp.desktop <<EOF
+[Desktop Entry]
+Name=PiQtTermTCP
+GenericName=PiQtTermTCP
+Comment=Terminal Program
+Exec=/usr/local/bin/piQtTermTCP
+Icon=/usr/share/icons/gnome/22x22/apps/xscreensaver.png
+Terminal=false
+Type=Application
+Categories=Utility
+EOF
 
+sudo mv piqttermtcp.desktop /usr/share/applications/
+
+}
 
 
 
