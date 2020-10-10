@@ -3,7 +3,7 @@
 #get VFO of radio to display in conky
 #20200428
 
-source "$HOME/patmenu/config"
+source "$HOME/patmenu2/config"
 
 MAIN () {
 
