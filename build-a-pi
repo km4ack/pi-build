@@ -419,6 +419,7 @@ false "PISTATS" "Pi3/4 Stats Monitor" \
 false "TELNET" "Telnet Protocol" \
 false "PITERM" "piQtTermTCP Terminal Program" \
 false "SECURITY" "File Encryption Software" \
+false "YGATE" "Yaesu APRS Software" \
 --button="Exit":1 \
 --button="Check All and Continue":3 \
 --button="Install Selected":2 > $UTILITY
@@ -428,7 +429,7 @@ exit
 fi
 
 if [ $BUT = 3 ]; then
-UTILAPPS=(DIPOLE CALLSIGN TEMPCONVERT GPARTED SHOWLOG PISTATS TELNET PITERM SECURITY)
+UTILAPPS=(DIPOLE CALLSIGN TEMPCONVERT GPARTED SHOWLOG PISTATS TELNET PITERM SECURITY YGATE)
 for i in "${UTILAPPS[@]}"
 do
 echo "$i" >> $UTILITY
