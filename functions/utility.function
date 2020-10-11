@@ -278,7 +278,7 @@ cat > ygate.desktop <<EOF
 Name=YGATE
 GenericName=YGATE
 Comment=Yaesu APRS Application
-Exec=~/bin/ygate
+Exec=/home/pi/bin/ygate.py
 Terminal=true
 Type=Application
 Categories=Utility
