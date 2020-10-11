@@ -19,12 +19,7 @@ For Pat Winlink:
 Winlink Password & Grid Square
 
 # Install
-This script is intended to run on a brand new installation of Buster. It should not be run on a pi that you have already started installing applications on. Install additional apps that you require after running this script.\
-\
-Get Debian Buster from https://cdimage.debian.org/debian-cd/current/arm64/iso-cd/ file debian-10.4.0-arm64-xfce-CD-1.iso
-NOTE: The Debian Buster arm64 image does not come with RealVNC server pre-installed, as it does with Raspbian. The reason is that RealVNC package is currently compiled for the armhf version of libbcm_host.so, which is a hook into the Broadcom GPU chip. As of 2020-06-27, it is not yet possible to get Debian Buster ARM64 to work with VNC.
-
-If this is a problem for you, then you will need to download Raspberry Pi OS (previously called Rasbian) 32-bit from https://downloads.raspberrypi.org/raspios_armhf_latest
+Download Raspberry Pi OS (previously called Rasbian) 32-bit from https://downloads.raspberrypi.org/raspios_armhf_latest
 
 Use a USB flash application such as Balena Etcher to copy the iso file to a USB key, get it at https://www.balena.io/etcher/
 
