@@ -680,6 +680,16 @@ else
 SECURITY="Not Installed"
 fi
 
+#----------------------------------------------------#
+#		YGATE
+#----------------------------------------------------#
+YGATE="$HOME/bin/ygate.py"
+if [ ! -f "$YGATE" ]; then
+YGATE="Not Installed"
+else
+YGATE="Installed"
+fi
+
 CHECK
 ####################################################################
 ####################################################################
@@ -948,6 +958,7 @@ false "PISTATS" "$PISTATS" "Pi3/4 Stats Monitor" \
 false "TELNET" "$TEL" "Telnet Protocol" \
 false "PITERM" "$PITERM" "PiQTermTCP Terminal Program" \
 false "SECURITY" "$SECURITY" "File Encryption Software" \
+false "YGATE" "$YGATE" "Yaesu APRS Software" \
 --button="Exit":1 \
 --button="Install/Update Selected":2 > $UTILITY
 BUT=$?
