@@ -271,7 +271,7 @@ sudo mv secure-file.desktop /usr/share/applications/
 YGATE(){
 cd $HOME/bin
 wget https://raw.githubusercontent.com/craigerl/ygate/master/ygate.py
-chmod +x ygate
+chmod +x ygate.py
 
 cat > ygate.desktop <<EOF
 [Desktop Entry]
