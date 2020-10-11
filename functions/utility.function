@@ -244,7 +244,7 @@ sudo mv piqttermtcp.desktop /usr/share/applications/
 #	Security Tools
 ##################################
 SECURITY(){
-cd $DIR
+cd $HOME/bin
 wget https://raw.githubusercontent.com/km4ack/pi-scripts/master/security-tools
 bash security-tools
 
@@ -265,8 +265,28 @@ EOF
 sudo mv secure-file.desktop /usr/share/applications/
 }
 
+##################################
+#	YGATE
+##################################
+YGATE(){
+cd $HOME/bin
+wget https://raw.githubusercontent.com/craigerl/ygate/master/ygate.py
+chmod +x ygate
 
+cat > ygate.desktop <<EOF
+[Desktop Entry]
+Name=YGATE
+GenericName=YGATE
+Comment=Yaesu APRS Application
+Exec=~/bin/ygate
+Terminal=true
+Type=Application
+Categories=Utility
+EOF
 
+sudo mv ygate.desktop /usr/share/applications/
+
+}
 
 
 
