@@ -289,10 +289,34 @@ sudo mv ygate.desktop /usr/share/applications/
 }
 
 
+##################################
+#	BPQ
+##################################
+BPQ(){
+#install LinBPQ
+cd
+wget http://www.cantab.net/users/john.wiseman/Downloads/installLinRMS
+chmod +x installLinRMS
+./installLinRMS
 
+#install BPQ config generator
+cd $HOME/linbpq
+wget https://www.cantab.net/users/john.wiseman/Downloads/Beta/piBPQConfigGen
+chmod +x piBPQConfigGen
 
+cat > bpq-config.desktop <<EOF
+[Desktop Entry]
+Name=BPQ Config Generator
+GenericName=BPQ Config Generator
+Comment=Config File Generator for LinBPQ
+Exec=/home/pi/linbpq/piBPQConfigGen
+Terminal=false
+Type=Application
+Categories=Utility
+EOF
 
-
+sudo mv bpq-config.desktop /usr/share/applications/
+}
 
 
 
