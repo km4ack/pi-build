@@ -316,6 +316,32 @@ Categories=Utility
 EOF
 
 sudo mv bpq-config.desktop /usr/share/applications/
+
+#add LinBPQ-README to desktop
+FILE=$HOME/Desktop/LinBPQ-README
+touch $FILE
+cat << EOF > $FILE
+LinBPQ was installed during the build.
+You will find the config file generator
+under utilities in the main pi menu.
+NO CONFIGURATION was done for LinBPQ
+during the build. Each individual
+operator is responsible for configuring
+his/her station.
+
+After completing the config file, you can
+start LinBPQ from the command line by running:
+~/linbpq/.linbpq
+
+Depending on your station setup, you may 
+need to start rig control, direwolf, or
+other applications before running LinBPQ.
+
+If you need help, you can find
+the LinBPQ forums at
+https://groups.io/g/bpq32/topics
+EOF
+
 }
 
 
