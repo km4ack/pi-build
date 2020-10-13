@@ -293,12 +293,51 @@ sudo mv ygate.desktop /usr/share/applications/
 #	BPQ
 ##################################
 BPQ(){
+source $HOME/pi-build/config
 #install LinBPQ
 cd
-wget http://www.cantab.net/users/john.wiseman/Downloads/installLinRMS
-chmod +x installLinRMS
-./installLinRMS
+##########################################################################
+#commands below this line were taken from John Wiseman's install script.
+#and modded to pull the operators call sign from the BAP config file.
+#http://www.cantab.net/users/john.wiseman/Downloads/installLinRMS
+##########################################################################
+ export LINBPQ=pilinbpq;
+ export APRS=piBPQAPRS
+echo "Downloading $LINBPQ and $APRS to linbpq and bpqaprs"
 
+mkdir linbpq
+cd linbpq
+wget -nv http://www.cantab.net/users/john.wiseman/Downloads/Beta/$LINBPQ -O linbpq
+chmod +x linbpq
+wget -nv http://www.cantab.net/users/john.wiseman/Downloads/Beta/$APRS -O bpqaprs
+chmod +x bpqaprs
+
+echo "Downloading config files"
+
+wget -nv http://www.cantab.net/users/john.wiseman/Downloads/SimpleRMSGateway_bpq32.cfg -O bpq32.cfg
+
+echo "Downloading HTML Files"
+
+mkdir HTML
+cd HTML
+wget -nv http://www.cantab.net/users/john.wiseman/Downloads/Beta/HTMLPages.zip
+unzip -o -q HTMLPages.zip
+rm HTMLPages.zip
+cd ..
+wget -nv http://www.cantab.net/users/john.wiseman/Downloads/LinBPQAPRS.zip
+unzip -o -q LinBPQAPRS.zip
+rm LinBPQAPRS.zip
+
+echo "Updating your callsign in configuration files"
+
+#read -e -p "Enter Your Callsign (Without SSID): "  CALL
+CALL=$(echo "$CALL" | tr '[:lower:]' '[:upper:]')
+
+sed -i "s/MYCALL/$CALL/g" bpq32.cfg
+
+#####################################################
+#End John Wiseman install script
+#####################################################
 #install BPQ config generator
 cd $HOME/linbpq
 wget https://www.cantab.net/users/john.wiseman/Downloads/Beta/piBPQConfigGen
@@ -340,6 +379,8 @@ other applications before running LinBPQ.
 If you need help, you can find
 the LinBPQ forums at
 https://groups.io/g/bpq32/topics
+and the main LinBPQ web page at
+http://g8bpq.org.uk
 EOF
 
 }
