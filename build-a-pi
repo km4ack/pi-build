@@ -421,6 +421,7 @@ false "PITERM" "piQtTermTCP Terminal Program" \
 false "SECURITY" "File Encryption Software" \
 false "YGATE" "Yaesu APRS Software" \
 false "BPQ" "LinBPQ Software" \
+false "BATT" "Battery Test Script" \
 --button="Exit":1 \
 --button="Check All and Continue":3 \
 --button="Install Selected":2 > $UTILITY
@@ -430,7 +431,7 @@ exit
 fi
 
 if [ $BUT = 3 ]; then
-UTILAPPS=(DIPOLE CALLSIGN TEMPCONVERT GPARTED SHOWLOG PISTATS TELNET PITERM SECURITY YGATE BPQ)
+UTILAPPS=(DIPOLE CALLSIGN TEMPCONVERT GPARTED SHOWLOG PISTATS TELNET PITERM SECURITY YGATE BPQ BATT)
 for i in "${UTILAPPS[@]}"
 do
 echo "$i" >> $UTILITY
