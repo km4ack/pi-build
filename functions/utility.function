@@ -278,7 +278,7 @@ cat > ygate.desktop <<EOF
 Name=YGATE
 GenericName=YGATE
 Comment=Yaesu APRS Application
-Exec=/home/pi/bin/ygate.py
+Exec=$HOME/bin/ygate.py
 Terminal=true
 Type=Application
 Categories=Utility
@@ -348,7 +348,7 @@ cat > bpq-config.desktop <<EOF
 Name=BPQ Config Generator
 GenericName=BPQ Config Generator
 Comment=Config File Generator for LinBPQ
-Exec=/home/pi/linbpq/piBPQConfigGen
+Exec=$HOME/linbpq/piBPQConfigGen
 Terminal=false
 Type=Application
 Categories=Utility
@@ -384,6 +384,35 @@ http://g8bpq.org.uk
 EOF
 
 }
+
+##################################
+#	Battery Test Script
+##################################
+BATT(){
+cd $HOME/bin
+wget https://raw.githubusercontent.com/km4ack/pi-scripts/master/batt-test
+chmod +x batt-test
+
+cat > battery-test.desktop <<EOF
+[Desktop Entry]
+Name=Battery Test Script
+GenericName=Battery Test Script
+Comment=Battery Test Utility
+Exec=$HOME/bin/batt-test
+Terminal=true
+Type=Application
+Categories=Utility
+EOF
+
+sudo mv battery-test.desktop /usr/share/applications/
+
+}
+
+
+
+
+
+
 
 
 
