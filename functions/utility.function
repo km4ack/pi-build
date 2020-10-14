@@ -408,12 +408,7 @@ sudo mv battery-test.desktop /usr/share/applications/
 
 }
 
-##################################
-#	Matchbox Keyboard
-##################################
-MATCHBOX(){
-sudo apt isntall -y matchbox-keyboard
-}
+
 
 
 
