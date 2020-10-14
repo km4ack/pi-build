@@ -700,6 +700,16 @@ else
 BPQ="Installed"
 fi
 
+#----------------------------------------------------#
+#		Battery Test Script :: BATT
+#----------------------------------------------------#
+BATT="$HOME/bin/batt-test"
+if [ ! -f "$BATT" ]; then
+BATT="Not Installed"
+else
+BATT="Installed"
+fi
+
 CHECK
 ####################################################################
 ####################################################################
@@ -970,6 +980,7 @@ false "PITERM" "$PITERM" "PiQTermTCP Terminal Program" \
 false "SECURITY" "$SECURITY" "File Encryption Software" \
 false "YGATE" "$YGATE" "Yaesu APRS Software" \
 false "BPQ" "$BPQ" "LinBPQ Software" \
+false "BATT" "$BATT" "Battery Test Script" \
 --button="Exit":1 \
 --button="Install/Update Selected":2 > $UTILITY
 BUT=$?
