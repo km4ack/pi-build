@@ -25,7 +25,7 @@ no_buffers yes
 uppercase no
 cpu_avg_samples 2
 net_avg_samples 1
-override_utf8_locale no
+override_utf8_locale yes
 use_spacer right
 TEXT
 
