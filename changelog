@@ -16,6 +16,7 @@ version=3.0.5
 		add Battery Test Script
 		add piQtTermTCP
 		Remove JTDX (Website Down) see - https://github.com/km4ack/pi-build/issues/153
+		add VNC viewer
 
 3.0.4		Add gitignore
 		Fix Issue #109 https://github.com/km4ack/pi-build/issues/109
