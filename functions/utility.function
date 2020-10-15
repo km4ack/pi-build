@@ -408,8 +408,18 @@ sudo mv battery-test.desktop /usr/share/applications/
 
 }
 
+##################################
+#	VNC Viewer
+##################################
+VNC(){
+cd $HOME
+PACKAGE=$(curl -s https://www.realvnc.com/en/connect/download/viewer/raspberrypi/ | grep .deb | awk '{print $2}' | \
+sed 's/href="\/download\/file\/viewer.files\///' | sed 's/"//')
 
-
+wget https://realvnc.com/download/file/viewer.files/$PACKAGE
+sudo dpkg -i $PACKAGE
+rm $PACKAGE
+}
 
 
 
