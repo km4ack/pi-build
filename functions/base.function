@@ -130,8 +130,10 @@ DIREWOLF(){
 cd $HOME
 git clone https://www.github.com/wb2osz/direwolf
 cd $HOME/direwolf
-sudo apt-get install -y libasound2-dev
-make
+mkdir build && cd build
+sudo apt-get install -y libasound2-dev cmake
+cmake ..
+make -j 4
 sudo make install
 make install-conf
 sed -i "s/N0CALL/$CALL/" "$HOME/direwolf.conf"
