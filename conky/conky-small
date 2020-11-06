@@ -26,7 +26,7 @@ conky.config = {
 	uppercase = false,
 	cpu_avg_samples = 2,
 	net_avg_samples = 1,
-	override_utf8_locale = false,
+	override_utf8_locale = true,
 	use_spacer = 'right',
 };
 

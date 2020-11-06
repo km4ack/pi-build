@@ -53,6 +53,21 @@ rm $DIR/gpsinstall
 #GPS Variable set by main script or update script
 #and placed in config file
 sudo sed -i "s|DEVICES.*$|DEVICES=\"$GPS\"|g" /etc/default/gpsd
+
+#add xgps to menu
+cat > xgps.desktop <<EOF
+[Desktop Entry]
+Name=XGPS
+GenericName=XGPS
+Comment=GPS Date Viewer
+Exec=/usr/bin/xgps
+Icon=/usr/share/icons/Adwaita/scalable/devices/thunderbolt-symbolic.svg
+Terminal=false
+Type=Application
+Categories=Utility
+EOF
+
+sudo mv xgps.desktop /usr/share/applications/
 }
 
 ################################
@@ -115,12 +130,15 @@ DIREWOLF(){
 cd $HOME
 git clone https://www.github.com/wb2osz/direwolf
 cd $HOME/direwolf
-sudo apt-get install -y libasound2-dev
-make
+mkdir build && cd build
+sudo apt-get install -y libasound2-dev cmake
+cmake ..
+make -j 4
 sudo make install
 make install-conf
 sed -i "s/N0CALL/$CALL/" "$HOME/direwolf.conf"
 sed -i 's/# ADEVICE  plughw:1,0/ADEVICE  plughw:2,0/' $HOME/direwolf.conf
+sed -i '/#PTT\ \/dev\/ttyUSB0\ RTS/a #Uncomment line below for PTT with sabrent sound card\n#PTT RIG 2 localhost:4532' $HOME/direwolf.conf
 rm -rf $HOME/direwolf
 }
 

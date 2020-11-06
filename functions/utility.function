@@ -119,8 +119,10 @@ yad --form --width=500 --text-align=center --center --title="Build-a-Pi" --text-
 --image $LOGO --window-icon=$LOGO --image-on-top --separator="|" --item-separator="|" \
 --text="Real Time Clock already installed" \
 --button=gtk-close
-exit 1
-fi
+#exit statement here causes script to exit without finishing. Reference link next line
+#https://github.com/km4ack/pi-build/issues/139
+
+else
 
 IC2ACTIVE=$(ls /dev/*i2c*)
 
@@ -183,6 +185,7 @@ yad --form --width=500 --text-align=center --center --title="Build-a-Pi" --text-
 --button=gtk-close
 fi
 
+fi #close first if/then statement
 }
 
 
@@ -205,22 +208,218 @@ cd $HOME
 rm -rf $PISTATDIR
 }
 
+##################################
+#	TELNET
+##################################
+TELNET(){
+sudo apt install -y telnet
+}
+
+##################################
+#	PiQtTermTCP
+##################################
+PITERM(){
+cd $DIR
+wget https://www.cantab.net/users/john.wiseman/Downloads/Beta/piQtTermTCP
+sudo chmod +x piQtTermTCP
+sudo mv piQtTermTCP /usr/local/bin/
+
+cat > piqttermtcp.desktop <<EOF
+[Desktop Entry]
+Name=PiQtTermTCP
+GenericName=PiQtTermTCP
+Comment=Terminal Program
+Exec=/usr/local/bin/piQtTermTCP
+Icon=/usr/share/icons/gnome/22x22/apps/xscreensaver.png
+Terminal=false
+Type=Application
+Categories=Utility
+EOF
+
+sudo mv piqttermtcp.desktop /usr/share/applications/
+
+}
+
+##################################
+#	Security Tools
+##################################
+SECURITY(){
+cd $HOME/bin
+wget https://raw.githubusercontent.com/km4ack/pi-scripts/master/security-tools
+bash security-tools
+
+sudo mv $HOME/bin/securefile /usr/local/bin
+
+cat > secure-file.desktop <<EOF
+[Desktop Entry]
+Name=SSE File Encryptor
+GenericName=SSE File Encryptor
+Comment=A program to encrypt files on the pi
+Exec=/usr/local/bin/securefile
+Icon=/usr/share/icons/gnome/22x22/actions/lock.png
+Terminal=false
+Type=Application
+Categories=Utility
+EOF
+
+sudo mv secure-file.desktop /usr/share/applications/
+}
+
+##################################
+#	YGATE
+##################################
+YGATE(){
+cd $HOME/bin
+wget https://raw.githubusercontent.com/craigerl/ygate/master/ygate.py
+chmod +x ygate.py
+
+cat > ygate.desktop <<EOF
+[Desktop Entry]
+Name=YGATE
+GenericName=YGATE
+Comment=Yaesu APRS Application
+Exec=$HOME/bin/ygate.py
+Terminal=true
+Type=Application
+Categories=Utility
+EOF
+
+sudo mv ygate.desktop /usr/share/applications/
+
+}
 
 
+##################################
+#	BPQ
+##################################
+BPQ(){
+source $HOME/pi-build/config
+#install LinBPQ
+cd
+##########################################################################
+#commands below this line were taken from John Wiseman's install script.
+#and modded to pull the operators call sign from the BAP config file.
+#http://www.cantab.net/users/john.wiseman/Downloads/installLinRMS
+##########################################################################
+ export LINBPQ=pilinbpq;
+ export APRS=piBPQAPRS
+echo "Downloading $LINBPQ and $APRS to linbpq and bpqaprs"
 
+mkdir linbpq
+cd linbpq
+wget -nv http://www.cantab.net/users/john.wiseman/Downloads/Beta/$LINBPQ -O linbpq
+chmod +x linbpq
+wget -nv http://www.cantab.net/users/john.wiseman/Downloads/Beta/$APRS -O bpqaprs
+chmod +x bpqaprs
 
+echo "Downloading config files"
 
+wget -nv http://www.cantab.net/users/john.wiseman/Downloads/SimpleRMSGateway_bpq32.cfg -O bpq32.cfg
 
+echo "Downloading HTML Files"
 
+mkdir HTML
+cd HTML
+wget -nv http://www.cantab.net/users/john.wiseman/Downloads/Beta/HTMLPages.zip
+unzip -o -q HTMLPages.zip
+rm HTMLPages.zip
+cd ..
+wget -nv http://www.cantab.net/users/john.wiseman/Downloads/LinBPQAPRS.zip
+unzip -o -q LinBPQAPRS.zip
+rm LinBPQAPRS.zip
 
+echo "Updating your callsign in configuration files"
 
+#read -e -p "Enter Your Callsign (Without SSID): "  CALL
+CALL=$(echo "$CALL" | tr '[:lower:]' '[:upper:]')
 
+sed -i "s/MYCALL/$CALL/g" bpq32.cfg
 
+#####################################################
+#End John Wiseman install script
+#####################################################
+#install BPQ config generator
+cd $HOME/linbpq
+wget https://www.cantab.net/users/john.wiseman/Downloads/Beta/piBPQConfigGen
+chmod +x piBPQConfigGen
 
+cat > bpq-config.desktop <<EOF
+[Desktop Entry]
+Name=BPQ Config Generator
+GenericName=BPQ Config Generator
+Comment=Config File Generator for LinBPQ
+Exec=$HOME/linbpq/piBPQConfigGen
+Terminal=false
+Type=Application
+Categories=Utility
+EOF
 
+sudo mv bpq-config.desktop /usr/share/applications/
 
+#add LinBPQ-README to desktop
+FILE=$HOME/Desktop/LinBPQ-README
+touch $FILE
+cat << EOF > $FILE
+LinBPQ was installed during the build.
+You will find the config file generator
+under utilities in the main pi menu.
+NO CONFIGURATION was done for LinBPQ
+during the build. Each individual
+operator is responsible for configuring
+his/her station.
 
+After completing the config file, you can
+start LinBPQ from the command line by running:
+~/linbpq/.linbpq
 
+Depending on your station setup, you may 
+need to start rig control, direwolf, or
+other applications before running LinBPQ.
+
+If you need help, you can find
+the LinBPQ forums at
+https://groups.io/g/bpq32/topics
+and the main LinBPQ web page at
+http://g8bpq.org.uk
+EOF
+
+}
+
+##################################
+#	Battery Test Script
+##################################
+BATT(){
+cd $HOME/bin
+wget https://raw.githubusercontent.com/km4ack/pi-scripts/master/batt-test
+chmod +x batt-test
+
+cat > battery-test.desktop <<EOF
+[Desktop Entry]
+Name=Battery Test Script
+GenericName=Battery Test Script
+Comment=Battery Test Utility
+Exec=$HOME/bin/batt-test
+Terminal=true
+Type=Application
+Categories=Utility
+EOF
+
+sudo mv battery-test.desktop /usr/share/applications/
+
+}
+
+##################################
+#	VNC Viewer
+##################################
+VNC(){
+cd $HOME
+PACKAGE=$(curl -s https://www.realvnc.com/en/connect/download/viewer/raspberrypi/ | grep .deb | awk '{print $2}' | \
+sed 's/href="\/download\/file\/viewer.files\///' | sed 's/"//')
+
+wget https://realvnc.com/download/file/viewer.files/$PACKAGE
+sudo dpkg -i $PACKAGE
+rm $PACKAGE
+}
 
 
 

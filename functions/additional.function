@@ -121,6 +121,7 @@ CONKY(){
 	sudo apt install -y conky
 	fi
 touch $HOME/Documents/mylog.txt		#conky will fail to load if this file doesn't exist
+touch /var/lib/misc/dnsmasq.leases	#conky will fail to load if this file doesn't exist
 sudo apt-get install -y ruby2.5
 sudo gem install gpsd_client
 sudo gem install maidenhead
@@ -554,6 +555,10 @@ fi
 ##################################
 #	JTDX
 ##################################
+#This code is left in place but no option is given during inital
+#run or update because the jtdx website is down.
+#see https://github.com/km4ack/pi-build/issues/153
+#14OCT2020 KM4ACK
 
 JTDX(){
 cd $HOME

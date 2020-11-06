@@ -1,4 +1,23 @@
-version=3.0.4
+version=3.0.5
+
+3.0.5		Fix RTC https://github.com/km4ack/pi-build/issues/139
+		Add Telnet https://github.com/km4ack/pi-build/issues/129
+		Fix GPS conflict https://github.com/km4ack/pi-build/issues/146
+		Add Security Tool File Encryption https://github.com/km4ack/pi-build/issues/148
+		Add PTT command to direwolf.conf (commented out by default)
+		Fix curl "body write fail" in update script
+		Fix https://github.com/km4ack/pi-build/issues/152
+		Fix https://github.com/km4ack/pi-build/issues/155
+		Add YGATE - https://github.com/craigerl/ygate/blob/master/ygate.py
+		Add XGPS menu item - https://github.com/km4ack/pi-build/issues/156
+		update README.md
+		add LinBPQ
+		fix https://github.com/km4ack/pi-build/issues/105 (Conky display issue)
+		add Battery Test Script
+		add piQtTermTCP
+		Remove JTDX (Website Down) see - https://github.com/km4ack/pi-build/issues/153
+		add VNC viewer
+		fix direwolf build procedure https://github.com/km4ack/pi-build/issues/163
 
 3.0.4		Add gitignore
 		Fix Issue #109 https://github.com/km4ack/pi-build/issues/109
