@@ -210,7 +210,7 @@ sudo rfkill unblock all > /dev/null 2>&1
 sudo ifconfig wlan0 up
 #LIST=$(sudo iw dev "wlan0" scan ap-force | egrep "^BSS|SSID:" | grep SSID: | sed 's/SSID://' | awk '{ print $1 }')
 #LIST=$(echo $LIST | sed 's/ /|/g')
-LIST=$(sudo iw dev "wlan0" scan ap-force | grep "SSID:" | awk '{print $2}')
+LIST=$(sudo iw dev "wlan0" scan ap-force | sed -ne 's/^.*SSID: \(.*\)/\1/p')
 LIST=$(echo "$LIST" | tr '\n' '|')
 
 
