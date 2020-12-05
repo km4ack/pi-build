@@ -126,49 +126,10 @@ sudo apt-get install -y ruby2.5
 sudo gem install gpsd_client
 sudo gem install maidenhead
 cp $MYPATH/conky/.conkyrc $HOME/.conkyrc
-mkdir -p $HOME/bin/conky
-cp $MYPATH/conky/* $HOME/bin/conky/
-chmod +x $HOME/bin/conky/get-grid $HOME/bin/conky/temp-conv $HOME/bin/conky/get-freq $HOME/bin/conky/grid
 sed -i "s/N0CALL/$CALL/" $HOME/.conkyrc
-#Line below is for https://github.com/km4ack/pi-build/issues/198
-#echo "*/5 * * * * home/pi/bin/conky/grid > /home/pi/bin/conky/gridsquare.txt" >> $TEMPCRON
-
-#Create files needed for autostart at login
-#Fix issue https://github.com/km4ack/pi-build/issues/83
-
-cat <<EOF > $HOME/.local/share/applications/conky.desktop
-[Desktop Entry]
-Name=Conky
-Comment=Conky
-GenericName=Conky Screen Background Monitor
-Exec=conky
-Icon=/home/pi/pi-build/conky/conky-logo.png
-Type=Application
-Encoding=UTF-8
-Terminal=false
-Categories=HamRadio
-Keywords=Radio
-EOF
-
-ln -sf $HOME/.local/share/applications/conky.desktop $HOME/.config/autostart/conky.desktop
-
-#####Add setconky to main menu
-chmod +x $HOME/pi-build/conky/setconky
-
-cat <<EOF > $HOME/.local/share/applications/setconky.desktop
-[Desktop Entry]
-Name=Conky-Prefs
-Comment=Conky-Prefs
-GenericName=Change Conky Preferences
-Exec=/home/pi/pi-build/conky/setconky
-Icon=/home/pi/pi-build/conky/conky-logo.png
-Type=Application
-Encoding=UTF-8
-Terminal=false
-Categories=Settings;DesktopSettings;GTK;X-LXDE-Settings;
-Keywords=Radio,Conky
-EOF
-
+# Add the rest of the code here so that it can be use for installation and locally
+bash $MYPATH/conky/update
+#echo "@reboot sleep 20 && export DISPLAY=:0 && /usr/bin/conky" >> $TEMPCRON
 }
 
 ##################################
