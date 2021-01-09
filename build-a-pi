@@ -183,7 +183,7 @@ false "ARDOPGUI" "GUI for ARDOP" \
 false "HAMLIB" "Needed for Rig Control" \
 false "DIREWOLF" "Software TNC" \
 false "AX25" "Data Link Layer Protocol" \
-false "PULSE" "Sound Server" \
+false "PULSE" "Pulse Audio Control Interface" \
 --button="Exit":1 \
 --button="Check All and Continue":3 \
 --button="Next":2 > $BASE
