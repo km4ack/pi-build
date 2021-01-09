@@ -152,10 +152,9 @@ sudo apt-get install -y ax25-apps
 }
 
 ################################
-#	PULSE AUDIO
+#	PULSE AUDIO Control
 ################################
 PULSE(){
-sudo apt-get install -y pulseaudio
 sudo apt-get install -y pavucontrol
 }
 
