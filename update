@@ -156,7 +156,7 @@ fi
 #----------------------------------------------------#
 #		PULSE
 #----------------------------------------------------#
-if ! hash pulseaudio 2>/dev/null; then
+if ! hash pavucontrol 2>/dev/null; then
 PULSE="Not Installed"
 else
 PULSE="Installed"
@@ -777,7 +777,7 @@ false "ARDOP" "$ARDOP" "Mode for HF" \
 false "ARDOPGUI" "$ARDOPGUI" "GUI for ARDOP" \
 false "DIREWOLF" "$DIRE" "Software TNC" \
 false "AX25" "$AX25" "Data Link Layer Protocol" \
-false "PULSE" "$PULSE" "Sound server" \
+false "PULSE" "$PULSE" "Pulse Audio Control Interface" \
 --button="Exit":1 \
 --button="Next":2 > $BASE
 BUT=$?
