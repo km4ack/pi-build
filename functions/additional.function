@@ -352,7 +352,8 @@ unzip $DIR/YAAC.zip
 ##################################
 XASTIR(){
 sudo apt-get install -y xastir
-sudo sed -i 's/Exec=xastir/Exec=sudo xastir/' /usr/share/applications/xastir.desktop
+sudo chmod +x /usr/bin/xastir
+#sudo sed -i 's/Exec=xastir/Exec=sudo xastir/' /usr/share/applications/xastir.desktop
 }
 
 ##################################
