@@ -446,6 +446,7 @@ sudo apt-get -y upgrade
 sudo apt -y full-upgrade
 
 #set wallpaper
+#fix issue 193
 sudo cp bap-wallpaper.jpg /usr/share/rpd-wallpaper/
 pcmanfm --set-wallpaper /usr/share/rpd-wallpaper/bap-wallpaper.jpg
 
