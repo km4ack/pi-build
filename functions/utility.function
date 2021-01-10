@@ -362,7 +362,7 @@ touch $FILE
 cat << EOF > $FILE
 LinBPQ was installed during the build.
 You will find the config file generator
-under utilities in the main pi menu.
+under accessories in the main pi menu.
 NO CONFIGURATION was done for LinBPQ
 during the build. Each individual
 operator is responsible for configuring
