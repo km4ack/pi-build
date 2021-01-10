@@ -83,6 +83,11 @@ echo $BUT
 	if [ $BUT = 252 ]; then 
 	exit
 	elif [ $BUT = 2 ]; then
+	wget -q --tries=5 --timeout=10 --spider http://google.com #| yad --center --progress --pulsate --timeout-indicator=top --auto-close --no-buttons --text="Checking internet connection"
+		if [[ $? -eq 1 ]]; then
+yad --center --timeout=3 --timeout-indicator=top --no-buttons --text="You are not connected to the internet"
+		exit
+		fi
 	echo "Updating Build a Pi to $LATEST"
 	mv $MYPATH/config $HOME/Documents/config.bap
 	rm -rf $MYPATH
@@ -156,7 +161,7 @@ fi
 #----------------------------------------------------#
 #		PULSE
 #----------------------------------------------------#
-if ! hash pavucontrol 2>/dev/null; then
+if ! hash pulseaudio 2>/dev/null; then
 PULSE="Not Installed"
 else
 PULSE="Installed"
@@ -777,7 +782,7 @@ false "ARDOP" "$ARDOP" "Mode for HF" \
 false "ARDOPGUI" "$ARDOPGUI" "GUI for ARDOP" \
 false "DIREWOLF" "$DIRE" "Software TNC" \
 false "AX25" "$AX25" "Data Link Layer Protocol" \
-false "PULSE" "$PULSE" "Pulse Audio Control Interface" \
+false "PULSE" "$PULSE" "Sound server" \
 --button="Exit":1 \
 --button="Next":2 > $BASE
 BUT=$?
@@ -795,7 +800,8 @@ HSINFO(){
 sudo rfkill unblock all > /dev/null 2>&1
 #bring wifi up
 sudo ifconfig wlan0 up
-LIST=$(sudo iw dev "wlan0" scan ap-force | sed -ne 's/^.*SSID: \(..*\)/\1/p' | sort | uniq | paste -sd '|')
+LIST=$(sudo iw dev "wlan0" scan ap-force | egrep "^BSS|SSID:" | grep SSID: | sed 's/SSID://' | awk '{ print $1 }')
+LIST=$(echo $LIST | sed 's/ /|/g')
 
 HSINFO=$(yad --center --form --width=400 --height=400 --separator="|" --item-separator="|" \
 --image $LOGO --column=Check --column=App --column=Description \
