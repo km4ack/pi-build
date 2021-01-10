@@ -1,6 +1,8 @@
 version=3.0.6
 
-3.0.6		Fix https://github.com/km4ack/pi-build/issues/186 (pulse)
+3.0.6		Remove Pulse audio install https://github.com/km4ack/pi-build/issues/186
+		Add Support for SSID with spaces Merge https://github.com/km4ack/pi-build/pull/184
+		Fix BPQ desktop note to indicate where config generator is located
 		
 
 3.0.5		Fix RTC https://github.com/km4ack/pi-build/issues/139
