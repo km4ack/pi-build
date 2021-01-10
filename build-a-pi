@@ -446,7 +446,8 @@ sudo apt-get -y upgrade
 sudo apt -y full-upgrade
 
 #set wallpaper
-pcmanfm --set-wallpaper $MYPATH/bap-wallpaper.jpg
+sudo cp bap-wallpaper.jpg /usr/share/rpd-wallpaper/
+pcmanfm --set-wallpaper /usr/share/rpd-wallpaper/bap-wallpaper.jpg
 
 mkdir -p $DIR 2> /dev/null
 
