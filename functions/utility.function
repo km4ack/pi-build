@@ -421,7 +421,13 @@ sudo dpkg -i $PACKAGE
 rm $PACKAGE
 }
 
-
+##################################
+#	ZYGRIB Viewer
+##################################
+ZYGRIB(){
+sudo apt install -y zygrib
+sudo apt install -y zygrib-maps
+}
 
 
 
