@@ -161,7 +161,7 @@ fi
 #----------------------------------------------------#
 #		PULSE
 #----------------------------------------------------#
-if ! hash pulseaudio 2>/dev/null; then
+if ! hash pavucontrol 2>/dev/null; then
 PULSE="Not Installed"
 else
 PULSE="Installed"
@@ -731,6 +731,15 @@ if ! hash vncviewer 2>/dev/null; then
 VNC="Not Installed"
 else
 VNC="Installed"
+fi
+
+#----------------------------------------------------#
+#		ZYGRIB Viewer
+#----------------------------------------------------#
+if [ -f /usr/share/zygrib ]; then
+ZYGRIB=Installed
+else
+ZYGRIB="Not Installed"
 fi
 
 CHECK
