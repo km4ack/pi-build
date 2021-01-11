@@ -1015,6 +1015,7 @@ false "YGATE" "$YGATE" "Yaesu APRS Software" \
 false "BPQ" "$BPQ" "LinBPQ Software" \
 false "BATT" "$BATT" "Battery Test Script" \
 false "VNC" "$VNC" "VNC Viewer Application" \
+false "ZYGRIB" "$ZYGRIB" "Grib File Viewer" \
 --button="Exit":1 \
 --button="Install/Update Selected":2 > $UTILITY
 BUT=$?
