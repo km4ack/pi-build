@@ -802,6 +802,7 @@ sudo rfkill unblock all > /dev/null 2>&1
 sudo ifconfig wlan0 up
 #LIST=$(sudo iw dev "wlan0" scan ap-force | egrep "^BSS|SSID:" | grep SSID: | sed 's/SSID://' | awk '{ print $1 }')
 #LIST=$(echo $LIST | sed 's/ /|/g')
+#Thanks to https://github.com/kuperman for fixing wifi space issue with line below.
 LIST=$(sudo iw dev "wlan0" scan ap-force | sed -ne 's/^.*SSID: \(..*\)/\1/p' | sort | uniq | paste -sd '|')
 
 HSINFO=$(yad --center --form --width=400 --height=400 --separator="|" --item-separator="|" \
