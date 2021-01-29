@@ -458,12 +458,17 @@ fi
 #----------------------------------------------------#
 #		XASTIR
 #----------------------------------------------------#
-XA="/usr/bin/xastir"
-if [ ! -f "$XA" ]; then
-XASTIR="Not Installed"
-else
-XASTIR="Installed"
-fi
+LATESTXAS=$(curl -s https://github.com/Xastir/Xastir | grep Release- | head -1 | sed 's/.*Release-//;s/">//')
+CURRENTXAS=$(xastir -V | sed 's/Xastir V//;s/(.*//;/^\s*$/d')
+
+	if (( $(echo "$LATESTXAS $CURRENTXAS" | awk '{print ($1 > $2)}') ))
+	then
+	XASTIR=NEEDS-UPDATE
+	else
+	XASTIR="is_latest_version"
+	fi
+
+echo $XASTIR
 
 #----------------------------------------------------#
 #		YAAC
