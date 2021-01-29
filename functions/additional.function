@@ -384,9 +384,42 @@ unzip $DIR/YAAC.zip
 #	XASTIR
 ##################################
 XASTIR(){
-sudo apt-get install -y xastir
-sudo chmod +x /usr/bin/xastir
+###OLD CODE
+#sudo apt-get install -y xastir
+#sudo chmod +x /usr/bin/xastir
 #sudo sed -i 's/Exec=xastir/Exec=sudo xastir/' /usr/share/applications/xastir.desktop
+
+###NEW CODE 29JAN2021 Builds from source
+sudo apt-get -y install build-essential automake git xorg-dev libmotif-dev graphicsmagick \
+gv libcurl4-openssl-dev shapelib libshp-dev libpcre3-dev libproj-dev libdb-dev python-dev \
+libax25-dev libwebp-dev libwebp-dev libgraphicsmagick1-dev festival festival-dev
+
+
+cd
+git clone https://github.com/Xastir/Xastir.git
+cd Xastir
+./bootstrap.sh
+mkdir build; cd build
+../configure
+make
+sudo make install
+cd
+rm -rf Xastir
+
+cat > xastir.desktop <<EOF
+[Desktop Entry]
+Name=Xastir
+Comment=X Amateur Station Tracking and Information Reporting
+Exec=xastir
+Icon=/usr/local/share/xastir/symbols/icon.png
+Terminal=false
+Type=Application
+Categories=Network;HamRadio
+Keywords=APRS;AX.25;HamRadio
+EOF
+
+sudo mv xastir.desktop /usr/share/applications/
+
 }
 
 ##################################
