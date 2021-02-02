@@ -97,6 +97,10 @@ WSJTXSUCCESS=$?
 sudo dpkg -i $WSPKG
 sudo apt-get --fix-broken -y install
 sudo dpkg -i $WSPKG
+#added to fix WSJTX 2.3.0
+sudo sed -i "s/# en_US.UTF-8/en_US.UTF-8/g" /etc/locale.gen
+sudo locale-gen
+#end edit for WSJTX 2.3.0
 	#try sourcegorge if princeton.edu fails
 	WSJTX2(){
 	if [ "$WSJTXSUCCESS" ! = 0 ]; then
