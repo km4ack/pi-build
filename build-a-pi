@@ -422,6 +422,7 @@ false "BPQ" "LinBPQ Software" \
 false "BATT" "Battery Test Script" \
 false "VNC" "VNC Client Application" \
 false "ZYGRIB" "Grib File Viewer" \
+false "GPSUPDATE" "Tool to Manage GPS Devices" \
 --button="Exit":1 \
 --button="Check All and Continue":3 \
 --button="Install Selected":2 > $UTILITY
@@ -431,7 +432,7 @@ exit
 fi
 
 if [ $BUT = 3 ]; then
-UTILAPPS=(DIPOLE CALLSIGN TEMPCONVERT GPARTED SHOWLOG PISTATS TELNET PITERM SECURITY YGATE BPQ BATT VNC ZYGRIB)
+UTILAPPS=(DIPOLE CALLSIGN TEMPCONVERT GPARTED SHOWLOG PISTATS TELNET PITERM SECURITY YGATE BPQ BATT VNC ZYGRIB GPSUPDATE)
 for i in "${UTILAPPS[@]}"
 do
 echo "$i" >> $UTILITY
