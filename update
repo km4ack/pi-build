@@ -752,7 +752,7 @@ fi
 #----------------------------------------------------#
 echo "Checking GPS Update Tool"
 if [ ! -f $HOME/bin/gpsupdate ]; then
-GPAUPDATE="Not_Installed"
+GPSUPDATE="Not_Installed"
 else
 GPSUPDATE=$(grep VERSION= $HOME/bin/gpsupdate | sed 's/VERSION=//')
 NEWGPSUPDATE=$(curl -s https://raw.githubusercontent.com/km4ack/pi-scripts/master/gpsupdate | grep VERSION= | sed 's/VERSION=//')
