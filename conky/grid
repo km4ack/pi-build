@@ -1,11 +1,16 @@
 #!/bin/bash
 
+#script get maidenhead from GPS for display in conky
+#called by cronjob
+#04FEB2021 KM4ACK
+
 GRID=$($HOME/bin/conky/get-grid)
 GRIDCH=$(echo $GRID | grep -i JJ00)
+FILE=/run/user/$UID/gridinfo.txt
 
 if [ -z "$GRIDCH" ]
 then
-echo $GRID
+echo $GRID > $FILE
 else
-echo "NO GPS"
+echo "NO GPS" > $FILE
 fi
