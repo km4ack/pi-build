@@ -747,6 +747,23 @@ else
 ZYGRIB="Not Installed"
 fi
 
+#----------------------------------------------------#
+#		GPS UPDATE TOOL
+#----------------------------------------------------#
+echo "Checking GPS Update Tool"
+if [ ! -f $HOME/bin/gpsupdate ]; then
+GPAUPDATE="Not_Installed"
+else
+GPSUPDATE=$(grep VERSION= $HOME/bin/gpsupdate | sed 's/VERSION=//')
+NEWGPSUPDATE=$(curl -s https://raw.githubusercontent.com/km4ack/pi-scripts/master/gpsupdate | grep VERSION= | sed 's/VERSION=//')
+	if (( $(echo "$NEWGPSUPDATE $GPSUPDATE" | awk '{print ($1 > $2)}') ))
+	then
+	GPSUPDATE=NEEDS-UPDATE
+	else
+	GPSUPDATE="is_latest_version"
+	fi
+fi
+
 CHECK
 ####################################################################
 ####################################################################
@@ -1021,6 +1038,7 @@ false "BPQ" "$BPQ" "LinBPQ Software" \
 false "BATT" "$BATT" "Battery Test Script" \
 false "VNC" "$VNC" "VNC Viewer Application" \
 false "ZYGRIB" "$ZYGRIB" "Grib File Viewer" \
+false "GPSUPDATE" "$GPSUPDATE" "Tool to Manage GPS Devices" \
 --button="Exit":1 \
 --button="Install/Update Selected":2 > $UTILITY
 BUT=$?
