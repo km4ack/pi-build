@@ -8,6 +8,12 @@ GRID=$($HOME/bin/conky/get-grid)
 GRIDCH=$(echo $GRID | grep -i JJ00)
 FILE=/run/user/$UID/gridinfo.txt
 
+#check if GPS software installed
+if ! hash gpsd>/dev/null; then
+echo "GPSD-Err" > $FILE
+exit 1
+fi
+
 if [ -z "$GRIDCH" ]
 then
 echo $GRID > $FILE
