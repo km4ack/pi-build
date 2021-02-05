@@ -31,7 +31,7 @@ TEXT
 
 ${font Arial:size=12}${color Yellow}${alignc}N0CALL
 ${voffset -30}
-${font Arial:bold:size=08}${color White}Gridsquare ${alignr}${color Yellow}${execi 25 $HOME/bin/conky/grid | cut -c1-8}
+${font Arial:bold:size=08}${color White}Gridsquare ${alignr}${color Yellow}${execi 60 cat /run/user/1000/gridinfo.txt | cut -c1-8}
 #${font Arial:bold:size=12}${color White}Radio Freq ${alignr}${color Yellow}${execi 5 $HOME/bin/conky/get-freq | cut -c1-6}
 ${color Yellow}LOCAL${alignr}ZULU
 ${voffset -20}

@@ -35,7 +35,7 @@ conky.text = [[
 ${voffset 15}
 ${font Arial:size=30}${color Yellow}${alignc}N0CALL
 ${voffset -45}
-${font Arial:bold:size=18}${color White}Gridsquare ${alignr}${color Yellow}${execi 25 $HOME/bin/conky/grid | cut -c1-8}
+${font Arial:bold:size=18}${color White}Gridsquare ${alignr}${color Yellow}${execi 60 cat /run/user/1000/gridinfo.txt | cut -c1-8}
 #${font Arial:bold:size=18}${color White}Radio Freq ${alignr}${color Yellow}${execi 5 $HOME/bin/conky/get-freq | cut -c1-6}
 #${font Arial:bold:size=18}${color White}Radio Freq A ${if_match "VFOA" == "${execi 5 $HOME/bin/conky/get-vfo}"}*$endif\
 #${alignr}${color Yellow}${execi 5 $HOME/bin/conky/get-freq VFOA | cut -c1-7}

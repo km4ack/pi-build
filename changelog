@@ -1,4 +1,20 @@
-version=3.0.5
+version=3.0.6
+
+3.0.6		Remove Pulse audio install https://github.com/km4ack/pi-build/issues/186
+		Add Support for SSID with spaces Merge https://github.com/km4ack/pi-build/pull/184
+		Fix BPQ desktop note to correctly indicate where config generator is located
+		Fix wifi names with spaces issue (Thanks Kuperman!) https://github.com/km4ack/pi-build/pull/182
+		Build CQRLOG from source https://github.com/km4ack/pi-build/issues/102 (Thanks Rico!)
+		Moved BAP wallpaper to /usr/share/rpd-wallpaper https://github.com/km4ack/pi-build/issues/193
+		Add zygrib https://github.com/km4ack/pi-build/issues/190
+		Build xastir from source
+		update xastir version check in update script
+		fix wsjtx 2.3.0 install issue https://github.com/km4ack/pi-build/issues/209
+		add new GPS update tool
+		update conky for better GPS support
+		change hamlib download to dynamic / upgrade to 4.0
+		fix YAAC not updating
+		fix issue #181 https://github.com/km4ack/pi-build/issues/181
 
 3.0.5		Fix RTC https://github.com/km4ack/pi-build/issues/139
 		Add Telnet https://github.com/km4ack/pi-build/issues/129
