@@ -15,6 +15,7 @@ version=3.0.6
 		change hamlib download to dynamic / upgrade to 4.0
 		fix YAAC not updating
 		fix issue #181 https://github.com/km4ack/pi-build/issues/181
+		fix GPS update tool install to avoid duplicate downloads
 
 3.0.5		Fix RTC https://github.com/km4ack/pi-build/issues/139
 		Add Telnet https://github.com/km4ack/pi-build/issues/129
