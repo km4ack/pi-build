@@ -433,6 +433,11 @@ sudo apt install -y zygrib-maps
 #	GPS update tool
 ##################################
 GPSUPDATE(){
+#remove existing file if needed before installing
+if [ -f $HOME/bin/gpsupdate ]; then
+rm $HOME/bin/gpsupdate
+fi
+
 cd $HOME/bin
 wget https://raw.githubusercontent.com/km4ack/pi-scripts/master/gpsupdate
 chmod +x gpsupdate
