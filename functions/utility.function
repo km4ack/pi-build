@@ -456,5 +456,33 @@ EOF
 sudo mv gpsupdate.desktop /usr/share/applications/
 }
 
+##################################
+#	removeMS Tool
+##################################
 
+REMOVEMS(){
+#download the file
+cd $HOME/bin
+wget https://raw.githubusercontent.com/km4ack/pi-scripts/master/removeMS
+chmod +x $HOME/bin/removeMS
+#place user directions on desktop
+cat <<EOF>$HOME/Desktop/Block-Microsoft.txt
+You have chosen to install the removeMS
+script which will block the Pi from accessing
+the Microsoft repository. The block has not
+been applied yet. To apply the block, open a 
+terminal window and run the following command:
+
+removeMS
+
+You only need to perform the block one time for
+each Pi. You can delete the removeMS script
+from your system by running:
+
+rm ~/bin/removeMS
+
+More information is available in this video
+https://youtu.be/I7jLVgnnUW0
+EOF
+}
 
