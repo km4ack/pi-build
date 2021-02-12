@@ -3,7 +3,7 @@
 #script to gather some system information
 #to help diagnose issues
 #20200616 km4ack
-
+#11FEB2021 review km4ack
 clear;echo;echo
 read -p "What is your call sign? " CALL
 
