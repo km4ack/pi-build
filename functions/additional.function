@@ -289,19 +289,28 @@ sudo apt-get install -y g++ libfftw3-dev qt5-default libpulse-dev libhamlib-dev 
 
 cd $HOME/Downloads
 
-TAR=$(curl -s http://users.telenet.be/on4qz/qsstv/downloads/ | grep tar.gz | sed 's/.*href="//' | sed 's/">.*$//' | tail -1)
-wget --tries 2 --connect-timeout=60 http://users.telenet.be/on4qz/qsstv/downloads/$TAR
-SSTVTAR=$(echo $TAR | sed 's/.tar.gz//;s/.0//')
-tar -xvzf $TAR
-cd $SSTVTAR
-qmake
+#not working with 9.5.1
+#TAR=$(curl -s http://users.telenet.be/on4qz/qsstv/downloads/ | grep tar.gz | sed 's/.*href="//' | sed 's/">.*$//' | tail -1)
+#wget --tries 2 --connect-timeout=60 http://users.telenet.be/on4qz/qsstv/downloads/$TAR
+#SSTVTAR=$(echo $TAR | sed 's/.tar.gz//;s/.0//')
+#tar -xvzf $TAR
+#cd $SSTVTAR
+#qmake
+#make
+#sudo make install
+
+#hard code for 9.4.4 as temp wrokaround 02MARCH2021
+wget --tries 2 --connect-timeout=60  http://users.telenet.be/on4qz/qsstv/downloads/qsstv_9.4.4.tar.gz
+tar -xvzf qsstv_9.4.4.tar.gz
+cd qsstv_9.4.4
+qmake 
 make
 sudo make install
+
 
 sudo sed -i 's/Education;/Network;HamRadio;/' /usr/local/share/applications/qsstv.desktop
 
 }
-
 ##################################
 #	GRIDTRACKER
 ##################################
