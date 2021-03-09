@@ -97,6 +97,10 @@ WSJTXSUCCESS=$?
 sudo dpkg -i $WSPKG
 sudo apt-get --fix-broken -y install
 sudo dpkg -i $WSPKG
+#added to fix WSJTX 2.3.0
+sudo sed -i "s/# en_US.UTF-8/en_US.UTF-8/g" /etc/locale.gen
+sudo locale-gen
+#end edit for WSJTX 2.3.0
 	#try sourcegorge if princeton.edu fails
 	WSJTX2(){
 	if [ "$WSJTXSUCCESS" ! = 0 ]; then
@@ -130,7 +134,9 @@ mkdir -p $HOME/bin/conky
 cp $MYPATH/conky/* $HOME/bin/conky/
 chmod +x $HOME/bin/conky/get-grid $HOME/bin/conky/temp-conv $HOME/bin/conky/get-freq $HOME/bin/conky/grid
 sed -i "s/N0CALL/$CALL/" $HOME/.conkyrc
-#echo "@reboot sleep 20 && export DISPLAY=:0 && /usr/bin/conky" >> $TEMPCRON
+#Line below is for https://github.com/km4ack/pi-build/issues/198
+echo "#Update GPS maidenhead for conky" >> $TEMPCRON
+echo "*/1 * * * * /home/pi/bin/conky/grid" >> $TEMPCRON
 
 #Create files needed for autostart at login
 #Fix issue https://github.com/km4ack/pi-build/issues/83
@@ -206,7 +212,40 @@ sudo apt-get install -y pyqso
 #	CQRLOG
 ##################################
 CQRLOG(){
-sudo apt-get install -y cqrlog
+#sudo apt-get install -y cqrlog
+sudo apt-get install -y lcl-2.0 lazarus-2.0 fp-compiler-3.0.4 fpc-3.0.4 libssl-dev git build-essential \
+libmariadbclient-dev lazarus-ide lcl lcl-gtk2 lcl-nogui lcl-units lcl-utils lazarus lazarus-doc lazarus-src \
+fp-units-misc fp-units-rtl fp-utils fpc fpc-source libssl-dev default-mysql-client-core default-mysql-server \
+default-mysql-server-core galera-3 gawk libcgi-fast-perl libcgi-pm-perl libconfig-inifiles-perl libdbd-mysql-perl \
+libdbi-perl libencode-locale-perl libfcgi-perl libhamlib-utils libhamlib2 libhtml-parser-perl libhtml-tagset-perl \
+libhtml-template-perl libhttp-date-perl libhttp-message-perl libio-html-perl liblwp-mediatypes-perl \
+libmariadb-dev-compat libnetpbm10 libreadline5 libterm-readkey-perl libtimedate-perl liburi-perl \
+mariadb-client-10.3 mariadb-client-core-10.3 mariadb-server-10.3 mariadb-server-core-10.3 socat xplanet xplanet-images
+
+sudo ln -s /usr/lib/arm-linux-gnueabihf/libmariadbclient.so /usr/lib/libmysqlclient.so
+
+cd
+git clone https://github.com/ok2cqr/cqrlog.git
+cd cqrlog
+make
+sudo make install
+cd ..
+rm -rf cqrlog
+
+cat > cqrlog.desktop <<EOF
+[Desktop Entry]
+Name=CQRLOG
+Comment=Amateur Radio Logging Software
+GenericName=CQRLOG
+Exec=cqrlog
+Icon=cqrlog
+Type=Application
+Terminal=false
+Categories=HamRadio;Utility
+EOF
+
+sudo mv cqrlog.desktop /usr/share/applications/
+
 }
 
 ##################################
@@ -250,19 +289,28 @@ sudo apt-get install -y g++ libfftw3-dev qt5-default libpulse-dev libhamlib-dev 
 
 cd $HOME/Downloads
 
-TAR=$(curl -s http://users.telenet.be/on4qz/qsstv/downloads/ | grep tar.gz | sed 's/.*href="//' | sed 's/">.*$//')
-wget --tries 2 --connect-timeout=60 http://users.telenet.be/on4qz/qsstv/downloads/$TAR
-SSTVTAR=$(echo $TAR | sed 's/.tar.gz//')
-tar -xvzf $TAR
-cd $SSTVTAR
-qmake
+#not working with 9.5.1
+#TAR=$(curl -s http://users.telenet.be/on4qz/qsstv/downloads/ | grep tar.gz | sed 's/.*href="//' | sed 's/">.*$//' | tail -1)
+#wget --tries 2 --connect-timeout=60 http://users.telenet.be/on4qz/qsstv/downloads/$TAR
+#SSTVTAR=$(echo $TAR | sed 's/.tar.gz//;s/.0//')
+#tar -xvzf $TAR
+#cd $SSTVTAR
+#qmake
+#make
+#sudo make install
+
+#hard code for 9.4.4 as temp wrokaround 02MARCH2021
+wget --tries 2 --connect-timeout=60  http://users.telenet.be/on4qz/qsstv/downloads/qsstv_9.4.4.tar.gz
+tar -xvzf qsstv_9.4.4.tar.gz
+cd qsstv_9.4.4
+qmake 
 make
 sudo make install
+
 
 sudo sed -i 's/Education;/Network;HamRadio;/' /usr/local/share/applications/qsstv.desktop
 
 }
-
 ##################################
 #	GRIDTRACKER
 ##################################
@@ -350,8 +398,42 @@ unzip $DIR/YAAC.zip
 #	XASTIR
 ##################################
 XASTIR(){
-sudo apt-get install -y xastir
-sudo sed -i 's/Exec=xastir/Exec=sudo xastir/' /usr/share/applications/xastir.desktop
+###OLD CODE
+#sudo apt-get install -y xastir
+#sudo chmod +x /usr/bin/xastir
+#sudo sed -i 's/Exec=xastir/Exec=sudo xastir/' /usr/share/applications/xastir.desktop
+
+###NEW CODE 29JAN2021 Builds from source
+sudo apt-get -y install build-essential automake git xorg-dev libmotif-dev graphicsmagick \
+gv libcurl4-openssl-dev shapelib libshp-dev libpcre3-dev libproj-dev libdb-dev python-dev \
+libax25-dev libwebp-dev libwebp-dev libgraphicsmagick1-dev festival festival-dev
+
+
+cd
+git clone https://github.com/Xastir/Xastir.git
+cd Xastir
+./bootstrap.sh
+mkdir build; cd build
+../configure
+make
+sudo make install
+cd
+rm -rf Xastir
+
+cat > xastir.desktop <<EOF
+[Desktop Entry]
+Name=Xastir
+Comment=X Amateur Station Tracking and Information Reporting
+Exec=xastir
+Icon=/usr/local/share/xastir/symbols/icon.png
+Terminal=false
+Type=Application
+Categories=Network;HamRadio
+Keywords=APRS;AX.25;HamRadio
+EOF
+
+sudo mv xastir.desktop /usr/share/applications/
+
 }
 
 ##################################

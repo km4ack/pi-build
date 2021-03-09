@@ -362,7 +362,7 @@ touch $FILE
 cat << EOF > $FILE
 LinBPQ was installed during the build.
 You will find the config file generator
-under utilities in the main pi menu.
+under accessories in the main pi menu.
 NO CONFIGURATION was done for LinBPQ
 during the build. Each individual
 operator is responsible for configuring
@@ -421,9 +421,68 @@ sudo dpkg -i $PACKAGE
 rm $PACKAGE
 }
 
+##################################
+#	ZYGRIB Viewer
+##################################
+ZYGRIB(){
+sudo apt install -y zygrib
+sudo apt install -y zygrib-maps
+}
 
+##################################
+#	GPS update tool
+##################################
+GPSUPDATE(){
+#remove existing file if needed before installing
+if [ -f $HOME/bin/gpsupdate ]; then
+rm $HOME/bin/gpsupdate
+fi
 
+cd $HOME/bin
+wget https://raw.githubusercontent.com/km4ack/pi-scripts/master/gpsupdate
+chmod +x gpsupdate
 
+cat > gpsupdate.desktop <<EOF
+[Desktop Entry]
+Name=GPS Update Tool
+GenericName=Used to change between GPS units
+Comment=Used to change between GPS units
+Exec=$HOME/bin/gpsupdate
+Terminal=false
+Type=Application
+Categories=Utility
+EOF
 
+sudo mv gpsupdate.desktop /usr/share/applications/
+}
 
+##################################
+#	removeMS Tool
+##################################
+
+REMOVEMS(){
+#download the file
+cd $HOME/bin
+wget https://raw.githubusercontent.com/km4ack/pi-scripts/master/removeMS
+chmod +x $HOME/bin/removeMS
+#place user directions on desktop
+cat <<EOF>$HOME/Desktop/Block-Microsoft.txt
+You have chosen to install the removeMS
+script which will block the Pi from accessing
+the Microsoft repository. The block has not
+been applied yet. To apply the block, open a 
+terminal window and run the following command:
+
+removeMS
+
+You only need to perform the block one time for
+each Pi. You can delete the removeMS script
+from your system by running:
+
+rm ~/bin/removeMS
+
+More information is available in this video
+https://youtu.be/I7jLVgnnUW0
+EOF
+}
 

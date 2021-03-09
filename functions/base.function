@@ -113,10 +113,19 @@ echo "Port=8515" >> $FILE
 ################################
 HAMLIB(){
 cd $DIR
-wget --tries 2 --connect-timeout=60 https://sourceforge.net/projects/hamlib/files/hamlib/3.3/hamlib-3.3.tar.gz 
-tar -xzf $DIR/hamlib-3.3.tar.gz
-rm $DIR/hamlib-3.3.tar.gz
-cd $DIR/hamlib-3.3
+NEWRIG=$(curl -s https://sourceforge.net/projects/hamlib/files/latest/download | \
+grep -o https://downloads.sourceforge.net/project/hamlib/hamlib/[0-9].[0-9] | \
+head -n 1 | awk -F "/" '{print $7}')
+HAMLIBLINK=https://sourceforge.net/projects/hamlib/files/hamlib/$NEWRIG/hamlib-$NEWRIG.tar.gz
+cd $HOME/Downloads
+echo "###################################"
+echo "#		Installing Hamlib	"
+echo "###################################"	
+wget --tries 2 --connect-timeout=60 $HAMLIBLINK
+
+tar -xzf hamlib-$NEWRIG.tar.gz
+rm hamlib-$NEWRIG.tar.gz
+cd hamlib-$NEWRIG
 ./configure
 make 
 sudo make install
@@ -152,10 +161,9 @@ sudo apt-get install -y ax25-apps
 }
 
 ################################
-#	PULSE AUDIO
+#	PULSE AUDIO Control
 ################################
 PULSE(){
-sudo apt-get install -y pulseaudio
 sudo apt-get install -y pavucontrol
 }
 

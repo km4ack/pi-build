@@ -83,6 +83,11 @@ echo $BUT
 	if [ $BUT = 252 ]; then 
 	exit
 	elif [ $BUT = 2 ]; then
+	wget -q --tries=5 --timeout=10 --spider http://google.com #| yad --center --progress --pulsate --timeout-indicator=top --auto-close --no-buttons --text="Checking internet connection"
+		if [[ $? -eq 1 ]]; then
+yad --center --timeout=3 --timeout-indicator=top --no-buttons --text="You are not connected to the internet"
+		exit
+		fi
 	echo "Updating Build a Pi to $LATEST"
 	mv $MYPATH/config $HOME/Documents/config.bap
 	rm -rf $MYPATH
@@ -156,7 +161,7 @@ fi
 #----------------------------------------------------#
 #		PULSE
 #----------------------------------------------------#
-if ! hash pulseaudio 2>/dev/null; then
+if ! hash pavucontrol 2>/dev/null; then
 PULSE="Not Installed"
 else
 PULSE="Installed"
@@ -453,12 +458,15 @@ fi
 #----------------------------------------------------#
 #		XASTIR
 #----------------------------------------------------#
-XA="/usr/bin/xastir"
-if [ ! -f "$XA" ]; then
-XASTIR="Not Installed"
-else
-XASTIR="Installed"
-fi
+LATESTXAS=$(curl -s https://github.com/Xastir/Xastir | grep Release- | head -1 | sed 's/.*Release-//;s/">//')
+CURRENTXAS=$(xastir -V | sed 's/Xastir V//;s/(.*//;/^\s*$/d')
+
+	if (( $(echo "$LATESTXAS $CURRENTXAS" | awk '{print ($1 > $2)}') ))
+	then
+	XASTIR=NEEDS-UPDATE
+	else
+	XASTIR="is_latest_version"
+	fi
 
 #----------------------------------------------------#
 #		YAAC
@@ -467,7 +475,16 @@ YAAC="$HOME/YAAC"
 if [ ! -d "$YAAC" ]; then
 YAAC="Not Installed"
 else
-YAAC="Installed"
+echo "Checking YAAC for updates"
+CURYAAC=$(java -jar $HOME/YAAC/YAAC.jar -version | grep core | awk '{print $7}' | sed 's/(.*//;s/1.0-beta//')
+wget -q https://sourceforge.net/projects/yetanotheraprsc/files/YAACBuildLabel.txt -O /run/user/$UID/latestyaac.txt
+LATESTYAAC=$(cat /run/user/$UID/latestyaac.txt | sed 's/1.0-beta//;s/(.*//')
+	if (( $(echo "$LATESTYAAC $CURYAAC" | awk '{print ($1 > $2)}') ))
+	then
+	YAAC=NEEDS-UPDATE
+	else
+	YAAC="is_latest_version"
+	fi
 fi
 
 #----------------------------------------------------#
@@ -719,6 +736,32 @@ else
 VNC="Installed"
 fi
 
+#----------------------------------------------------#
+#		ZYGRIB Viewer
+#----------------------------------------------------#
+if [ -f /usr/share/zygrib ]; then
+ZYGRIB=Installed
+else
+ZYGRIB="Not Installed"
+fi
+
+#----------------------------------------------------#
+#		GPS UPDATE TOOL
+#----------------------------------------------------#
+echo "Checking GPS Update Tool"
+if [ ! -f $HOME/bin/gpsupdate ]; then
+GPSUPDATE="Not_Installed"
+else
+GPSUPDATE=$(grep VERSION= $HOME/bin/gpsupdate | sed 's/VERSION=//')
+NEWGPSUPDATE=$(curl -s https://raw.githubusercontent.com/km4ack/pi-scripts/master/gpsupdate | grep VERSION= | sed 's/VERSION=//')
+	if (( $(echo "$NEWGPSUPDATE $GPSUPDATE" | awk '{print ($1 > $2)}') ))
+	then
+	GPSUPDATE=NEEDS-UPDATE
+	else
+	GPSUPDATE="is_latest_version"
+	fi
+fi
+
 CHECK
 ####################################################################
 ####################################################################
@@ -795,8 +838,10 @@ HSINFO(){
 sudo rfkill unblock all > /dev/null 2>&1
 #bring wifi up
 sudo ifconfig wlan0 up
-LIST=$(sudo iw dev "wlan0" scan ap-force | egrep "^BSS|SSID:" | grep SSID: | sed 's/SSID://' | awk '{ print $1 }')
-LIST=$(echo $LIST | sed 's/ /|/g')
+#LIST=$(sudo iw dev "wlan0" scan ap-force | egrep "^BSS|SSID:" | grep SSID: | sed 's/SSID://' | awk '{ print $1 }')
+#LIST=$(echo $LIST | sed 's/ /|/g')
+#Thanks to https://github.com/kuperman for fixing wifi space issue with line below.
+LIST=$(sudo iw dev "wlan0" scan ap-force | sed -ne 's/^.*SSID: \(..*\)/\1/p' | sort | uniq | paste -sd '|')
 
 HSINFO=$(yad --center --form --width=400 --height=400 --separator="|" --item-separator="|" \
 --image $LOGO --column=Check --column=App --column=Description \
@@ -990,6 +1035,8 @@ false "YGATE" "$YGATE" "Yaesu APRS Software" \
 false "BPQ" "$BPQ" "LinBPQ Software" \
 false "BATT" "$BATT" "Battery Test Script" \
 false "VNC" "$VNC" "VNC Viewer Application" \
+false "ZYGRIB" "$ZYGRIB" "Grib File Viewer" \
+false "GPSUPDATE" "$GPSUPDATE" "Tool to Manage GPS Devices" \
 --button="Exit":1 \
 --button="Install/Update Selected":2 > $UTILITY
 BUT=$?
