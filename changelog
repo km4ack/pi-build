@@ -1,4 +1,6 @@
-version=3.0.6
+version=3.0.7
+
+3.0.7		patch to fix flrig from not installing correctly https://github.com/km4ack/pi-build/issues/229
 
 3.0.6		Remove Pulse audio install https://github.com/km4ack/pi-build/issues/186
 		Add Support for SSID with spaces Merge https://github.com/km4ack/pi-build/pull/184
