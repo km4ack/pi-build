@@ -1,12 +1,12 @@
 #!/bin/bash
 
-MYPATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-LOGO=$MYPATH/logo.png
+MYPATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+LOGO=${MYPATH}/logo.png
 
-cat <<EOF > $MYPATH/boot.txt
+cat <<EOF >${MYPATH}/boot.txt
 Build-a-Pi Build Complete.
 
-If you found this script helpful 
+If you found this script helpful
 consider a donation to encourage
 future development.
 
@@ -16,19 +16,20 @@ https://paypal.me/km4ack
 
 EOF
 
-OUT=$(yad --width=550 --height=300 --text-align=center --center --title="Build-a-Pi"  --show-uri \
---image $LOGO --window-icon=$LOGO --image-on-top --separator="|" --item-separator="|" \
---text-info<$MYPATH/boot.txt \
---button="CLOSE":2 > /dev/null 2>&1)
+OUT=$(yad --width=550 --height=300 --text-align=center --center --title="Build-a-Pi" --show-uri \
+    --image ${LOGO} --window-icon=${LOGO} --image-on-top --separator="|" --item-separator="|" \
+    --text-info \
+    --button="CLOSE":2 <${MYPATH}/boot.txt \
+    >/dev/null 2>&1)
 BUT=$?
 if [ $BUT = 252 ]; then
-rm $MYPATH/boot.txt
-crontab -l > $HOME/Documents/cron.tmp
-sed -i 's/@reboot\ sleep\ 10.*//' $HOME/Documents/cron.tmp
-crontab $HOME/Documents/cron.tmp
-exit
+    rm ${MYPATH}/boot.txt
+    crontab -l >${HOME}/Documents/cron.tmp
+    sed -i 's/@reboot\ sleep\ 10.*//' ${HOME}/Documents/cron.tmp
+    crontab ${HOME}/Documents/cron.tmp
+    exit
 fi
-rm $MYPATH/boot.txt
-crontab -l > $HOME/Documents/cron.tmp
-sed -i 's/@reboot\ sleep\ 10.*//' $HOME/Documents/cron.tmp
-crontab $HOME/Documents/cron.tmp
+rm ${MYPATH}/boot.txt
+crontab -l >${HOME}/Documents/cron.tmp
+sed -i 's/@reboot\ sleep\ 10.*//' ${HOME}/Documents/cron.tmp
+crontab ${HOME}/Documents/cron.tmp

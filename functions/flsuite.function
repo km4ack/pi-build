@@ -1,203 +1,192 @@
-
-
 #script to install FLDIGI from source
 #20200121 km4ack
 
-mkdir -p $HOME/Downloads
-FLSTART(){
-#find how much memory we are working with
-FREEMEM=$(free -m | grep Mem: | awk '{ print $2 }')
-echo $FREEMEM
+mkdir -p ${HOME}/Downloads
+FLSTART() {
+	#find how much memory we are working with
+	FREEMEM=$(free -m | grep Mem: | awk '{ print $2 }')
+	echo ${FREEMEM}
 
-##################################
-#	INCREASE SWAP
-##################################
-#increase swap file if less than 3G memory
-if [ $FREEMEM -lt 3000 ]
-then
-echo "Increasing Swap size for build"
-#increase swap size
-sudo sed -i 's/#CONF_SWAPFILE=\/var\/swap/CONF_SWAPFILE=\/var\/swap/' /etc/dphys-swapfile
-sudo sed -i 's/CONF_SWAPSIZE=100/CONF_SWAPSIZE=1024/' /etc/dphys-swapfile
-sudo /etc/init.d/dphys-swapfile restart
-sleep 10
-fi
+	##################################
+	#	INCREASE SWAP
+	##################################
+	#increase swap file if less than 3G memory
+	if [ ${FREEMEM} -lt 3000 ]; then
+		echo "Increasing Swap size for build"
+		#increase swap size
+		sudo sed -i 's/#CONF_SWAPFILE=\/var\/swap/CONF_SWAPFILE=\/var\/swap/' /etc/dphys-swapfile
+		sudo sed -i 's/CONF_SWAPSIZE=100/CONF_SWAPSIZE=1024/' /etc/dphys-swapfile
+		sudo /etc/init.d/dphys-swapfile restart
+		sleep 10
+	fi
 
-##################################
-#	DEPENDS
-##################################
-#install needed depends
-sudo apt-get install -y libfltk1.3-dev libjpeg9-dev libxft-dev libxinerama-dev libxcursor-dev libsndfile1-dev libsamplerate0-dev portaudio19-dev libpulse-dev libusb-1.0-0-dev texinfo
+	##################################
+	#	DEPENDS
+	##################################
+	#install needed depends
+	sudo apt-get install -y libfltk1.3-dev libjpeg9-dev libxft-dev libxinerama-dev libxcursor-dev libsndfile1-dev libsamplerate0-dev portaudio19-dev libpulse-dev libusb-1.0-0-dev texinfo
 
-##################################
-#	FLXMLRPC
-##################################
-FLX=$(ldconfig -p | grep flxmlrpc)
+	##################################
+	#	FLXMLRPC
+	##################################
+	FLX=$(ldconfig -p | grep flxmlrpc)
 
-	if [ -z "$FLX" ]
-	then
-	#determine latest FLXMLRPC & download
-	FLXM=$(curl -s http://www.w1hkj.com/files/flxmlrpc/ | grep .tar.gz | sed 's/<li><a\ href="//' | sed 's/">\ flxmlrpc.*$//')
-	XMPKG=$( echo $FLXM | sed 's/.tar.gz//')
-	cd $HOME/Downloads
-	wget --tries 2 --connect-timeout=60 http://www.w1hkj.com/files/flxmlrpc/$FLXM
-	tar -zxvf $FLXM
-	rm *.gz
+	if [ -z "$FLX" ]; then
+		#determine latest FLXMLRPC & download
+		FLXM=$(curl -s http://www.w1hkj.com/files/flxmlrpc/ | grep .tar.gz | sed 's/<li><a\ href="//' | sed 's/">\ flxmlrpc.*$//')
+		XMPKG=$(echo ${FLXM} | sed 's/.tar.gz//')
+		cd ${HOME}/Downloads || exit
+		wget --tries 2 --connect-timeout=60 http://www.w1hkj.com/files/flxmlrpc/${FLXM}
+		tar -zxvf ${FLXM}
+		rm ./*.gz #THIS IS DANGEROUS -- SEE SC2035
 
-	#build FLXMLRPC
-	cd $XMPKG
-	./configure --prefix=/usr/local --enable-static
-	make
-	sudo make install
-	sudo ldconfig
+		#build FLXMLRPC
+		cd ${XMPKG} || exit
+		./configure --prefix=/usr/local --enable-static
+		make
+		sudo make install
+		sudo ldconfig
 	fi
 }
 
 ##################################
 #	FLRIG
 ##################################
-FLRIG(){
-#Determine latest FLRIG
-RIGTAR=$(curl -s http://www.w1hkj.com/files/flrig/ | grep .tar.gz | sed 's/<li><a\ href="//' | sed 's/">\ flrig.*$//' | tail -1)
-RIGPKG=$(echo $RIGTAR | sed 's/.tar.gz//')
+FLRIG() {
+	#Determine latest FLRIG
+	RIGTAR=$(curl -s http://www.w1hkj.com/files/flrig/ | grep .tar.gz | sed 's/<li><a\ href="//' | sed 's/">\ flrig.*$//' | tail -1)
+	RIGPKG=$(echo ${RIGTAR} | sed 's/.tar.gz//')
 
-#Download latest FLRIG
-cd $HOME/Downloads
-wget --tries 2 --connect-timeout=60 http://www.w1hkj.com/files/flrig/$RIGTAR
-tar -zxvf $RIGTAR
-rm *.gz
+	#Download latest FLRIG
+	cd ${HOME}/Downloads || exit
+	wget --tries 2 --connect-timeout=60 http://www.w1hkj.com/files/flrig/${RIGTAR}
+	tar -zxvf ${RIGTAR}
+	rm ./*.gz #THIS IS DANGEROUS -- SEE SC2035
 
-#Build FLRIG
-cd $RIGPKG
-./configure --prefix=/usr/local --enable-static
-make
-sudo make install
-sudo ldconfig
+	#Build FLRIG
+	cd ${RIGPKG} || exit
+	./configure --prefix=/usr/local --enable-static
+	make
+	sudo make install
+	sudo ldconfig
 }
 
 ##################################
 #	FLWRAP
 ##################################
-FLWRAP(){
-#Determine latest FLWRAP
-WRAPTAR=$(curl -s http://www.w1hkj.com/files/flwrap/ | grep .tar.gz | sed 's/<li><a\ href="//' | sed 's/">\ flwrap.*$//')
-WRAPPKG=$(echo $WRAPTAR | sed 's/.tar.gz//')
+FLWRAP() {
+	#Determine latest FLWRAP
+	WRAPTAR=$(curl -s http://www.w1hkj.com/files/flwrap/ | grep .tar.gz | sed 's/<li><a\ href="//' | sed 's/">\ flwrap.*$//')
+	WRAPPKG=$(echo ${WRAPTAR} | sed 's/.tar.gz//')
 
-#Download latest FLWRAP
-cd $HOME/Downloads
-wget --tries 2 --connect-timeout=60 http://www.w1hkj.com/files/flwrap/$WRAPTAR
-tar -zxvf $WRAPTAR
-rm *.gz
+	#Download latest FLWRAP
+	cd ${HOME}/Downloads || exit
+	wget --tries 2 --connect-timeout=60 http://www.w1hkj.com/files/flwrap/${WRAPTAR}
+	tar -zxvf ${WRAPTAR}
+	rm ./*.gz #THIS IS DANGEROUS -- SEE SC2035
 
-#Build FLRIG
-cd $WRAPPKG
-./configure --prefix=/usr/local --enable-static
-make
-sudo make install
-sudo ldconfig
+	#Build FLRIG
+	cd ${WRAPPKG} || exit
+	./configure --prefix=/usr/local --enable-static
+	make
+	sudo make install
+	sudo ldconfig
 }
 
 ##################################
 #	FLDIGI
 ##################################
-FLDIGI(){
-#Determine latest FLDIGI
-FLTAR=$(curl -s http://www.w1hkj.com/files/fldigi/ | grep .tar.gz | sed 's/<li><a\ href="//' | sed 's/">\ fldigi.*$//')
-FLPKG=$(echo $FLTAR | sed 's/.tar.gz//')
+FLDIGI() {
+	#Determine latest FLDIGI
+	FLTAR=$(curl -s http://www.w1hkj.com/files/fldigi/ | grep .tar.gz | sed 's/<li><a\ href="//' | sed 's/">\ fldigi.*$//')
+	FLPKG=$(echo ${FLTAR} | sed 's/.tar.gz//')
 
-#Download latest FLDIGI tar file
-cd $HOME/Downloads
-wget --tries 2 --connect-timeout=60 http://www.w1hkj.com/files/fldigi/$FLTAR
-tar -zxvf $FLTAR
-rm *.gz
+	#Download latest FLDIGI tar file
+	cd ${HOME}/Downloads || exit
+	wget --tries 2 --connect-timeout=60 http://www.w1hkj.com/files/fldigi/${FLTAR}
+	tar -zxvf ${FLTAR}
+	rm ./*.gz #THIS IS DANGEROUS -- SEE SC2035
 
-
-#build FLDIGI
-cd $FLPKG
-./configure --prefix=/usr/local --enable-static
-make
-sudo make install
-sudo ldconfig
+	#build FLDIGI
+	cd ${FLPKG} || exit
+	./configure --prefix=/usr/local --enable-static
+	make
+	sudo make install
+	sudo ldconfig
 }
 ##################################
 #	FLMSG
 ##################################
-FLMSG(){
-#Determine latest FLMSG
-MSGTAR=$(curl -s http://www.w1hkj.com/files/flmsg/ | grep .tar.gz | sed 's/<li><a\ href="//' | sed 's/">\ flmsg.*$//' | tail -1)
-MSGPKG=$(echo $MSGTAR | sed 's/.tar.gz//')
+FLMSG() {
+	#Determine latest FLMSG
+	MSGTAR=$(curl -s http://www.w1hkj.com/files/flmsg/ | grep .tar.gz | sed 's/<li><a\ href="//' | sed 's/">\ flmsg.*$//' | tail -1)
+	MSGPKG=$(echo ${MSGTAR} | sed 's/.tar.gz//')
 
-#download FLMSG
-cd $HOME/Downloads
-wget --tries 2 --connect-timeout=60 http://www.w1hkj.com/files/flmsg/$MSGTAR
-tar -zxvf $MSGTAR
-rm *.gz
+	#download FLMSG
+	cd ${HOME}/Downloads || exit
+	wget --tries 2 --connect-timeout=60 http://www.w1hkj.com/files/flmsg/${MSGTAR}
+	tar -zxvf ${MSGTAR}
+	rm ./*.gz #THIS IS DANGEROUS -- SEE SC2035
 
-#Build FLMSG
-cd $MSGPKG
-./configure --prefix=/usr/local --enable-static
-make
-sudo make install
-sudo ldconfig
+	#Build FLMSG
+	cd ${MSGPKG} || exit
+	./configure --prefix=/usr/local --enable-static
+	make
+	sudo make install
+	sudo ldconfig
 }
 ##################################
 #	FLAMP
 ##################################
-FLAMP(){
-#determine latest FLAMP
-AMPTAR=$(curl -s http://www.w1hkj.com/files/flamp/ | grep .tar.gz | sed 's/<li><a\ href="//' | sed 's/">\ flamp.*$//')
-AMPPKG=$(echo $AMPTAR | sed 's/.tar.gz//')
+FLAMP() {
+	#determine latest FLAMP
+	AMPTAR=$(curl -s http://www.w1hkj.com/files/flamp/ | grep .tar.gz | sed 's/<li><a\ href="//' | sed 's/">\ flamp.*$//')
+	AMPPKG=$(echo ${AMPTAR} | sed 's/.tar.gz//')
 
-#download FLAMP
-cd $HOME/Downloads
-wget --tries 2 --connect-timeout=60 http://www.w1hkj.com/files/flamp/$AMPTAR
-tar -zxvf $AMPTAR
-rm *.gz
+	#download FLAMP
+	cd ${HOME}/Downloads || exit
+	wget --tries 2 --connect-timeout=60 http://www.w1hkj.com/files/flamp/$AMPTAR
+	tar -zxvf ${AMPTAR}
+	rm ./*.gz #THIS IS DANGEROUS -- SEE SC2035
 
-#build FLAMP
-cd $AMPPKG
-./configure --prefix=/usr/local --enable-static
-make
-sudo make install
-sudo ldconfig
+	#build FLAMP
+	cd ${AMPPKG} || exit
+	./configure --prefix=/usr/local --enable-static
+	make
+	sudo make install
+	sudo ldconfig
 }
 ##################################
 #	FLNET
 ##################################
-FLNET(){
-#determine lastest FLNET
-NETTAR=$(curl -s http://www.w1hkj.com/files/flnet/ | grep .tar.gz | sed 's/<li><a\ href="//' | sed 's/">\ flnet.*$//')
-NETPKG=$(echo $NETTAR | sed 's/.tar.gz//')
+FLNET() {
+	#determine lastest FLNET
+	NETTAR=$(curl -s http://www.w1hkj.com/files/flnet/ | grep .tar.gz | sed 's/<li><a\ href="//' | sed 's/">\ flnet.*$//')
+	NETPKG=$(echo ${NETTAR} | sed 's/.tar.gz//')
 
-#download FLNET
-cd $HOME/Downloads
-wget --tries 2 --connect-timeout=60 http://www.w1hkj.com/files/flnet/$NETTAR
-tar -zxvf $NETTAR
-rm *.gz
+	#download FLNET
+	cd ${HOME}/Downloads || exit
+	wget --tries 2 --connect-timeout=60 http://www.w1hkj.com/files/flnet/$NETTAR
+	tar -zxvf ${NETTAR}
+	rm ./*.gz #THIS IS DANGEROUS -- SEE SC2035
 
-#build FLNET
-cd $NETPKG
-./configure --prefix=/usr/local --enable-static
-make
-sudo make install
-sudo ldconfig
+	#build FLNET
+	cd ${NETPKG} || exit
+	./configure --prefix=/usr/local --enable-static
+	make
+	sudo make install
+	sudo ldconfig
 }
 ##################################
 #	RESET SWAP
 ##################################
-FLSTOP(){
-#reset swap size to default
-if [ $FREEMEM -lt 3000 ]
-then
-echo "Resetting swap size to default"
-#increase swap size
-sudo sed -i 's/CONF_SWAPFILE=\/var\/swap/#CONF_SWAPFILE=\/var\/swap/' /etc/dphys-swapfile
-sudo sed -i 's/CONF_SWAPSIZE=1024/CONF_SWAPSIZE=100/' /etc/dphys-swapfile
-sudo /etc/init.d/dphys-swapfile restart
-fi
+FLSTOP() {
+	#reset swap size to default
+	if [ ${FREEMEM} -lt 3000 ]; then
+		echo "Resetting swap size to default"
+		#increase swap size
+		sudo sed -i 's/CONF_SWAPFILE=\/var\/swap/#CONF_SWAPFILE=\/var\/swap/' /etc/dphys-swapfile
+		sudo sed -i 's/CONF_SWAPSIZE=1024/CONF_SWAPSIZE=100/' /etc/dphys-swapfile
+		sudo /etc/init.d/dphys-swapfile restart
+	fi
 }
-
-
-
-
-

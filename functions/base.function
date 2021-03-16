@@ -1,61 +1,61 @@
 #this installs the basic software for build-a-pi
 #km4ack 20200513
 
-TEMPCRON=$MYPATH/cron.tmp
-DIR=$MYPATH/temp
-mkdir -p $DIR
+TEMPCRON=${MYPATH}/cron.tmp
+DIR=${MYPATH}/temp
+mkdir -p ${DIR}
 
-source $MYPATH/config
+source ${MYPATH}/config
 
 ################################
 #	HOTSPOT
 ################################
-HOTSPOT(){
-HS="/usr/bin/autohotspotN"
-if [ ! -f "$HS" ]; then
-#pass variables with script because run as root
-sudo bash $MYPATH/functions/autohotspot "$SHACKSSID" "$SHACKPASS" "$HSPASS"
-echo "*/5 * * * * sudo /usr/bin/autohotspotN >/dev/null 2>&1" >> $TEMPCRON
-else
-echo ################################
-echo ################################
-echo "        FATAL ERROR"
-echo "HOTSPOT ALREADY INSTALLED ONCE"
-echo "   CANNOT INSTALL AGAIN"
-echo " WILL CONTINUE IN 10 SECONDS"
-echo ################################
-echo ################################
-sleep 10
-fi
+HOTSPOT() {
+    HS="/usr/bin/autohotspotN"
+    if [ ! -f "${HS}" ]; then
+        #pass variables with script because run as root
+        sudo bash ${MYPATH}/functions/autohotspot "${SHACKSSID}" "${SHACKPASS}" "${HSPASS}"
+        echo "*/5 * * * * sudo /usr/bin/autohotspotN >/dev/null 2>&1" >>${TEMPCRON}
+    else
+        echo ################################
+        echo ################################
+        echo "        FATAL ERROR"
+        echo "HOTSPOT ALREADY INSTALLED ONCE"
+        echo "   CANNOT INSTALL AGAIN"
+        echo " WILL CONTINUE IN 10 SECONDS"
+        echo ################################
+        echo ################################
+        sleep 10
+    fi
 }
 
 ################################
 #	HOTSPOT TOOLS
 ################################
-HSTOOLS(){
-if [ -d $HOME/hotspot-tools2 ]; then
-rm -rf $HOME/hotspot-tools2
-fi
-git clone https://github.com/km4ack/hotspot-tools2.git $HOME/hotspot-tools2
-sudo cp $HOME/hotspot-tools2/hstools.desktop /usr/share/applications/hotspot-tools.desktop
+HSTOOLS() {
+    if [ -d ${HOME}/hotspot-tools2 ]; then
+        rm -rf ${HOME}/hotspot-tools2
+    fi
+    git clone https://github.com/km4ack/hotspot-tools2.git ${HOME}/hotspot-tools2
+    sudo cp ${HOME}/hotspot-tools2/hstools.desktop /usr/share/applications/hotspot-tools.desktop
 }
 
 ################################
 #	GPS
 ################################
-GPS(){
-cd $DIR
-wget --tries 2 --connect-timeout=60 https://raw.githubusercontent.com/km4ack/pi-scripts/master/gpsinstall
-chmod +x $DIR/gpsinstall
-sudo $DIR/gpsinstall
-rm $DIR/gpsinstall
-#Set GPS by serial ID
-#GPS Variable set by main script or update script
-#and placed in config file
-sudo sed -i "s|DEVICES.*$|DEVICES=\"$GPS\"|g" /etc/default/gpsd
+GPS() {
+    cd ${DIR} || exit
+    wget --tries 2 --connect-timeout=60 https://raw.githubusercontent.com/km4ack/pi-scripts/master/gpsinstall
+    chmod +x ${DIR}/gpsinstall
+    sudo ${DIR}/gpsinstall
+    rm ${DIR}/gpsinstall
+    #Set GPS by serial ID
+    #GPS Variable set by main script or update script
+    #and placed in config file
+    sudo sed -i "s|DEVICES.*$|DEVICES=\"$GPS\"|g" /etc/default/gpsd
 
-#add xgps to menu
-cat > xgps.desktop <<EOF
+    #add xgps to menu
+    cat >xgps.desktop <<EOF
 [Desktop Entry]
 Name=XGPS
 GenericName=XGPS
@@ -67,131 +67,102 @@ Type=Application
 Categories=Utility
 EOF
 
-sudo mv xgps.desktop /usr/share/applications/
+    sudo mv xgps.desktop /usr/share/applications/
 }
 
 ################################
 #	ARDOP
 ################################
-ARDOP(){
-mkdir -p $HOME/ardop
-cd $HOME/ardop
-wget --tries 2 --connect-timeout=60 https://www.cantab.net/users/john.wiseman/Downloads/Beta/piardopc
-sudo chmod +x $HOME/ardop/piardopc
+ARDOP() {
+    mkdir -p ${HOME}/ardop
+    cd ${HOME}/ardop || exit
+    wget --tries 2 --connect-timeout=60 https://www.cantab.net/users/john.wiseman/Downloads/Beta/piardopc
+    sudo chmod +x ${HOME}/ardop/piardopc
 }
 
 ################################
 #	ARDOP GUI
 ################################
-ARDOPGUI(){
-mkdir -p $HOME/ardop
-cd $HOME/ardop
-wget --tries 2 --connect-timeout=60 https://www.cantab.net/users/john.wiseman/Downloads/Beta/piARDOP_GUI
-sudo chmod +x $HOME/ardop/piARDOP_GUI
-cat > ardopgui.desktop <<EOF
+ARDOPGUI() {
+    mkdir -p ${HOME}/ardop
+    cd ${HOME}/ardop || exit
+    wget --tries 2 --connect-timeout=60 https://www.cantab.net/users/john.wiseman/Downloads/Beta/piARDOP_GUI
+    sudo chmod +x ${HOME}/ardop/piARDOP_GUI
+    cat >ardopgui.desktop <<EOF
 [Desktop Entry]
 Name=ARDOP GUI
 GenericName=ARDOP GUI
 Comment=Graphical User Interface for ARDOP modem
-Exec=$HOME/ardop/piARDOP_GUI
+Exec=${HOME}/ardop/piARDOP_GUI
 Terminal=false
 Type=Application
 Categories=Network;HamRadio;
 EOF
 
-sudo mv ardopgui.desktop /usr/share/applications/
-FILE=$HOME/.config/G8BPQ/ARDOP_GUI.conf
-mkdir -p $HOME/.config/G8BPQ
-touch $FILE
-echo "[General]" >> $FILE
-echo "Host=local" >> $FILE
-echo "Port=8515" >> $FILE
+    sudo mv ardopgui.desktop /usr/share/applications/
+    FILE=${HOME}/.config/G8BPQ/ARDOP_GUI.conf
+    mkdir -p ${HOME}/.config/G8BPQ
+    touch ${FILE}
+    echo "[General]" >>${FILE}
+    echo "Host=local" >>${FILE}
+    echo "Port=8515" >>${FILE}
 }
 
 ################################
 #	HAMLIB
 ################################
-HAMLIB(){
-cd $DIR
-NEWRIG=$(curl -s https://sourceforge.net/projects/hamlib/files/latest/download | \
-grep -o https://downloads.sourceforge.net/project/hamlib/hamlib/[0-9].[0-9] | \
-head -n 1 | awk -F "/" '{print $7}')
-HAMLIBLINK=https://sourceforge.net/projects/hamlib/files/hamlib/$NEWRIG/hamlib-$NEWRIG.tar.gz
-cd $HOME/Downloads
-echo "###################################"
-echo "#		Installing Hamlib	"
-echo "###################################"	
-wget --tries 2 --connect-timeout=60 $HAMLIBLINK
+HAMLIB() {
+    cd ${DIR} || exit
+    NEWRIG=$(curl -s https://sourceforge.net/projects/hamlib/files/latest/download |
+        grep -o https://downloads.sourceforge.net/project/hamlib/hamlib/[0-9].[0-9] |
+        head -n 1 | awk -F "/" '{print $7}')
+    HAMLIBLINK=https://sourceforge.net/projects/hamlib/files/hamlib/${NEWRIG}/hamlib-${NEWRIG}.tar.gz
+    cd ${HOME}/Downloads || exit
+    echo "###################################"
+    echo "#		Installing Hamlib	"
+    echo "###################################"
+    wget --tries 2 --connect-timeout=60 ${HAMLIBLINK}
 
-tar -xzf hamlib-$NEWRIG.tar.gz
-rm hamlib-$NEWRIG.tar.gz
-cd hamlib-$NEWRIG
-./configure
-make 
-sudo make install
-sudo ldconfig
+    tar -xzf hamlib-${NEWRIG}.tar.gz
+    rm hamlib-${NEWRIG}.tar.gz
+    cd hamlib-${NEWRIG} || exit
+    ./configure
+    make
+    sudo make install
+    sudo ldconfig
 }
 
 ################################
 #	DIREWOLF
 ################################
-DIREWOLF(){
-cd $HOME
-git clone https://www.github.com/wb2osz/direwolf
-cd $HOME/direwolf
-mkdir build && cd build
-sudo apt-get install -y libasound2-dev cmake
-cmake ..
-make -j 4
-sudo make install
-make install-conf
-sed -i "s/N0CALL/$CALL/" "$HOME/direwolf.conf"
-sed -i 's/# ADEVICE  plughw:1,0/ADEVICE  plughw:2,0/' $HOME/direwolf.conf
-sed -i '/#PTT\ \/dev\/ttyUSB0\ RTS/a #Uncomment line below for PTT with sabrent sound card\n#PTT RIG 2 localhost:4532' $HOME/direwolf.conf
-rm -rf $HOME/direwolf
+DIREWOLF() {
+    cd ${HOME} || exit
+    git clone https://www.github.com/wb2osz/direwolf
+    cd ${HOME}/direwolf || exit
+    (mkdir build && cd build) || exit
+    sudo apt-get install -y libasound2-dev cmake
+    cmake ..
+    make -j 4
+    sudo make install
+    make install-conf
+    sed -i "s/N0CALL/${CALL}/" "${HOME}/direwolf.conf"
+    sed -i 's/# ADEVICE  plughw:1,0/ADEVICE  plughw:2,0/' ${HOME}/direwolf.conf
+    sed -i '/#PTT\ \/dev\/ttyUSB0\ RTS/a #Uncomment line below for PTT with sabrent sound card\n#PTT RIG 2 localhost:4532' ${HOME}/direwolf.conf
+    rm -rf ${HOME}/direwolf
 }
 
 ################################
 #	AX25
 ################################
-AX25(){
-sudo apt-get install -y ax25-tools
-echo "wl2k "$CALL" 1200 255 7 Winlink" | sudo tee -a /etc/ax25/axports
-sudo apt-get install -y ax25-apps
+AX25() {
+    sudo apt-get install -y ax25-tools
+    echo "wl2k ${CALL} 1200 255 7 Winlink" | sudo tee -a /etc/ax25/axports
+    sudo apt-get install -y ax25-apps
 }
 
 ################################
 #	PULSE AUDIO Control
 ################################
-PULSE(){
-sudo apt-get install -y pavucontrol
+PULSE() {
+    sudo apt-get install -y pavucontrol
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
