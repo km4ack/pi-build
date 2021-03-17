@@ -446,7 +446,7 @@ pcmanfm --set-wallpaper /usr/share/rpd-wallpaper/bap-wallpaper.jpg
 mkdir -p ${DIR} 2>/dev/null
 
 #add virtual sound card link for pulse audio
-cd ${DIR} || exit
+cd ${DIR} || ! echo "Failure"
 cat >tempsound <<EOF
 pcm.pulse {
 	type pulse
@@ -460,7 +460,7 @@ sudo mv tempsound /etc/asound.conf
 
 #mod sound card for Buster May 2020
 #so it will always load as card #2
-cd ${DIR} || exit
+cd ${DIR} || ! echo "Failure"
 cat >tempsound <<EOF
 #Internal sound
 options snd-bcm2835 index=0
@@ -482,7 +482,7 @@ echo "export PATH=$PATH:${HOME}/bin" >>${HOME}/.bashrc
 chmod +x ${MYPATH}/update ${MYPATH}/build-a-pi
 
 #create build-a-pi menu item
-cd ${MYPATH} || exit
+cd ${MYPATH} || ! echo "Failure"
 cat >build-a-pi.desktop <<EOF
 [Desktop Entry]
 Name=Build-a-Pi

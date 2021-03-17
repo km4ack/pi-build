@@ -47,7 +47,7 @@ trap FINISH EXIT
 #fix issue 108 https://github.com/km4ack/pi-build/issues/108
 #Thanks to N5RKS for finding the bug
 if [ -d ${HOME}/pi-build/temp ]; then
-	rm -rf ${HOME}/pi-build/temp
+	rm -rf "${HOME}/pi-build/temp"
 fi
 
 #####################################
@@ -91,8 +91,8 @@ EOF
 		fi
 		echo "Updating Build a Pi to $LATEST"
 		mv ${MYPATH}/config ${HOME}/Documents/config.bap
-		rm -rf ${MYPATH}
-		cd ~ || exit
+		rm -rf "${MYPATH}"
+		cd ~ || ! echo "Failure"
 		git clone https://github.com/km4ack/pi-build.git
 		mv ${HOME}/Documents/config.bap ${MYPATH}/config
 
@@ -400,7 +400,7 @@ CHECK() {
 	if [ ! -d ${HOME}/patmenu2 ]; then
 		PATMENU="Not_Installed"
 	else
-		cd ${HOME}/patmenu2/ || exit
+		cd ${HOME}/patmenu2/ || ! echo "Failure"
 		wget -O ${HOME}/patmenu2/latest https://raw.githubusercontent.com/km4ack/patmenu2/master/changelog >/dev/null 2>&1
 		LATEST=$(cat ${HOME}/patmenu2/latest | grep '^release' | sed 's/release=//')
 		CURRENT=$(cat ${HOME}/patmenu2/changelog | grep '^release' | sed 's/release=//')

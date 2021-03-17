@@ -146,7 +146,7 @@ CHECK() {
 	if [ ! -d ${HOME}/patmenu2 ]; then
 		PATMENU="Not_Installed"
 	else
-		cd ${HOME}/patmenu2/ || exit
+		cd ${HOME}/patmenu2/ || ! echo "Failure"
 		wget -O ${HOME}/patmenu2/latest https://raw.githubusercontent.com/km4ack/patmenu2/master/changelog >/dev/null 2>&1
 		LATEST=$(cat ${HOME}/patmenu2/latest | grep '^release' | sed 's/release=//')
 		CURRENT=$(cat ${HOME}/patmenu2/changelog | grep '^release' | sed 's/release=//')
@@ -303,7 +303,7 @@ echo "DIREWOLF $DIRE" >>${DIR}/apps.info
 echo "Pat Menu $PATMENU" >>${DIR}/apps.info
 echo "EES $EES" >>${DIR}/apps.info
 
-cd ${HOME}/Desktop || exit
+cd ${HOME}/Desktop || ! echo "Failure"
 zip -r ${CALL}-diagnostic.zip ${DIR} >/dev/null 2>&1
 
 rm -rf ${DIR} >/dev/null 2>&1

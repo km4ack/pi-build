@@ -44,7 +44,7 @@ HSTOOLS() {
 #	GPS
 ################################
 GPS() {
-    cd ${DIR} || exit
+    cd ${DIR} || return
     wget --tries 2 --connect-timeout=60 https://raw.githubusercontent.com/km4ack/pi-scripts/master/gpsinstall
     chmod +x ${DIR}/gpsinstall
     sudo ${DIR}/gpsinstall
@@ -75,7 +75,7 @@ EOF
 ################################
 ARDOP() {
     mkdir -p ${HOME}/ardop
-    cd ${HOME}/ardop || exit
+    cd ${HOME}/ardop || return
     wget --tries 2 --connect-timeout=60 https://www.cantab.net/users/john.wiseman/Downloads/Beta/piardopc
     sudo chmod +x ${HOME}/ardop/piardopc
 }
@@ -85,7 +85,7 @@ ARDOP() {
 ################################
 ARDOPGUI() {
     mkdir -p ${HOME}/ardop
-    cd ${HOME}/ardop || exit
+    cd ${HOME}/ardop || return
     wget --tries 2 --connect-timeout=60 https://www.cantab.net/users/john.wiseman/Downloads/Beta/piARDOP_GUI
     sudo chmod +x ${HOME}/ardop/piARDOP_GUI
     cat >ardopgui.desktop <<EOF
@@ -112,12 +112,12 @@ EOF
 #	HAMLIB
 ################################
 HAMLIB() {
-    cd ${DIR} || exit
+    cd ${DIR} || return
     NEWRIG=$(curl -s https://sourceforge.net/projects/hamlib/files/latest/download |
         grep -o https://downloads.sourceforge.net/project/hamlib/hamlib/[0-9].[0-9] |
         head -n 1 | awk -F "/" '{print $7}')
     HAMLIBLINK=https://sourceforge.net/projects/hamlib/files/hamlib/${NEWRIG}/hamlib-${NEWRIG}.tar.gz
-    cd ${HOME}/Downloads || exit
+    cd ${HOME}/Downloads || return
     echo "###################################"
     echo "#		Installing Hamlib	"
     echo "###################################"
@@ -125,7 +125,7 @@ HAMLIB() {
 
     tar -xzf hamlib-${NEWRIG}.tar.gz
     rm hamlib-${NEWRIG}.tar.gz
-    cd hamlib-${NEWRIG} || exit
+    cd hamlib-${NEWRIG} || return
     ./configure
     make
     sudo make install
@@ -136,10 +136,10 @@ HAMLIB() {
 #	DIREWOLF
 ################################
 DIREWOLF() {
-    cd ${HOME} || exit
+    cd ${HOME} || return
     git clone https://www.github.com/wb2osz/direwolf
-    cd ${HOME}/direwolf || exit
-    (mkdir build && cd build) || exit
+    cd ${HOME}/direwolf || return
+    (mkdir build && cd build) || return
     sudo apt-get install -y libasound2-dev cmake
     cmake ..
     make -j 4

@@ -2,7 +2,7 @@
 #	DIPOLE CALC
 ##################################
 DIPOLE() {
-    cd ${HOME}/bin || exit
+    cd ${HOME}/bin || return
     wget --tries 2 --connect-timeout=60 https://raw.githubusercontent.com/km4ack/pi-scripts/master/dipole
     chmod +x dipole
 
@@ -26,7 +26,7 @@ EOF
 #	Call Lookup
 ##################################
 CALLSIGN() {
-    cd ${HOME}/bin || exit
+    cd ${HOME}/bin || return
     wget --tries 2 --connect-timeout=60 https://raw.githubusercontent.com/km4ack/pi-scripts/master/getcall
     chmod +x getcall
 
@@ -52,7 +52,7 @@ TEMPCONVERT() {
     if ! hash bc 2>/dev/null; then
         sudo apt-get install -y bc
     fi
-    cd ${HOME}/bin || exit
+    cd ${HOME}/bin || return
     wget --tries 2 --connect-timeout=60 https://raw.githubusercontent.com/km4ack/pi-scripts/master/converttemp
     chmod +x converttemp
 
@@ -83,7 +83,7 @@ GPARTED() {
 ##################################
 SHOWLOG() {
 
-    cd ${HOME}/bin || exit
+    cd ${HOME}/bin || return
     wget https://raw.githubusercontent.com/km4ack/pi-scripts/master/showlog
     chmod +x showlog
 
@@ -185,18 +185,18 @@ by connecting to the internet or attaching a GPS" \
 #	PISTATS
 ##################################
 PISTATS() {
-    cd ${HOME} || exit
+    cd ${HOME} || return
     CUR=$(curl -s http://www.w1hkj.com/pi3/ | grep .tgz | sed 's/.*pistats//' | sed 's/<\/a><br>//')
     wget http://www.w1hkj.com/pi3/pistats${CUR}
     tar -xzvf pistats${CUR}
     rm pistats${CUR}
     PISTATDIR=$(ls ${HOME} | grep pistats)
-    cd ${PISTATDIR} || exit
+    cd ${PISTATDIR} || return
     sudo apt-get install -y libfltk1.3-dev
     make
     sudo mv pistats /usr/local/bin
     sudo mv ${HOME}/${PISTATDIR}/data/pistats.desktop /usr/share/applications/
-    cd ${HOME} || exit
+    cd ${HOME} || return
     rm -rf "${PISTATDIR}"
 }
 
@@ -211,7 +211,7 @@ TELNET() {
 #	PiQtTermTCP
 ##################################
 PITERM() {
-    cd ${DIR} || exit
+    cd ${DIR} || return
     wget https://www.cantab.net/users/john.wiseman/Downloads/Beta/piQtTermTCP
     sudo chmod +x piQtTermTCP
     sudo mv piQtTermTCP /usr/local/bin/
@@ -236,7 +236,7 @@ EOF
 #	Security Tools
 ##################################
 SECURITY() {
-    cd ${HOME}/bin || exit
+    cd ${HOME}/bin || return
     wget https://raw.githubusercontent.com/km4ack/pi-scripts/master/security-tools
     bash security-tools
 
@@ -261,7 +261,7 @@ EOF
 #	YGATE
 ##################################
 YGATE() {
-    cd ${HOME}/bin || exit
+    cd ${HOME}/bin || return
     wget https://raw.githubusercontent.com/craigerl/ygate/master/ygate.py
     chmod +x ygate.py
 
@@ -284,9 +284,9 @@ EOF
 #	BPQ
 ##################################
 BPQ() {
-    source ${HOME}/pi-build/config || exit
+    source ${HOME}/pi-build/config || return
     #install LinBPQ
-    cd || exit
+    cd || return
     ##########################################################################
     #commands below this line were taken from John Wiseman's install script.
     #and modded to pull the operators call sign from the BAP config file.
@@ -297,7 +297,7 @@ BPQ() {
     echo "Downloading ${LINBPQ} and ${APRS} to linbpq and bpqaprs"
 
     mkdir linbpq
-    cd linbpq || exit
+    cd linbpq || return
     wget -nv http://www.cantab.net/users/john.wiseman/Downloads/Beta/${LINBPQ} -O linbpq
     chmod +x linbpq
     wget -nv http://www.cantab.net/users/john.wiseman/Downloads/Beta/${APRS} -O bpqaprs
@@ -310,11 +310,11 @@ BPQ() {
     echo "Downloading HTML Files"
 
     mkdir HTML
-    cd HTML || exit
+    cd HTML || return
     wget -nv http://www.cantab.net/users/john.wiseman/Downloads/Beta/HTMLPages.zip
     unzip -o -q HTMLPages.zip
     rm HTMLPages.zip
-    cd .. || exit
+    cd .. || return
     wget -nv http://www.cantab.net/users/john.wiseman/Downloads/LinBPQAPRS.zip
     unzip -o -q LinBPQAPRS.zip
     rm LinBPQAPRS.zip
@@ -330,7 +330,7 @@ BPQ() {
     #End John Wiseman install script
     #####################################################
     #install BPQ config generator
-    cd ${HOME}/linbpq || exit
+    cd ${HOME}/linbpq || return
     wget https://www.cantab.net/users/john.wiseman/Downloads/Beta/piBPQConfigGen
     chmod +x piBPQConfigGen
 
@@ -380,7 +380,7 @@ EOF
 #	Battery Test Script
 ##################################
 BATT() {
-    cd ${HOME}/bin || exit
+    cd ${HOME}/bin || return
     wget https://raw.githubusercontent.com/km4ack/pi-scripts/master/batt-test
     chmod +x batt-test
 
@@ -403,7 +403,7 @@ EOF
 #	VNC Viewer
 ##################################
 VNC() {
-    cd ${HOME} || exit
+    cd ${HOME} || return
     PACKAGE=$(curl -s https://www.realvnc.com/en/connect/download/viewer/raspberrypi/ | grep .deb | awk '{print $2}' |
         sed 's/href="\/download\/file\/viewer.files\///' | sed 's/"//')
 
@@ -429,7 +429,7 @@ GPSUPDATE() {
         rm ${HOME}/bin/gpsupdate
     fi
 
-    cd ${HOME}/bin || exit
+    cd ${HOME}/bin || return
     wget https://raw.githubusercontent.com/km4ack/pi-scripts/master/gpsupdate
     chmod +x gpsupdate
 
@@ -453,7 +453,7 @@ EOF
 
 REMOVEMS() {
     #download the file
-    cd ${HOME}/bin || exit
+    cd ${HOME}/bin || return
     wget https://raw.githubusercontent.com/km4ack/pi-scripts/master/removeMS
     chmod +x ${HOME}/bin/removeMS
     #place user directions on desktop

@@ -31,7 +31,7 @@ systemctl disable hostapd
 systemctl disable dnsmasq
 
 mkdir -p ${HOME}/temp
-cd ${HOME}/temp || exit
+cd ${HOME}/temp || return
 
 wget http://www.raspberryconnect.com/images/Autohotspot/autohotspot-95-4/hostapd.txt
 
@@ -67,7 +67,7 @@ echo "nohook wpa_supplicant" >>/etc/dhcpcd.conf
 #setup ip forward
 sed 's/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/' /etc/sysctl.conf
 
-cd ${HOME}/temp || exit
+cd ${HOME}/temp || return
 
 wget http://www.raspberryconnect.com/images/autohotspotN/autohotspotn-95-4/autohotspot-service.txt
 
@@ -85,7 +85,7 @@ if [ -z "iw" ]; then #THIS MIGHT NEED TO SOME LOOKING AT -- SEE SC2157
 fi
 
 #install autohotspot script
-cd ${HOME}/temp || exit
+cd ${HOME}/temp || return
 wget http://www.raspberryconnect.com/images/autohotspotN/autohotspotn-95-4/autohotspotN.txt
 #mod ip address for our custom setup
 sed -i 's/192.168.50.5/10.10.10.10/' autohotspotN.txt

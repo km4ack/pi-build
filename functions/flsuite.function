@@ -35,13 +35,13 @@ FLSTART() {
 		#determine latest FLXMLRPC & download
 		FLXM=$(curl -s http://www.w1hkj.com/files/flxmlrpc/ | grep .tar.gz | sed 's/<li><a\ href="//' | sed 's/">\ flxmlrpc.*$//')
 		XMPKG=$(echo ${FLXM} | sed 's/.tar.gz//')
-		cd ${HOME}/Downloads || exit
+		cd ${HOME}/Downloads || return
 		wget --tries 2 --connect-timeout=60 http://www.w1hkj.com/files/flxmlrpc/${FLXM}
 		tar -zxvf ${FLXM}
 		rm ./*.gz #THIS IS DANGEROUS -- SEE SC2035
 
 		#build FLXMLRPC
-		cd ${XMPKG} || exit
+		cd ${XMPKG} || return
 		./configure --prefix=/usr/local --enable-static
 		make
 		sudo make install
@@ -58,13 +58,13 @@ FLRIG() {
 	RIGPKG=$(echo ${RIGTAR} | sed 's/.tar.gz//')
 
 	#Download latest FLRIG
-	cd ${HOME}/Downloads || exit
+	cd ${HOME}/Downloads || return
 	wget --tries 2 --connect-timeout=60 http://www.w1hkj.com/files/flrig/${RIGTAR}
 	tar -zxvf ${RIGTAR}
 	rm ./*.gz #THIS IS DANGEROUS -- SEE SC2035
 
 	#Build FLRIG
-	cd ${RIGPKG} || exit
+	cd ${RIGPKG} || return
 	./configure --prefix=/usr/local --enable-static
 	make
 	sudo make install
@@ -80,13 +80,13 @@ FLWRAP() {
 	WRAPPKG=$(echo ${WRAPTAR} | sed 's/.tar.gz//')
 
 	#Download latest FLWRAP
-	cd ${HOME}/Downloads || exit
+	cd ${HOME}/Downloads || return
 	wget --tries 2 --connect-timeout=60 http://www.w1hkj.com/files/flwrap/${WRAPTAR}
 	tar -zxvf ${WRAPTAR}
 	rm ./*.gz #THIS IS DANGEROUS -- SEE SC2035
 
 	#Build FLRIG
-	cd ${WRAPPKG} || exit
+	cd ${WRAPPKG} || return
 	./configure --prefix=/usr/local --enable-static
 	make
 	sudo make install
@@ -102,13 +102,13 @@ FLDIGI() {
 	FLPKG=$(echo ${FLTAR} | sed 's/.tar.gz//')
 
 	#Download latest FLDIGI tar file
-	cd ${HOME}/Downloads || exit
+	cd ${HOME}/Downloads || return
 	wget --tries 2 --connect-timeout=60 http://www.w1hkj.com/files/fldigi/${FLTAR}
 	tar -zxvf ${FLTAR}
 	rm ./*.gz #THIS IS DANGEROUS -- SEE SC2035
 
 	#build FLDIGI
-	cd ${FLPKG} || exit
+	cd ${FLPKG} || return
 	./configure --prefix=/usr/local --enable-static
 	make
 	sudo make install
@@ -123,13 +123,13 @@ FLMSG() {
 	MSGPKG=$(echo ${MSGTAR} | sed 's/.tar.gz//')
 
 	#download FLMSG
-	cd ${HOME}/Downloads || exit
+	cd ${HOME}/Downloads || return
 	wget --tries 2 --connect-timeout=60 http://www.w1hkj.com/files/flmsg/${MSGTAR}
 	tar -zxvf ${MSGTAR}
 	rm ./*.gz #THIS IS DANGEROUS -- SEE SC2035
 
 	#Build FLMSG
-	cd ${MSGPKG} || exit
+	cd ${MSGPKG} || return
 	./configure --prefix=/usr/local --enable-static
 	make
 	sudo make install
@@ -144,13 +144,13 @@ FLAMP() {
 	AMPPKG=$(echo ${AMPTAR} | sed 's/.tar.gz//')
 
 	#download FLAMP
-	cd ${HOME}/Downloads || exit
+	cd ${HOME}/Downloads || return
 	wget --tries 2 --connect-timeout=60 http://www.w1hkj.com/files/flamp/$AMPTAR
 	tar -zxvf ${AMPTAR}
 	rm ./*.gz #THIS IS DANGEROUS -- SEE SC2035
 
 	#build FLAMP
-	cd ${AMPPKG} || exit
+	cd ${AMPPKG} || return
 	./configure --prefix=/usr/local --enable-static
 	make
 	sudo make install
@@ -165,13 +165,13 @@ FLNET() {
 	NETPKG=$(echo ${NETTAR} | sed 's/.tar.gz//')
 
 	#download FLNET
-	cd ${HOME}/Downloads || exit
+	cd ${HOME}/Downloads || return
 	wget --tries 2 --connect-timeout=60 http://www.w1hkj.com/files/flnet/$NETTAR
 	tar -zxvf ${NETTAR}
 	rm ./*.gz #THIS IS DANGEROUS -- SEE SC2035
 
 	#build FLNET
-	cd ${NETPKG} || exit
+	cd ${NETPKG} || return
 	./configure --prefix=/usr/local --enable-static
 	make
 	sudo make install
