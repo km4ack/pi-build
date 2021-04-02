@@ -345,6 +345,7 @@ yad --center --list --checklist --width=600 --height=600 --separator="" \
 	false "XASTIR" "APRS Client" \
 	false "GPREDICT" "Satellite Tracking" \
 	false "TQSL" "LOTW Software" \
+	false "GRIDCALC" "Grid Calculation Software" \
 	--button="Exit":1 \
 	--button="Check All and Continue":3 \
 	--button="Next":2 >${ADDITIONAL}
@@ -356,7 +357,7 @@ fi
 if [ ${BUT} = 3 ]; then
 	ADDAPPS=(CONKY PI-APRS CHIRP GARIM PAT PAT-MENU JS8CALL M0IAX WSJTX PYQSO
 		CQRLOG EES QSSTV GRIDTRACKER HAMCLOCK PROPAGATION YAAC XASTIR GPREDICT TQSL
-		XLOG)
+		XLOG GRIDCALC)
 
 	for i in "${ADDAPPS[@]}"; do
 		echo "$i" >>${ADDITIONAL}
