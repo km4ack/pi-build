@@ -641,7 +641,7 @@ HAMRS() {
 	Terminal=false
 	Type=Application
 	Categories=HamRadio
-	EOF
+EOF
 	sudo mv ${HOME}/Downloads/hamrs.desktop /usr/share/applications/
 	cd $HOME/Downloads
 	wget https://github.com/km4ack/pi-scripts/raw/master/hamrs-logo.png
