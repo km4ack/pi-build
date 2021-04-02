@@ -514,9 +514,9 @@ SMALL() {
 	unzip ESPHamClock.zip
 	rm ESPHamClock.zip
 	cd ESPHamClock || return
-	sudo make -j 4 hamclock
-	sudo chmod +s hamclock
-	sudo mv hamclock /usr/local/bin/hamclock
+	sudo make -j 4 hamclock-800x480
+	sudo chmod +s hamclock-800x480
+	sudo mv hamclock-800x480 /usr/local/bin/hamclock
 	rm -rf "${DIR}/ESPHamClock"
 
 	cat >${HOME}/Downloads/hamclock.desktop <<EOF
