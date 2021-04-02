@@ -626,6 +626,29 @@ EOF
 }
 
 ##################################
+#	HAMRS
+##################################
+HAMRS() {
+#currently only a placeholder HAMRS install https://www.hamrs.app/
+
+	#create menu item and download icon	
+	cat >${HOME}/Downloads/hamrs.desktop <<EOF
+	[Desktop Entry]
+	Name=HAMRS
+	Comment=POTA Logging Software
+	Exec=/home/pi/bin/hamrs
+	Icon=/home/pi/Pictures/hamrs-logo.png
+	Terminal=false
+	Type=Application
+	Categories=HamRadio
+	EOF
+	sudo mv ${HOME}/Downloads/hamrs.desktop /usr/share/applications/
+	cd $HOME/Downloads
+	wget https://github.com/km4ack/pi-scripts/raw/master/hamrs-logo.png
+	sudo mv $HOME/Downloads/hamrs-logo.png /usr/share/pixmaps/hamrs-logo.png
+}
+
+##################################
 #	JTDX
 ##################################
 #This code is left in place but no option is given during inital
