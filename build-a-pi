@@ -364,11 +364,6 @@ if [ ${BUT} = 3 ]; then
 	done
 fi
 
-HAMCLOCKOLD(){
-#This is old code left for reference. Added as a function that is never called instead of commenting out.
-#This is no longer needed as the developer of hamclock changed the way it builds. Setting to less than
-#fullscreen is an option inside the application as of early 2021
-
 #check if hamclock is being installed
 HCCHECK=$(grep "HAMCLOCK" ${ADDITIONAL})
 if [ -n "$HCCHECK" ]; then
@@ -382,7 +377,7 @@ if [ -n "$HCCHECK" ]; then
 	sed -i 's/HAMCLOCK//' ${ADDITIONAL}
 	echo $HC >>${ADDITIONAL}
 fi
-}
+
 
 PATCHECK=$(grep "PAT" ${ADDITIONAL})
 if [ -n "$PATCHECK" ]; then
