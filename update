@@ -747,6 +747,21 @@ else
 	fi
 fi
 
+#----------------------------------------------------#
+#		Grid Calc
+#----------------------------------------------------#
+echo "Checking Grid Calc"
+if [ ! -f $HOME/bin/grid-calc ]; then
+	GRIDCALC="Not_Installed"
+else
+	CURRENT=$(grep VERSION $HOME/bin/grid-calc | head -1 | sed 's/VERSION=//')
+	LATEST=$(curl -s https://raw.githubusercontent.com/km4ack/pi-scripts/master/grid-calc | grep VERSION | head -1 | sed 's/VERSION=//')
+		if (($(echo "${LATEST} ${CURRENT}" | awk '{print ($1 > $2)}'))); then
+		GRIDCALC=NEEDS-UPDATE
+	else
+		GRIDCALC="is_latest_version"
+	fi
+
 CHECK
 ####################################################################
 ####################################################################
@@ -957,6 +972,7 @@ yad --center --list --checklist --width=600 --height=600 --separator="" \
 	false "EES" "$EES" "KM4ACK Emergency Email Server" \
 	false "GPREDICT" "$GPREDICT" "Satellite Tracking" \
 	false "TQSL" "$TQSL" "LOTW Software" \
+	false "GRIDCALC" "$GRIDCALC" "Grid Calculation Software" \
 	--button="Exit":1 \
 	--button="Next":2 >${ADDITIONAL}
 BUT=$?
