@@ -465,10 +465,11 @@ CHECK() {
 	#		YAAC
 	#----------------------------------------------------#
 	YAAC="${HOME}/YAAC"
+	echo "Checking YAAC for updates"
 	if [ ! -d "$YAAC" ]; then
 		YAAC="Not Installed"
 	else
-		echo "Checking YAAC for updates"
+
 		CURYAAC=$(java -jar ${HOME}/YAAC/YAAC.jar -version | grep core | awk '{print $7}' | sed 's/(.*//;s/1.0-beta//')
 		wget -q https://sourceforge.net/projects/yetanotheraprsc/files/YAACBuildLabel.txt -O /run/user/${UID}/latestyaac.txt
 		LATESTYAAC=$(cat /run/user/${UID}/latestyaac.txt | sed 's/1.0-beta//;s/(.*//')
