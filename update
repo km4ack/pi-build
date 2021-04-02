@@ -447,13 +447,18 @@ CHECK() {
 	#----------------------------------------------------#
 	#		XASTIR
 	#----------------------------------------------------#
+	echo "Checking Xastir"
+	if ! hash xastir 2>/dev/null; then
+	XASTIR="Not_Installed"
+	else
 	LATESTXAS=$(curl -s https://github.com/Xastir/Xastir | grep Release- | head -1 | sed 's/.*Release-//;s/">//')
 	CURRENTXAS=$(xastir -V | sed 's/Xastir V//;s/(.*//;/^\s*$/d')
 
-	if (($(echo "${LATESTXAS} ${CURRENTXAS}" | awk '{print ($1 > $2)}'))); then
-		XASTIR=NEEDS-UPDATE
-	else
-		XASTIR="is_latest_version"
+		if (($(echo "${LATESTXAS} ${CURRENTXAS}" | awk '{print ($1 > $2)}'))); then
+			XASTIR=NEEDS-UPDATE
+		else
+			XASTIR="is_latest_version"
+		fi
 	fi
 
 	#----------------------------------------------------#
