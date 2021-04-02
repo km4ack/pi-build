@@ -69,6 +69,7 @@ FLRIG() {
 	make
 	sudo make install
 	sudo ldconfig
+	sudo apt-mark manual libjpeg9
 }
 
 ##################################
