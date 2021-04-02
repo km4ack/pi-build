@@ -1,4 +1,15 @@
-version=3.0.7
+version=3.0.8
+3.0.8
+		add support to direwolf for CM108/CM119 - https://github.com/km4ack/pi-build/issues/243
+		fix zygrib update error - https://github.com/km4ack/pi-build/issues/235
+		mark libjpg9 as manual install - https://github.com/km4ack/pi-build/issues/233
+		add autoremove back to BAP primary script - https://github.com/km4ack/pi-build/issues/233
+		fix wallpaper path - https://github.com/km4ack/pi-build/issues/230
+		remove hamclock large/small option in build-a-pi script
+		remove hamclock large/small option in update script
+		fix temp not changing to C in setconky (conky-prefs) - https://github.com/km4ack/pi-build/issues/218
+		add gridcalc software - https://github.com/km4ack/pi-build/issues/214
+		
 
 3.0.7		patch to fix flrig from not installing correctly https://github.com/km4ack/pi-build/issues/229
 
