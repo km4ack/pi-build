@@ -895,7 +895,7 @@ echo "HSPASS=${HSPASS}" >>${CONFIG}
 #CHECK IF GPS IS CHOSEN TO INSTALL#
 ###################################
 GPSINSTALL=$(cat ${BASE} | grep GPS)
-if [ -n "${GPS}INSTALL" ]; then
+if [ -n "${GPSINSTALL}" ]; then
 
 	yad --center --height="300" --width="300" --form --separator="|" --item-separator="|" --title="GPS" \
 		--image ${LOGO} --window-icon=${LOGO} --image-on-top \
