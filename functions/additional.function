@@ -649,6 +649,17 @@ HAMRS() {
 }
 
 ##################################
+#	Grid-Calc
+##################################
+GRIDCALC(){
+	sudo apt install -y wwl bc
+	cd $HOME/bin
+	wget https://raw.githubusercontent.com/km4ack/pi-scripts/master/grid-calc
+	chmod +x $HOME/bin/grid-calc
+	$HOME/bin/grid-calc
+}
+
+##################################
 #	JTDX
 ##################################
 #This code is left in place but no option is given during inital
