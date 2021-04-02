@@ -11,93 +11,93 @@
 ##################################################################
 #20200620
 
-
 DESK=$(printenv | grep DISPLAY)
-MYPATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-LOGO=$MYPATH/logo.png
-RB=$HOME/.config/KM4ACK
-BASE=$MYPATH/base.txt
-ADDITIONAL=$MYPATH/additional.txt
-UTILITY=$MYPATH/utility.txt
-FLSUITE=$MYPATH/flsuite.txt
-CONFIG=$MYPATH/config
-FUNCTIONS=$MYPATH/functions
-TEMPCRON=$MYPATH/cron.tmp
-DIR=$MYPATH/temp
+MYPATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+LOGO=${MYPATH}/logo.png
+RB=${HOME}/.config/KM4ACK
+BASE=${MYPATH}/base.txt
+ADDITIONAL=${MYPATH}/additional.txt
+UTILITY=${MYPATH}/utility.txt
+FLSUITE=${MYPATH}/flsuite.txt
+CONFIG=${MYPATH}/config
+FUNCTIONS=${MYPATH}/functions
+TEMPCRON=${MYPATH}/cron.tmp
+DIR=${MYPATH}/temp
 WHO=$(whoami)
-VERSION=$(grep "version=" $MYPATH/changelog | sed 's/version=//')
+VERSION=$(grep "version=" ${MYPATH}/changelog | sed 's/version=//')
 
-FINISH(){
-if [ -f "$BASE" ]; then
-rm $BASE
-fi
+FINISH() {
+	if [ -f "${BASE}" ]; then
+		rm ${BASE}
+	fi
 
-if [ -f "$ADDITIONAL" ]; then
-rm $ADDITIONAL
-fi
+	if [ -f "${ADDITIONAL}" ]; then
+		rm ${ADDITIONAL}
+	fi
 
-if [ -f "$FLSUITE" ]; then
-rm $FLSUITE
-fi
+	if [ -f "${FLSUITE}" ]; then
+		rm ${FLSUITE}
+	fi
 
-if [ -f "$UTILITY" ]; then
-rm $UTILITY
-fi
+	if [ -f "${UTILITY}" ]; then
+		rm ${UTILITY}
+	fi
 }
 
 trap FINISH EXIT
 
 #check for display. can't run from SSH
-if [ -z "$DESK" ]
-then
-cat <<EOF
+if [ -z "$DESK" ]; then
+	cat <<EOF
 This script cannot be run from an SSH session.
 Please boot into the pi's desktop environment,
 open the terminal, and run this script again
 EOF
-exit 0
+	exit 0
 fi
 
 #install YAD & jq as needed
-clear;echo;echo
+clear
+echo
+echo
 echo "#######################################"
 echo "#  Updating repository & installing   #"
 echo "#  a few needed items before we begin #"
 echo "#######################################"
 sudo apt-get update
-	if ! hash yad 2>/dev/null; then
+if ! hash yad 2>/dev/null; then
 	sudo apt install -y yad
-	fi
-	if ! hash jq 2>/dev/null; then
+fi
+if ! hash jq 2>/dev/null; then
 	sudo apt install -y jq
-	fi
-	if ! hash bc>/dev/null; then
+fi
+if ! hash bc >/dev/null; then
 	sudo apt install -y bc
-	fi
+fi
 
 #####################################
 #	Check if run before
 #####################################
-if [ -f "$RB" ]; then
-bash $MYPATH/update &
-exit
+if [ -f "${RB}" ]; then
+	bash ${MYPATH}/update &
+	exit
 fi
 #####################################
 #	Check user is pi
 #####################################
 if [ "$WHO" != 'pi' ]; then
-yad --form --width=500 --text-align=center --center --title="Build-a-Pi" --text-align=center \
---image $LOGO --window-icon=$LOGO --image-on-top --separator="|" --item-separator="|" \
---text="<b>USER NAME IS NOT PI</b>\rThis script is designed to be run as the pi user. Please set the user name to pi \
+	yad --form --width=500 --text-align=center --center --title="Build-a-Pi" --text-align=center \
+		--image ${LOGO} --window-icon=${LOGO} --image-on-top --separator="|" --item-separator="|" \
+		--text="<b>USER NAME IS NOT PI</b>\rThis script is designed to be run as the pi user. Please set the user name to pi \
 and try again. You can change the user name after the build is complete but some configuration may not work \
 as expected" \
---button=gtk-close
-exit 1
+		--button=gtk-close
+	exit 1
 fi
 #####################################
 #	notice to user
 #####################################
-cat <<EOF > $MYPATH/intro.txt
+cat <<EOF >${MYPATH}/intro.txt
 This script takes approximately 4 hours to complete
 if you choose to install everything. If you find it
 helpful please consider a donation to encourage future
@@ -106,343 +106,334 @@ development.
 https://paypal.me/km4ack
 EOF
 
-INTRO=$(yad --width=550 --height=250 --text-align=center --center --title="Build-a-Pi"  --show-uri \
---image $LOGO --window-icon=$LOGO --image-on-top --separator="|" --item-separator="|" \
---text-info<$MYPATH/intro.txt \
---button="Continue":2 > /dev/null 2>&1)
+INTRO=$(yad --width=550 --height=250 --text-align=center --center --title="Build-a-Pi" --show-uri \
+	--image ${LOGO} --window-icon=${LOGO} --image-on-top --separator="|" --item-separator="|" \
+	--text-info \
+	--button="Continue":2 <${MYPATH}/intro.txt \
+	>/dev/null 2>&1)
 BUT=$?
-if [ $BUT = 252 ]; then
-rm $MYPATH/intro.txt
-exit
+if [ ${BUT} = 252 ]; then
+	rm ${MYPATH}/intro.txt
+	exit
 fi
-rm $MYPATH/intro.txt
+rm ${MYPATH}/intro.txt
 #####################################
 #	Create autostart dir
 #used to autostart conky at boot
 #####################################
-mkdir -p $HOME/.config/autostart
-
+mkdir -p ${HOME}/.config/autostart
 
 #####################################
 #	Get User Call
 #####################################
-CALL(){
-INFO=$(yad --form --width=420 --text-align=center --center --title="Build-a-Pi" \
---image $LOGO --window-icon=$LOGO --image-on-top --separator="|" --item-separator="|" \
---text="<b>version $VERSION</b>" \
---field="Call Sign*" \
---field="<b>* Required</b>":LBL \
---button="Continue":2)
-BUT=$?
-if [ $BUT = 252 ]; then
-exit
-fi
+CALL() {
+	INFO=$(yad --form --width=420 --text-align=center --center --title="Build-a-Pi" \
+		--image ${LOGO} --window-icon=${LOGO} --image-on-top --separator="|" --item-separator="|" \
+		--text="<b>version $VERSION</b>" \
+		--field="Call Sign*" \
+		--field="<b>* Required</b>":LBL \
+		--button="Continue":2)
+	BUT=$?
+	if [ ${BUT} = 252 ]; then
+		exit
+	fi
 }
 CALL
-CALL=$(echo $INFO | awk -F "|" '{print $1}')
+CALL=$(echo ${INFO} | awk -F "|" '{print $1}')
 CALL=${CALL^^}
 
 #Verify call not empty
 ATTEMPTS=0
-while [ -z "$CALL" ];
-do
-	if [ $ATTEMPTS -eq 3 ]
-	then
+while [ -z "$CALL" ]; do
+	if [ $ATTEMPTS -eq 3 ]; then
 		yad --form --width=420 --text-align=center --center --title="Build-a-Pi" --text-align=center \
-		--image $LOGO --window-icon=$LOGO --image-on-top --separator="|" --item-separator="|" \
-		--text="<b>Empty callsign after 3 attempts. Quiting!</b>" \
-		--button=gtk-ok
+			--image ${LOGO} --window-icon=${LOGO} --image-on-top --separator="|" --item-separator="|" \
+			--text="<b>Empty callsign after 3 attempts. Quiting!</b>" \
+			--button=gtk-ok
 		exit
 	fi
 
 	yad --form --width=420 --text-align=center --center --title="Build-a-Pi" --text-align=center \
-	--image $LOGO --window-icon=$LOGO --image-on-top --separator="|" --item-separator="|" \
-	--text="<b>Call Can't be Blank</b>" \
-	--button=gtk-ok
+		--image ${LOGO} --window-icon=${LOGO} --image-on-top --separator="|" --item-separator="|" \
+		--text="<b>Call Can't be Blank</b>" \
+		--button=gtk-ok
 
-	((ATTEMPTS=ATTEMPTS+1))
+	((ATTEMPTS = ATTEMPTS + 1))
 	CALL
-	CALL=$(echo $INFO | awk -F "|" '{print $1}')
+	CALL=$(echo ${INFO} | awk -F "|" '{print $1}')
 	CALL=${CALL^^}
 done
 
-echo "CALL=$CALL" > $CONFIG
+echo "CALL=$CALL" >${CONFIG}
 
 #####################################
 #	Base Apps
 #####################################
 yad --center --list --checklist --width=600 --height=600 --separator="" \
---image $LOGO --column=Check --column=App --column=Description \
---print-column=2 --window-icon=$LOGO --image-on-top --text-align=center \
---text="<b>Base Applications</b>" --title="Build-a-Pi" \
-false "HOTSPOT" "Hot Spot Generator for Portable Ops" \
-false "HSTOOLS" "Tools to Manage Hot Spot" \
-false "GPS" "GPS Software" \
-false "ARDOP" "Modem for HF" \
-false "ARDOPGUI" "GUI for ARDOP" \
-false "HAMLIB" "Needed for Rig Control" \
-false "DIREWOLF" "Software TNC" \
-false "AX25" "Data Link Layer Protocol" \
-false "PULSE" "Pulse Audio Control Interface" \
---button="Exit":1 \
---button="Check All and Continue":3 \
---button="Next":2 > $BASE
+	--image ${LOGO} --column=Check --column=App --column=Description \
+	--print-column=2 --window-icon=${LOGO} --image-on-top --text-align=center \
+	--text="<b>Base Applications</b>" --title="Build-a-Pi" \
+	false "HOTSPOT" "Hot Spot Generator for Portable Ops" \
+	false "HSTOOLS" "Tools to Manage Hot Spot" \
+	false "GPS" "GPS Software" \
+	false "ARDOP" "Modem for HF" \
+	false "ARDOPGUI" "GUI for ARDOP" \
+	false "HAMLIB" "Needed for Rig Control" \
+	false "DIREWOLF" "Software TNC" \
+	false "AX25" "Data Link Layer Protocol" \
+	false "PULSE" "Pulse Audio Control Interface" \
+	--button="Exit":1 \
+	--button="Check All and Continue":3 \
+	--button="Next":2 >${BASE}
 BUT=$?
-if [ $BUT = 252 ] || [ $BUT = 1 ]; then
-exit
+if [ ${BUT} = 252 ] || [ ${BUT} = 1 ]; then
+	exit
 fi
 
-if [ $BUT = 3 ]; then
-BASEAPPS=(HOTSPOT HSTOOLS GPS ARDOP ARDOPGUI HAMLIB DIREWOLF AX25 PULSE)
-for i in "${BASEAPPS[@]}"
-do
-echo "$i" >> $BASE
-done
+if [ ${BUT} = 3 ]; then
+	BASEAPPS=(HOTSPOT HSTOOLS GPS ARDOP ARDOPGUI HAMLIB DIREWOLF AX25 PULSE)
+	for i in "${BASEAPPS[@]}"; do
+		echo "$i" >>${BASE}
+	done
 fi
 
 #check if hotspot is chosen for install & get info if needed
-HS=$(grep "HOTSPOT" $BASE)
+HS=$(grep "HOTSPOT" ${BASE})
 if [ -n "$HS" ]; then
-HSINFO(){
-#unblock wifi
-sudo rfkill unblock all > /dev/null 2>&1
-#bring wifi up
-sudo ifconfig wlan0 up
-#LIST=$(sudo iw dev "wlan0" scan ap-force | egrep "^BSS|SSID:" | grep SSID: | sed 's/SSID://' | awk '{ print $1 }')
-#LIST=$(echo $LIST | sed 's/ /|/g')
-LIST=$(sudo iw dev "wlan0" scan ap-force | sed -ne 's/^.*SSID: \(..*\)/\1/p' | sort | uniq | paste -sd '|')
+	HSINFO() {
+		#unblock wifi
+		sudo rfkill unblock all >/dev/null 2>&1
+		#bring wifi up
+		sudo ifconfig wlan0 up
+		#LIST=$(sudo iw dev "wlan0" scan ap-force | egrep "^BSS|SSID:" | grep SSID: | sed 's/SSID://' | awk '{ print $1 }')
+		#LIST=$(echo $LIST | sed 's/ /|/g')
+		LIST=$(sudo iw dev "wlan0" scan ap-force | sed -ne 's/^.*SSID: \(..*\)/\1/p' | sort | uniq | paste -sd '|')
 
-
-HSINFO=$(yad --center --form --width=400 --height=400 --separator="|" --item-separator="|" \
---image $LOGO --column=Check --column=App --column=Description \
---window-icon=$LOGO --image-on-top --text-align=center \
---text="<b>HotSpot Information\r\rPlease enter the information\rbelow \
+		HSINFO=$(yad --center --form --width=400 --height=400 --separator="|" --item-separator="|" \
+			--image ${LOGO} --column=Check --column=App --column=Description \
+			--window-icon=${LOGO} --image-on-top --text-align=center \
+			--text="<b>HotSpot Information\r\rPlease enter the information\rbelow \
 for the Hot Spot\r</b>NOTE: The last field is the password for the hotspot. You will use this password to \
 connect to your Pi when it is in hotspot mode <b>This password can only contain letters and numbers</b>" \
---title="Build-a-Pi" \
---field="Home Wifi SSID":CB "$LIST" \
---field="Home Wifi Password" \
---field="Hot Spot Password" \
---button="Exit":1 \
---button="Continue":2 \
---button="Refresh Wifi":3)
-BUT=$?
-	if [ $BUT = 3 ];then
-	HSINFO #Call HSINFO function
-	fi
+			--title="Build-a-Pi" \
+			--field="Home Wifi SSID":CB "$LIST" \
+			--field="Home Wifi Password" \
+			--field="Hot Spot Password" \
+			--button="Exit":1 \
+			--button="Continue":2 \
+			--button="Refresh Wifi":3)
+		BUT=$?
+		if [ ${BUT} = 3 ]; then
+			HSINFO #Call HSINFO function
+		fi
 
-	if [ $BUT = 252 ] || [ $BUT = 1 ]; then
-	exit
-	fi
-#}						
-#HSINFO	
-#fi				
-SHACKSSID=$(echo $HSINFO | awk -F "|" '{print $1}')
-SHACKPASS=$(echo $HSINFO | awk -F "|" '{print $2}')
-HSPASS=$(echo $HSINFO | awk -F "|" '{print $3}')
+		if [ ${BUT} = 252 ] || [ ${BUT} = 1 ]; then
+			exit
+		fi
+		#}
+		#HSINFO
+		#fi
+		SHACKSSID=$(echo $HSINFO | awk -F "|" '{print $1}')
+		SHACKPASS=$(echo $HSINFO | awk -F "|" '{print $2}')
+		HSPASS=$(echo $HSINFO | awk -F "|" '{print $3}')
 
-#Check password length
-if [ -n "$HS" ]; then
-COUNT=${#HSPASS}
-	if [ $COUNT -lt 8 ]
-	then
-	yad --center --form --width=300 --height=200 --separator="|" \
-	--image $LOGO --window-icon=$LOGO --image-on-top --text-align=center \
-	--text="<b>Hotspot password has to be 8-63 characters</b>" --title="Build-a-Pi" \
-	--button=gtk-ok
+		#Check password length
+		if [ -n "$HS" ]; then
+			COUNT=${#HSPASS}
+			if [ ${COUNT} -lt 8 ]; then
+				yad --center --form --width=300 --height=200 --separator="|" \
+					--image ${LOGO} --window-icon=${LOGO} --image-on-top --text-align=center \
+					--text="<b>Hotspot password has to be 8-63 characters</b>" --title="Build-a-Pi" \
+					--button=gtk-ok
+				HSINFO
+			fi
+		fi
+
+	}
 	HSINFO
-	fi
 fi
 
-}						
-HSINFO
-fi
-
-echo "SHACKSSID=$SHACKSSID" >> $CONFIG
-echo "SHACKPASS=\"$SHACKPASS\"" >> $CONFIG
-echo "HSPASS=\"$HSPASS\"" >> $CONFIG
+echo "SHACKSSID=$SHACKSSID" >>${CONFIG}
+echo "SHACKPASS=\"$SHACKPASS\"" >>${CONFIG}
+echo "HSPASS=\"$HSPASS\"" >>${CONFIG}
 ###################################
 #CHECK IF GPS IS CHOSEN TO INSTALL#
 ###################################
-GPSINSTALL=$(cat $BASE | grep GPS)
-if [ -n "$GPSINSTALL" ]; then
+GPSINSTALL=$(cat ${BASE} | grep GPS)
+if [ -n "${GPS}INSTALL" ]; then
 
+	yad --center --height="300" --width="300" --form --separator="|" --item-separator="|" --title="GPS" \
+		--image ${LOGO} --window-icon=${LOGO} --image-on-top \
+		--text="\r\r\r\r\r<b><big>Connect your GPS to the pi</big></b>" \
+		--button="Exit":1 \
+		--button="Continue":2
 
-yad --center --height="300" --width="300" --form --separator="|" --item-separator="|" --title="GPS" \
---image $LOGO --window-icon=$LOGO --image-on-top \
---text="\r\r\r\r\r<b><big>Connect your GPS to the pi</big></b>" \
---button="Exit":1 \
---button="Continue":2
+	BUT=$?
+	if [ ${BUT} = 1 ] || [ ${BUT} = 252 ]; then
+		exit
+	fi
+	USB=$(ls /dev/serial/by-id)
+	USB=$(echo $USB | sed "s/\s/|/g")
 
-BUT=$?
-if [ $BUT = 1 ] || [ $BUT = 252 ]; then
-exit
-fi
-USB=$(ls /dev/serial/by-id)
-USB=$(echo $USB | sed "s/\s/|/g")
+	GPS=$(yad --center --height="600" --width="300" --form --separator="|" --item-separator="|" --title="GPS" \
+		--image ${LOGO} --window-icon=${LOGO} --image-on-top \
+		--text="Choose Your GPS" \
+		--field="GPS":CB "$USB")
+	BUT=$?
+	if [ ${BUT} = 252 ] || [ ${BUT} = 1 ]; then
+		echo exiting
+		exit
+	fi
 
-GPS=$(yad --center --height="600" --width="300" --form --separator="|" --item-separator="|" --title="GPS" \
---image $LOGO --window-icon=$LOGO --image-on-top \
---text="Choose Your GPS" \
---field="GPS":CB "$USB")
-BUT=$?
-if [ $BUT = 252 ] || [ $BUT = 1 ]; then
-echo exiting
-exit
-fi
-
-GPS=$(echo $GPS | awk -F "|" '{print $1}')
-GPS=/dev/serial/by-id/$GPS
-echo "GPS=$GPS" >> $CONFIG
+	GPS=$(echo ${GPS} | awk -F "|" '{print $1}')
+	GPS=/dev/serial/by-id/${GPS}
+	echo "GPS=${GPS}" >>${CONFIG}
 fi
 
 #####################################
 #	FLSUITE
 #####################################
 yad --center --list --checklist --width=600 --height=600 --separator="" \
---image $LOGO --column=Check --column=App --column=Description \
---print-column=2 --window-icon=$LOGO --image-on-top --text-align=center \
---text="<b>FLDIGI Suite</b>" --title="Build-a-Pi" \
-false "FLRIG" "Rig Contol GUI" \
-false "FLDIGI" "Digital Software" \
-false "FLAMP" "File Transfer Program" \
-false "FLNET" "Net Control Software" \
-false "FLMSG" "Forms Manager" \
-false "FLWRAP" "File Encapsulation" \
---button="Exit":1 \
---button="Check All and Continue":3 \
---button="Next":2 > $FLSUITE
+	--image ${LOGO} --column=Check --column=App --column=Description \
+	--print-column=2 --window-icon=${LOGO} --image-on-top --text-align=center \
+	--text="<b>FLDIGI Suite</b>" --title="Build-a-Pi" \
+	false "FLRIG" "Rig Contol GUI" \
+	false "FLDIGI" "Digital Software" \
+	false "FLAMP" "File Transfer Program" \
+	false "FLNET" "Net Control Software" \
+	false "FLMSG" "Forms Manager" \
+	false "FLWRAP" "File Encapsulation" \
+	--button="Exit":1 \
+	--button="Check All and Continue":3 \
+	--button="Next":2 >${FLSUITE}
 BUT=$?
-if [ $BUT = 252 ] || [ $BUT = 1 ]; then
-exit
+if [ ${BUT} = 252 ] || [ ${BUT} = 1 ]; then
+	exit
 fi
-if [ $BUT = 3 ]; then
-FLAPPS=(FLRIG FLDIGI FLAMP FLNET FLMSG FLWRAP)
-for i in "${FLAPPS[@]}"
-do
-echo "$i" >> $FLSUITE
-done
+if [ ${BUT} = 3 ]; then
+	FLAPPS=(FLRIG FLDIGI FLAMP FLNET FLMSG FLWRAP)
+	for i in "${FLAPPS[@]}"; do
+		echo "$i" >>${FLSUITE}
+	done
 fi
 
 #####################################
 #	Ham Apps
 #####################################
 yad --center --list --checklist --width=600 --height=600 --separator="" \
---image $LOGO --column=Check --column=App --column=Description \
---print-column=2 --window-icon=$LOGO --image-on-top --text-align=center \
---text="<b>Ham Applications</b>" --title="Build-a-Pi" \
-false "CONKY" "System Information Display" \
-false "PI-APRS" "APRS Message Application" \
-false "CHIRP" "Program Radios" \
-false "GARIM" "File Transfer Program" \
-false "PAT" "Radio Email Application" \
-false "PAT-MENU" "Control for Pat Winlink" \
-false "JS8CALL" "Weak Signal Digital Mode Software" \
-false "M0IAX" "Tools for JS8Call Messages" \
-false "WSJTX" "Weak Signal Digital Mode Software" \
-false "PYQSO" "Logging Software" \
-false "CQRLOG" "Logging Software" \
-false "XLOG" "Logging Software" \
-false "EES" "KM4ACK Emergency Email Server" \
-false "QSSTV" "Slow Scan TV" \
-false "GRIDTRACKER" "Track Grids in WSJTX" \
-false "HAMCLOCK" "Clock for Ham Radio Ops" \
-false "PROPAGATION" "Propagation Prediction Software" \
-false "YAAC" "Yet Another APRS Client" \
-false "XASTIR" "APRS Client" \
-false "GPREDICT" "Satellite Tracking" \
-false "TQSL" "LOTW Software" \
---button="Exit":1 \
---button="Check All and Continue":3 \
---button="Next":2 > $ADDITIONAL
+	--image ${LOGO} --column=Check --column=App --column=Description \
+	--print-column=2 --window-icon=${LOGO} --image-on-top --text-align=center \
+	--text="<b>Ham Applications</b>" --title="Build-a-Pi" \
+	false "CONKY" "System Information Display" \
+	false "PI-APRS" "APRS Message Application" \
+	false "CHIRP" "Program Radios" \
+	false "GARIM" "File Transfer Program" \
+	false "PAT" "Radio Email Application" \
+	false "PAT-MENU" "Control for Pat Winlink" \
+	false "JS8CALL" "Weak Signal Digital Mode Software" \
+	false "M0IAX" "Tools for JS8Call Messages" \
+	false "WSJTX" "Weak Signal Digital Mode Software" \
+	false "PYQSO" "Logging Software" \
+	false "CQRLOG" "Logging Software" \
+	false "XLOG" "Logging Software" \
+	false "EES" "KM4ACK Emergency Email Server" \
+	false "QSSTV" "Slow Scan TV" \
+	false "GRIDTRACKER" "Track Grids in WSJTX" \
+	false "HAMCLOCK" "Clock for Ham Radio Ops" \
+	false "PROPAGATION" "Propagation Prediction Software" \
+	false "YAAC" "Yet Another APRS Client" \
+	false "XASTIR" "APRS Client" \
+	false "GPREDICT" "Satellite Tracking" \
+	false "TQSL" "LOTW Software" \
+	--button="Exit":1 \
+	--button="Check All and Continue":3 \
+	--button="Next":2 >${ADDITIONAL}
 BUT=$?
-if [ $BUT = 252 ] || [ $BUT = 1 ]; then
-exit
+if [ ${BUT} = 252 ] || [ ${BUT} = 1 ]; then
+	exit
 fi
 
-if [ $BUT = 3 ]; then
-ADDAPPS=(CONKY PI-APRS CHIRP GARIM PAT PAT-MENU JS8CALL M0IAX WSJTX PYQSO \
-CQRLOG EES QSSTV GRIDTRACKER HAMCLOCK PROPAGATION YAAC XASTIR GPREDICT TQSL \
-XLOG)
+if [ ${BUT} = 3 ]; then
+	ADDAPPS=(CONKY PI-APRS CHIRP GARIM PAT PAT-MENU JS8CALL M0IAX WSJTX PYQSO
+		CQRLOG EES QSSTV GRIDTRACKER HAMCLOCK PROPAGATION YAAC XASTIR GPREDICT TQSL
+		XLOG)
 
-for i in "${ADDAPPS[@]}"
-do
-echo "$i" >> $ADDITIONAL
-done
+	for i in "${ADDAPPS[@]}"; do
+		echo "$i" >>${ADDITIONAL}
+	done
 fi
 
 #check if hamclock is being installed
-HCCHECK=$(grep "HAMCLOCK" $ADDITIONAL)
+HCCHECK=$(grep "HAMCLOCK" ${ADDITIONAL})
 if [ -n "$HCCHECK" ]; then
 
-HC=$(yad --form --width=420 --text-align=center --center --title="Build-a-Pi" \
---image $LOGO --window-icon=$LOGO --image-on-top --separator="|" --item-separator="|" \
---text="<b>version $VERSION</b>" \
---field="Ham Clock Size":CB "SMALL|LARGE" \
---button="Continue":2)
-HC=$(echo $HC | awk -F "|" '{print $1}')
-sed -i 's/HAMCLOCK//' $ADDITIONAL
-echo $HC >> $ADDITIONAL
+	HC=$(yad --form --width=420 --text-align=center --center --title="Build-a-Pi" \
+		--image ${LOGO} --window-icon=${LOGO} --image-on-top --separator="|" --item-separator="|" \
+		--text="<b>version $VERSION</b>" \
+		--field="Ham Clock Size":CB "SMALL|LARGE" \
+		--button="Continue":2)
+	HC=$(echo $HC | awk -F "|" '{print $1}')
+	sed -i 's/HAMCLOCK//' ${ADDITIONAL}
+	echo $HC >>${ADDITIONAL}
 fi
 
-PATCHECK=$(grep "PAT" $ADDITIONAL)
+PATCHECK=$(grep "PAT" ${ADDITIONAL})
 if [ -n "$PATCHECK" ]; then
-INFO=$(yad --form --width=420 --text-align=center --center --title="Build-a-Pi" \
---image $LOGO --window-icon=$LOGO --image-on-top --separator="|" --item-separator="|" \
---text="<b>version $VERSION</b>" \
---field="Six Character Grid Square" \
---field="Winlink Password" \
---field="<b>Password is case sensitive</b>":LBL \
---button="Continue":2)
-GRID=$(echo $INFO | awk -F "|" '{print $1}')
-GRID=${GRID^^}
-WL2KPASS=$(echo $INFO | awk -F "|" '{print $2}')
-echo "GRID=$GRID" >> $CONFIG
-echo "WL2KPASS=\"$WL2KPASS\"" >> $CONFIG
+	INFO=$(yad --form --width=420 --text-align=center --center --title="Build-a-Pi" \
+		--image ${LOGO} --window-icon=${LOGO} --image-on-top --separator="|" --item-separator="|" \
+		--text="<b>version $VERSION</b>" \
+		--field="Six Character Grid Square" \
+		--field="Winlink Password" \
+		--field="<b>Password is case sensitive</b>":LBL \
+		--button="Continue":2)
+	GRID=$(echo ${INFO} | awk -F "|" '{print $1}')
+	GRID=${GRID^^}
+	WL2KPASS=$(echo ${INFO} | awk -F "|" '{print $2}')
+	echo "GRID=$GRID" >>${CONFIG}
+	echo "WL2KPASS=\"$WL2KPASS\"" >>${CONFIG}
 fi
 
 #####################################
 #	Utilities
 #####################################
 yad --center --list --checklist --width=600 --height=600 --separator="" \
---image $LOGO --column=Check --column=App --column=Description \
---print-column=2 --window-icon=$LOGO --image-on-top --text-align=center \
---text="<b>Utilities</b>" --title="Build-a-Pi" \
-false "DIPOLE" "Dipole Calculator" \
-false "CALLSIGN" "Call sign lookup" \
-false "TEMPCONVERT" "Temperature Converter" \
-false "GPARTED" "Disk Utility Tool" \
-false "SHOWLOG" "Log file viewer" \
-false "PISTATS" "Pi3/4 Stats Monitor" \
-false "TELNET" "Telnet Protocol" \
-false "PITERM" "piQtTermTCP Terminal Program" \
-false "SECURITY" "File Encryption Software" \
-false "YGATE" "Yaesu APRS Software" \
-false "BPQ" "LinBPQ Software" \
-false "BATT" "Battery Test Script" \
-false "VNC" "VNC Client Application" \
-false "ZYGRIB" "Grib File Viewer" \
-false "GPSUPDATE" "Tool to Manage GPS Devices" \
---button="Exit":1 \
---button="Check All and Continue":3 \
---button="Install Selected":2 > $UTILITY
+	--image ${LOGO} --column=Check --column=App --column=Description \
+	--print-column=2 --window-icon=${LOGO} --image-on-top --text-align=center \
+	--text="<b>Utilities</b>" --title="Build-a-Pi" \
+	false "DIPOLE" "Dipole Calculator" \
+	false "CALLSIGN" "Call sign lookup" \
+	false "TEMPCONVERT" "Temperature Converter" \
+	false "GPARTED" "Disk Utility Tool" \
+	false "SHOWLOG" "Log file viewer" \
+	false "PISTATS" "Pi3/4 Stats Monitor" \
+	false "TELNET" "Telnet Protocol" \
+	false "PITERM" "piQtTermTCP Terminal Program" \
+	false "SECURITY" "File Encryption Software" \
+	false "YGATE" "Yaesu APRS Software" \
+	false "BPQ" "LinBPQ Software" \
+	false "BATT" "Battery Test Script" \
+	false "VNC" "VNC Client Application" \
+	false "ZYGRIB" "Grib File Viewer" \
+	false "GPSUPDATE" "Tool to Manage GPS Devices" \
+	--button="Exit":1 \
+	--button="Check All and Continue":3 \
+	--button="Install Selected":2 >${UTILITY}
 BUT=$?
-if [ $BUT = 252 ] || [ $BUT = 1 ]; then
-exit
+if [ ${BUT} = 252 ] || [ ${BUT} = 1 ]; then
+	exit
 fi
 
-if [ $BUT = 3 ]; then
-UTILAPPS=(DIPOLE CALLSIGN TEMPCONVERT GPARTED SHOWLOG PISTATS TELNET PITERM SECURITY YGATE BPQ BATT VNC ZYGRIB GPSUPDATE)
-for i in "${UTILAPPS[@]}"
-do
-echo "$i" >> $UTILITY
-done
+if [ ${BUT} = 3 ]; then
+	UTILAPPS=(DIPOLE CALLSIGN TEMPCONVERT GPARTED SHOWLOG PISTATS TELNET PITERM SECURITY YGATE BPQ BATT VNC ZYGRIB GPSUPDATE)
+	for i in "${UTILAPPS[@]}"; do
+		echo "$i" >>${UTILITY}
+	done
 fi
 
-#backup crontab 
-crontab -l > $TEMPCRON
-echo "@reboot sleep 10 && export DISPLAY=:0 && $MYPATH/.complete" >> $TEMPCRON
-$MYPATH/.funfacts &
+#backup crontab
+crontab -l >$TEMPCRON
+echo "@reboot sleep 10 && export DISPLAY=:0 && ${MYPATH}/.complete" >>$TEMPCRON
+${MYPATH}/.funfacts &
 #upgrade the system
 sudo apt-get -y upgrade
 sudo apt -y full-upgrade
@@ -452,11 +443,11 @@ sudo apt -y full-upgrade
 sudo cp bap-wallpaper.jpg /usr/share/rpd-wallpaper/
 pcmanfm --set-wallpaper /usr/share/rpd-wallpaper/bap-wallpaper.jpg
 
-mkdir -p $DIR 2> /dev/null
+mkdir -p ${DIR} 2>/dev/null
 
 #add virtual sound card link for pulse audio
-cd $DIR
-cat > tempsound <<EOF
+cd ${DIR} || ! echo "Failure"
+cat >tempsound <<EOF
 pcm.pulse {
 	type pulse
 	}
@@ -467,15 +458,14 @@ EOF
 sudo chown root:root tempsound
 sudo mv tempsound /etc/asound.conf
 
-
-#mod sound card for Buster May 2020 
+#mod sound card for Buster May 2020
 #so it will always load as card #2
-cd $DIR
-cat > tempsound <<EOF
+cd ${DIR} || ! echo "Failure"
+cat >tempsound <<EOF
 #Internal sound
-options snd-bcm2835 index=0 
+options snd-bcm2835 index=0
 
-#USB soundcard 
+#USB soundcard
 options snd-usb-audio index=2
 EOF
 sudo chown root:root tempsound
@@ -485,21 +475,21 @@ sudo mv tempsound /etc/modprobe.d/alsa.conf
 sudo apt-get install -y extra-xdg-menus
 
 #setup bin dir and put in path
-mkdir -p $HOME/bin
-echo "export PATH=$PATH:$HOME/bin" >> $HOME/.bashrc
+mkdir -p ${HOME}/bin
+echo "export PATH=$PATH:${HOME}/bin" >>${HOME}/.bashrc
 
 #set update script to exec
-chmod +x $MYPATH/update $MYPATH/build-a-pi
+chmod +x ${MYPATH}/update ${MYPATH}/build-a-pi
 
 #create build-a-pi menu item
-cd $MYPATH
-cat > build-a-pi.desktop <<EOF
+cd ${MYPATH} || ! echo "Failure"
+cat >build-a-pi.desktop <<EOF
 [Desktop Entry]
 Name=Build-a-Pi
 GenericName=KM4ACK Build-a-Pi
 Comment=Build-a-Pi App Manager
-Exec=$MYPATH/update
-Icon=$MYPATH/logo.png
+Exec=${MYPATH}/update
+Icon=${MYPATH}/logo.png
 Terminal=true
 Type=Application
 Categories=Settings;DesktopSettings;GTK;X-LXDE-Settings;
@@ -510,82 +500,73 @@ sudo mv build-a-pi.desktop /usr/share/applications/
 #####################################
 #	Install Base Apps
 #####################################
-touch $RB
-source $FUNCTIONS/base.function
-while read i ; do
-$i
-done < $BASE
-
+touch ${RB}
+source ${FUNCTIONS}/base.function
+while read i; do
+	$i
+done <${BASE}
 
 #####################################
 #	Install FLSUITE
 #####################################
-source $FUNCTIONS/flsuite.function
+source ${FUNCTIONS}/flsuite.function
 #perform memory increase if needed
-CHECKFL="$MYPATH/flsuite.txt"
+CHECKFL="${MYPATH}/flsuite.txt"
 if [ -s "$CHECKFL" ]; then
-FLSTART
+	FLSTART
 fi
-touch $RB
-while read i ; do
-$i
-done < $FLSUITE
+touch ${RB}
+while read i; do
+	$i
+done <${FLSUITE}
 
 #Perform memory reset if needed
 if [ -s "$CHECKFL" ]; then
-FLSTOP
+	FLSTOP
 fi
-
 
 #####################################
 #	Install ADDITIONAL Apps
 #####################################
-source $FUNCTIONS/additional.function
-while read i ; do
-$i
-done < $ADDITIONAL
-
+source ${FUNCTIONS}/additional.function
+while read i; do
+	$i
+done <${ADDITIONAL}
 
 #####################################
 #	Install KM4ACK Utilites
 #####################################
-source $FUNCTIONS/utility.function
-while read i ; do
-$i
-done < $UTILITY
-
+source ${FUNCTIONS}/utility.function
+while read i; do
+	$i
+done <${UTILITY}
 
 #####################################
 #	END CLEANUP
 #####################################
 #Remove temp files
-rm $BASE $ADDITIONAL $UTILITY $FLSUITE > /dev/null 2>&1
-rm -rf $DIR > /dev/null 2>&1
+rm ${BASE} ${ADDITIONAL} ${UTILITY} ${FLSUITE} >/dev/null 2>&1
+rm -rf ${DIR} >/dev/null 2>&1
 #sudo apt -y autoremove > /dev/null 2>&1
 
 #restore crontab
-crontab $TEMPCRON
-rm $TEMPCRON
+crontab ${TEMPCRON}
+rm ${TEMPCRON}
 
 echo "WE ARE ALL DONE HERE.  If you close this window, you will have to reboot manually."
 
 #reboot when done
-yad --width=400 --height=200 --title="Reboot" --image $LOGO \
---text-align=center --skip-taskbar --image-on-top \
---wrap --window-icon=$LOGO \
---undecorated --text="<big><big><big><b>Build Finished \rReboot Required</b></big></big></big>\r\r" \
---button="Reboot Now":0 \
---button="Exit":1
+yad --width=400 --height=200 --title="Reboot" --image ${LOGO} \
+	--text-align=center --skip-taskbar --image-on-top \
+	--wrap --window-icon=${LOGO} \
+	--undecorated --text="<big><big><big><b>Build Finished \rReboot Required</b></big></big></big>\r\r" \
+	--button="Reboot Now":0 \
+	--button="Exit":1
 BUT=$(echo $?)
 
-if [ $BUT = 0 ]; then
-echo rebooting
-sudo reboot
-elif [ $BUT = 1 ]; then
-exit
+if [ ${BUT} = 0 ]; then
+	echo rebooting
+	sudo reboot
+elif [ ${BUT} = 1 ]; then
+	exit
 fi
-
-
-
-
-

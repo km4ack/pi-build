@@ -1,109 +1,105 @@
-
-
-
-
 ##################################
 #	DIPOLE CALC
 ##################################
-DIPOLE(){
-cd $HOME/bin
-wget --tries 2 --connect-timeout=60 https://raw.githubusercontent.com/km4ack/pi-scripts/master/dipole
-chmod +x dipole
+DIPOLE() {
+    cd ${HOME}/bin || return
+    wget --tries 2 --connect-timeout=60 https://raw.githubusercontent.com/km4ack/pi-scripts/master/dipole
+    chmod +x dipole
 
-cat > dipole.desktop <<EOF
+    cat >dipole.desktop <<EOF
 [Desktop Entry]
 Name=Dipole Calculator
 GenericName=Dipole Calc
 Comment=Dipole Calculator
-Exec=$HOME/bin/dipole
+Exec=${HOME}/bin/dipole
 Icon=/usr/share/icons/Adwaita/scalable/apps/accessories-calculator-symbolic.svg
 Terminal=false
 Type=Application
 Categories=HamRadio;
 EOF
 
-sudo mv dipole.desktop /usr/share/applications/
+    sudo mv dipole.desktop /usr/share/applications/
 
 }
 
 ##################################
 #	Call Lookup
 ##################################
-CALLSIGN(){
-cd $HOME/bin
-wget --tries 2 --connect-timeout=60 https://raw.githubusercontent.com/km4ack/pi-scripts/master/getcall
-chmod +x getcall
+CALLSIGN() {
+    cd ${HOME}/bin || return
+    wget --tries 2 --connect-timeout=60 https://raw.githubusercontent.com/km4ack/pi-scripts/master/getcall
+    chmod +x getcall
 
-cat > getcall.desktop <<EOF
+    cat >getcall.desktop <<EOF
 [Desktop Entry]
 Name=Call Sign Lookup
 GenericName=Call sign lookup utility
 Comment=Call sign lookup utility
-Exec=$HOME/bin/getcall
+Exec=${HOME}/bin/getcall
 Icon=/usr/share/icons/Adwaita/scalable/apps/user-info-symbolic.svg
 Terminal=false
 Type=Application
 Categories=HamRadio;
 EOF
 
-sudo mv getcall.desktop /usr/share/applications/
+    sudo mv getcall.desktop /usr/share/applications/
 }
 
 ##################################
 #	Temp Convert
 ##################################
-TEMPCONVERT(){
-if ! hash bc 2>/dev/null; then
-sudo apt-get install -y bc
-fi
-cd $HOME/bin
-wget --tries 2 --connect-timeout=60 https://raw.githubusercontent.com/km4ack/pi-scripts/master/converttemp
-chmod +x converttemp
+TEMPCONVERT() {
+    if ! hash bc 2>/dev/null; then
+        sudo apt-get install -y bc
+    fi
+    cd ${HOME}/bin || return
+    wget --tries 2 --connect-timeout=60 https://raw.githubusercontent.com/km4ack/pi-scripts/master/converttemp
+    chmod +x converttemp
 
-cat > converttemp.desktop <<EOF
+    cat >converttemp.desktop <<EOF
 [Desktop Entry]
 Name=Temperature Converter
 GenericName=Temperature Converter
 Comment=Utility to convert temperature
-Exec=$HOME/bin/converttemp
+Exec=${HOME}/bin/converttemp
 Icon=/usr/share/icons/Adwaita/22x22/actions/mark-location.png
 Terminal=false
 Type=Application
 Categories=HamRadio;
 EOF
 
-sudo mv converttemp.desktop /usr/share/applications/
+    sudo mv converttemp.desktop /usr/share/applications/
 }
 
 ##################################
 #	GPARTED
 ##################################
-GPARTED(){
-sudo apt-get install -y gparted
+GPARTED() {
+    sudo apt-get install -y gparted
 }
 
 ##################################
 #	Log Viewer | Showlog
 ##################################
-SHOWLOG(){
+SHOWLOG() {
 
-cd $HOME/bin
-wget https://raw.githubusercontent.com/km4ack/pi-scripts/master/showlog
-chmod +x showlog
+    cd ${HOME}/bin || return
+    wget https://raw.githubusercontent.com/km4ack/pi-scripts/master/showlog
+    chmod +x showlog
 
-cat > showlog.desktop <<EOF
+    cat >showlog.desktop <<EOF
 [Desktop Entry]
 Name=Log Viewer
 GenericName=KM4ACK Log Viewer
 Comment=Log File Viewer
-Exec=$HOME/bin/showlog
+Exec=${HOME}/bin/showlog
 Icon=/usr/share/icons/PiXflat/48x48/apps/fm-details.png
 Terminal=false
 Type=Application
 Categories=Utility
 EOF
 
-sudo mv showlog.desktop /usr/share/applications/
+    sudo mv showlog.desktop /usr/share/applications/
 }
 
 ##################################
@@ -111,120 +107,116 @@ sudo mv showlog.desktop /usr/share/applications/
 ##################################
 #Based on directions from the following web site
 #https://thepihut.com/blogs/raspberry-pi-tutorials/17209332-adding-a-real-time-clock-to-your-raspberry-pi
-RTC(){
-DOUBLE=$(sudo i2cdetect -y 1 | grep UU)
+RTC() {
+    DOUBLE=$(sudo i2cdetect -y 1 | grep UU)
 
-if [ -n "$DOUBLE" ]; then
-yad --form --width=500 --text-align=center --center --title="Build-a-Pi" --text-align=center \
---image $LOGO --window-icon=$LOGO --image-on-top --separator="|" --item-separator="|" \
---text="Real Time Clock already installed" \
---button=gtk-close
-#exit statement here causes script to exit without finishing. Reference link next line
-#https://github.com/km4ack/pi-build/issues/139
+    if [ -n "$DOUBLE" ]; then
+        yad --form --width=500 --text-align=center --center --title="Build-a-Pi" --text-align=center \
+            --image ${LOGO} --window-icon=${LOGO} --image-on-top --separator="|" --item-separator="|" \
+            --text="Real Time Clock already installed" \
+            --button=gtk-close
+    #exit statement here causes script to exit without finishing. Reference link next line
+    #https://github.com/km4ack/pi-build/issues/139
 
-else
+    else
 
-IC2ACTIVE=$(ls /dev/*i2c*)
+        IC2ACTIVE=$(ls /dev/*i2c*)
 
-if [ $IC2ACTIVE = '/dev/i2c-1' ]
-then
-echo "IC2 is active"
-else 
-yad --form --width=500 --text-align=center --center --title="Build-a-Pi" --text-align=center \
---image $LOGO --window-icon=$LOGO --image-on-top --separator="|" --item-separator="|" \
---text="Please enable IC2 interface in the Raspberry Pi Configuration and try again" \
---button=gtk-close
-exit 1
-fi
+        if [ ${IC2ACTIVE} = '/dev/i2c-1' ]; then
+            echo "IC2 is active"
+        else
+            yad --form --width=500 --text-align=center --center --title="Build-a-Pi" --text-align=center \
+                --image ${LOGO} --window-icon=${LOGO} --image-on-top --separator="|" --item-separator="|" \
+                --text="Please enable IC2 interface in the Raspberry Pi Configuration and try again" \
+                --button=gtk-close
+            exit 1
+        fi
 
-NOW=$(date)
+        NOW=$(date)
 
-INFO=$(yad --form --width=500 --text-align=center --center --title="Build-a-Pi" --text-align=center \
---image $LOGO --window-icon=$LOGO --image-on-top --separator="|" --item-separator="|" \
---text="<b>System time is $NOW</b>" \
---field="Is this Correct":CB "yes|no" \
---button="Continue")
-echo $?
+        INFO=$(yad --form --width=500 --text-align=center --center --title="Build-a-Pi" --text-align=center \
+            --image ${LOGO} --window-icon=${LOGO} --image-on-top --separator="|" --item-separator="|" \
+            --text="<b>System time is $NOW</b>" \
+            --field="Is this Correct":CB "yes|no" \
+            --button="Continue")
+        echo $?
 
-TIME=$(echo $INFO | awk -F "|" '{print $1}')
+        TIME=$(echo ${INFO} | awk -F "|" '{print $1}')
 
-
-if [ $TIME = 'no' ]; then
-yad --form --width=500 --text-align=center --center --title="Build-a-Pi" --text-align=center \
---image $LOGO --window-icon=$LOGO --image-on-top --separator="|" --item-separator="|" \
---text="Please set time on the Raspberry Pi and try again. You can set time \
+        if [ ${TIME} = 'no' ]; then
+            yad --form --width=500 --text-align=center --center --title="Build-a-Pi" --text-align=center \
+                --image ${LOGO} --window-icon=${LOGO} --image-on-top --separator="|" --item-separator="|" \
+                --text="Please set time on the Raspberry Pi and try again. You can set time \
 by connecting to the internet or attaching a GPS" \
---button=gtk-close
-exit 1
-fi
+                --button=gtk-close
+            exit 1
+        fi
 
-CLOCK=$(sudo i2cdetect -y 1 | grep 68)
+        CLOCK=$(sudo i2cdetect -y 1 | grep 68)
 
+        if [ -z "$CLOCK" ]; then
+            yad --form --width=500 --text-align=center --center --title="Build-a-Pi" --text-align=center \
+                --image ${LOGO} --window-icon=${LOGO} --image-on-top --separator="|" --item-separator="|" \
+                --text="Real Time Clock not detected. Please be sure the RTC is installed and seated firmly" \
+                --button=gtk-close
+            exit 1
+        else
+            sudo modprobe rtc-ds1307
+            echo "ds1307 0x68" | sudo tee -a /sys/class/i2c-adapter/i2c-1/new_device
+            sudo hwclock -w
+            echo rtc-ds1307 | sudo tee -a /etc/modules
 
-if [ -z "$CLOCK" ]; then
-yad --form --width=500 --text-align=center --center --title="Build-a-Pi" --text-align=center \
---image $LOGO --window-icon=$LOGO --image-on-top --separator="|" --item-separator="|" \
---text="Real Time Clock not detected. Please be sure the RTC is installed and seated firmly" \
---button=gtk-close
-exit 1
-else
-sudo modprobe rtc-ds1307
-echo "ds1307 0x68" | sudo tee -a /sys/class/i2c-adapter/i2c-1/new_device
-sudo hwclock -w
-echo rtc-ds1307 | sudo tee -a /etc/modules
+            sudo sed -i 's/exit\ 0//' /etc/rc.local
+            echo "echo ds1307 0x68 > /sys/class/i2c-adapter/i2c-1/new_device" | sudo tee -a /etc/rc.local >/dev/null 2>&1
+            echo "sudo hwclock -s" | sudo tee -a /etc/rc.local >/dev/null 2>&1
+            echo "date" | sudo tee -a /etc/rc.local >/dev/null 2>&1
+            echo "exit 0" | sudo tee -a /etc/rc.local >/dev/null 2>&1
 
-sudo sed -i 's/exit\ 0//' /etc/rc.local
-echo "echo ds1307 0x68 > /sys/class/i2c-adapter/i2c-1/new_device" | sudo tee -a /etc/rc.local > /dev/null 2>&1
-echo "sudo hwclock -s" | sudo tee -a /etc/rc.local > /dev/null 2>&1
-echo "date" | sudo tee -a /etc/rc.local > /dev/null 2>&1
-echo "exit 0" | sudo tee -a /etc/rc.local > /dev/null 2>&1
+            yad --form --width=500 --text-align=center --center --title="Build-a-Pi" --text-align=center \
+                --image ${LOGO} --window-icon=${LOGO} --image-on-top --separator="|" --item-separator="|" \
+                --text="Real Time Clock has been installed and configured" \
+                --button=gtk-close
+        fi
 
-yad --form --width=500 --text-align=center --center --title="Build-a-Pi" --text-align=center \
---image $LOGO --window-icon=$LOGO --image-on-top --separator="|" --item-separator="|" \
---text="Real Time Clock has been installed and configured" \
---button=gtk-close
-fi
-
-fi #close first if/then statement
+    fi #close first if/then statement
 }
-
 
 ##################################
 #	PISTATS
 ##################################
-PISTATS(){
-cd $HOME
-CUR=$(curl -s http://www.w1hkj.com/pi3/ | grep .tgz | sed 's/.*pistats//' | sed 's/<\/a><br>//')
-wget http://www.w1hkj.com/pi3/pistats$CUR
-tar -xzvf pistats$CUR
-rm pistats$CUR
-PISTATDIR=$(ls $HOME | grep pistats)
-cd $PISTATDIR
-sudo apt-get install -y libfltk1.3-dev
-make
-sudo mv pistats /usr/local/bin
-sudo mv $HOME/$PISTATDIR/data/pistats.desktop /usr/share/applications/
-cd $HOME
-rm -rf $PISTATDIR
+PISTATS() {
+    cd ${HOME} || return
+    CUR=$(curl -s http://www.w1hkj.com/pi3/ | grep .tgz | sed 's/.*pistats//' | sed 's/<\/a><br>//')
+    wget http://www.w1hkj.com/pi3/pistats${CUR}
+    tar -xzvf pistats${CUR}
+    rm pistats${CUR}
+    PISTATDIR=$(ls ${HOME} | grep pistats)
+    cd ${PISTATDIR} || return
+    sudo apt-get install -y libfltk1.3-dev
+    make
+    sudo mv pistats /usr/local/bin
+    sudo mv ${HOME}/${PISTATDIR}/data/pistats.desktop /usr/share/applications/
+    cd ${HOME} || return
+    rm -rf "${PISTATDIR}"
 }
 
 ##################################
 #	TELNET
 ##################################
-TELNET(){
-sudo apt install -y telnet
+TELNET() {
+    sudo apt install -y telnet
 }
 
 ##################################
 #	PiQtTermTCP
 ##################################
-PITERM(){
-cd $DIR
-wget https://www.cantab.net/users/john.wiseman/Downloads/Beta/piQtTermTCP
-sudo chmod +x piQtTermTCP
-sudo mv piQtTermTCP /usr/local/bin/
+PITERM() {
+    cd ${DIR} || return
+    wget https://www.cantab.net/users/john.wiseman/Downloads/Beta/piQtTermTCP
+    sudo chmod +x piQtTermTCP
+    sudo mv piQtTermTCP /usr/local/bin/
 
-cat > piqttermtcp.desktop <<EOF
+    cat >piqttermtcp.desktop <<EOF
 [Desktop Entry]
 Name=PiQtTermTCP
 GenericName=PiQtTermTCP
@@ -236,21 +228,21 @@ Type=Application
 Categories=Utility
 EOF
 
-sudo mv piqttermtcp.desktop /usr/share/applications/
+    sudo mv piqttermtcp.desktop /usr/share/applications/
 
 }
 
 ##################################
 #	Security Tools
 ##################################
-SECURITY(){
-cd $HOME/bin
-wget https://raw.githubusercontent.com/km4ack/pi-scripts/master/security-tools
-bash security-tools
+SECURITY() {
+    cd ${HOME}/bin || return
+    wget https://raw.githubusercontent.com/km4ack/pi-scripts/master/security-tools
+    bash security-tools
 
-sudo mv $HOME/bin/securefile /usr/local/bin
+    sudo mv ${HOME}/bin/securefile /usr/local/bin
 
-cat > secure-file.desktop <<EOF
+    cat >secure-file.desktop <<EOF
 [Desktop Entry]
 Name=SSE File Encryptor
 GenericName=SSE File Encryptor
@@ -262,104 +254,103 @@ Type=Application
 Categories=Utility
 EOF
 
-sudo mv secure-file.desktop /usr/share/applications/
+    sudo mv secure-file.desktop /usr/share/applications/
 }
 
 ##################################
 #	YGATE
 ##################################
-YGATE(){
-cd $HOME/bin
-wget https://raw.githubusercontent.com/craigerl/ygate/master/ygate.py
-chmod +x ygate.py
+YGATE() {
+    cd ${HOME}/bin || return
+    wget https://raw.githubusercontent.com/craigerl/ygate/master/ygate.py
+    chmod +x ygate.py
 
-cat > ygate.desktop <<EOF
+    cat >ygate.desktop <<EOF
 [Desktop Entry]
 Name=YGATE
 GenericName=YGATE
 Comment=Yaesu APRS Application
-Exec=$HOME/bin/ygate.py
+Exec=${HOME}/bin/ygate.py
 Terminal=true
 Type=Application
 Categories=Utility
 EOF
 
-sudo mv ygate.desktop /usr/share/applications/
+    sudo mv ygate.desktop /usr/share/applications/
 
 }
-
 
 ##################################
 #	BPQ
 ##################################
-BPQ(){
-source $HOME/pi-build/config
-#install LinBPQ
-cd
-##########################################################################
-#commands below this line were taken from John Wiseman's install script.
-#and modded to pull the operators call sign from the BAP config file.
-#http://www.cantab.net/users/john.wiseman/Downloads/installLinRMS
-##########################################################################
- export LINBPQ=pilinbpq;
- export APRS=piBPQAPRS
-echo "Downloading $LINBPQ and $APRS to linbpq and bpqaprs"
+BPQ() {
+    source ${HOME}/pi-build/config || return
+    #install LinBPQ
+    cd || return
+    ##########################################################################
+    #commands below this line were taken from John Wiseman's install script.
+    #and modded to pull the operators call sign from the BAP config file.
+    #http://www.cantab.net/users/john.wiseman/Downloads/installLinRMS
+    ##########################################################################
+    export LINBPQ=pilinbpq
+    export APRS=piBPQAPRS
+    echo "Downloading ${LINBPQ} and ${APRS} to linbpq and bpqaprs"
 
-mkdir linbpq
-cd linbpq
-wget -nv http://www.cantab.net/users/john.wiseman/Downloads/Beta/$LINBPQ -O linbpq
-chmod +x linbpq
-wget -nv http://www.cantab.net/users/john.wiseman/Downloads/Beta/$APRS -O bpqaprs
-chmod +x bpqaprs
+    mkdir linbpq
+    cd linbpq || return
+    wget -nv http://www.cantab.net/users/john.wiseman/Downloads/Beta/${LINBPQ} -O linbpq
+    chmod +x linbpq
+    wget -nv http://www.cantab.net/users/john.wiseman/Downloads/Beta/${APRS} -O bpqaprs
+    chmod +x bpqaprs
 
-echo "Downloading config files"
+    echo "Downloading config files"
 
-wget -nv http://www.cantab.net/users/john.wiseman/Downloads/SimpleRMSGateway_bpq32.cfg -O bpq32.cfg
+    wget -nv http://www.cantab.net/users/john.wiseman/Downloads/SimpleRMSGateway_bpq32.cfg -O bpq32.cfg
 
-echo "Downloading HTML Files"
+    echo "Downloading HTML Files"
 
-mkdir HTML
-cd HTML
-wget -nv http://www.cantab.net/users/john.wiseman/Downloads/Beta/HTMLPages.zip
-unzip -o -q HTMLPages.zip
-rm HTMLPages.zip
-cd ..
-wget -nv http://www.cantab.net/users/john.wiseman/Downloads/LinBPQAPRS.zip
-unzip -o -q LinBPQAPRS.zip
-rm LinBPQAPRS.zip
+    mkdir HTML
+    cd HTML || return
+    wget -nv http://www.cantab.net/users/john.wiseman/Downloads/Beta/HTMLPages.zip
+    unzip -o -q HTMLPages.zip
+    rm HTMLPages.zip
+    cd .. || return
+    wget -nv http://www.cantab.net/users/john.wiseman/Downloads/LinBPQAPRS.zip
+    unzip -o -q LinBPQAPRS.zip
+    rm LinBPQAPRS.zip
 
-echo "Updating your callsign in configuration files"
+    echo "Updating your callsign in configuration files"
 
-#read -e -p "Enter Your Callsign (Without SSID): "  CALL
-CALL=$(echo "$CALL" | tr '[:lower:]' '[:upper:]')
+    #read -e -p "Enter Your Callsign (Without SSID): "  CALL
+    CALL=$(echo "$CALL" | tr '[:lower:]' '[:upper:]')
 
-sed -i "s/MYCALL/$CALL/g" bpq32.cfg
+    sed -i "s/MYCALL/$CALL/g" bpq32.cfg
 
-#####################################################
-#End John Wiseman install script
-#####################################################
-#install BPQ config generator
-cd $HOME/linbpq
-wget https://www.cantab.net/users/john.wiseman/Downloads/Beta/piBPQConfigGen
-chmod +x piBPQConfigGen
+    #####################################################
+    #End John Wiseman install script
+    #####################################################
+    #install BPQ config generator
+    cd ${HOME}/linbpq || return
+    wget https://www.cantab.net/users/john.wiseman/Downloads/Beta/piBPQConfigGen
+    chmod +x piBPQConfigGen
 
-cat > bpq-config.desktop <<EOF
+    cat >bpq-config.desktop <<EOF
 [Desktop Entry]
 Name=BPQ Config Generator
 GenericName=BPQ Config Generator
 Comment=Config File Generator for LinBPQ
-Exec=$HOME/linbpq/piBPQConfigGen
+Exec=${HOME}/linbpq/piBPQConfigGen
 Terminal=false
 Type=Application
 Categories=Utility
 EOF
 
-sudo mv bpq-config.desktop /usr/share/applications/
+    sudo mv bpq-config.desktop /usr/share/applications/
 
-#add LinBPQ-README to desktop
-FILE=$HOME/Desktop/LinBPQ-README
-touch $FILE
-cat << EOF > $FILE
+    #add LinBPQ-README to desktop
+    FILE=${HOME}/Desktop/LinBPQ-README
+    touch ${FILE}
+    cat <<EOF >${FILE}
 LinBPQ was installed during the build.
 You will find the config file generator
 under accessories in the main pi menu.
@@ -372,7 +363,7 @@ After completing the config file, you can
 start LinBPQ from the command line by running:
 ~/linbpq/.linbpq
 
-Depending on your station setup, you may 
+Depending on your station setup, you may
 need to start rig control, direwolf, or
 other applications before running LinBPQ.
 
@@ -388,89 +379,89 @@ EOF
 ##################################
 #	Battery Test Script
 ##################################
-BATT(){
-cd $HOME/bin
-wget https://raw.githubusercontent.com/km4ack/pi-scripts/master/batt-test
-chmod +x batt-test
+BATT() {
+    cd ${HOME}/bin || return
+    wget https://raw.githubusercontent.com/km4ack/pi-scripts/master/batt-test
+    chmod +x batt-test
 
-cat > battery-test.desktop <<EOF
+    cat >battery-test.desktop <<EOF
 [Desktop Entry]
 Name=Battery Test Script
 GenericName=Battery Test Script
 Comment=Battery Test Utility
-Exec=$HOME/bin/batt-test
+Exec=${HOME}/bin/batt-test
 Terminal=true
 Type=Application
 Categories=Utility
 EOF
 
-sudo mv battery-test.desktop /usr/share/applications/
+    sudo mv battery-test.desktop /usr/share/applications/
 
 }
 
 ##################################
 #	VNC Viewer
 ##################################
-VNC(){
-cd $HOME
-PACKAGE=$(curl -s https://www.realvnc.com/en/connect/download/viewer/raspberrypi/ | grep .deb | awk '{print $2}' | \
-sed 's/href="\/download\/file\/viewer.files\///' | sed 's/"//')
+VNC() {
+    cd ${HOME} || return
+    PACKAGE=$(curl -s https://www.realvnc.com/en/connect/download/viewer/raspberrypi/ | grep .deb | awk '{print $2}' |
+        sed 's/href="\/download\/file\/viewer.files\///' | sed 's/"//')
 
-wget https://realvnc.com/download/file/viewer.files/$PACKAGE
-sudo dpkg -i $PACKAGE
-rm $PACKAGE
+    wget https://realvnc.com/download/file/viewer.files/${PACKAGE}
+    sudo dpkg -i ${PACKAGE}
+    rm ${PACKAGE}
 }
 
 ##################################
 #	ZYGRIB Viewer
 ##################################
-ZYGRIB(){
-sudo apt install -y zygrib
-sudo apt install -y zygrib-maps
+ZYGRIB() {
+    sudo apt install -y zygrib
+    sudo apt install -y zygrib-maps
 }
 
 ##################################
 #	GPS update tool
 ##################################
-GPSUPDATE(){
-#remove existing file if needed before installing
-if [ -f $HOME/bin/gpsupdate ]; then
-rm $HOME/bin/gpsupdate
-fi
+GPSUPDATE() {
+    #remove existing file if needed before installing
+    if [ -f ${HOME}/bin/gpsupdate ]; then
+        rm ${HOME}/bin/gpsupdate
+    fi
 
-cd $HOME/bin
-wget https://raw.githubusercontent.com/km4ack/pi-scripts/master/gpsupdate
-chmod +x gpsupdate
+    cd ${HOME}/bin || return
+    wget https://raw.githubusercontent.com/km4ack/pi-scripts/master/gpsupdate
+    chmod +x gpsupdate
 
-cat > gpsupdate.desktop <<EOF
+    cat >gpsupdate.desktop <<EOF
 [Desktop Entry]
 Name=GPS Update Tool
 GenericName=Used to change between GPS units
 Comment=Used to change between GPS units
-Exec=$HOME/bin/gpsupdate
+Exec=${HOME}/bin/gpsupdate
 Terminal=false
 Type=Application
 Categories=Utility
 EOF
 
-sudo mv gpsupdate.desktop /usr/share/applications/
+    sudo mv gpsupdate.desktop /usr/share/applications/
 }
 
 ##################################
 #	removeMS Tool
 ##################################
 
-REMOVEMS(){
-#download the file
-cd $HOME/bin
-wget https://raw.githubusercontent.com/km4ack/pi-scripts/master/removeMS
-chmod +x $HOME/bin/removeMS
-#place user directions on desktop
-cat <<EOF>$HOME/Desktop/Block-Microsoft.txt
+REMOVEMS() {
+    #download the file
+    cd ${HOME}/bin || return
+    wget https://raw.githubusercontent.com/km4ack/pi-scripts/master/removeMS
+    chmod +x ${HOME}/bin/removeMS
+    #place user directions on desktop
+    cat <<EOF >${HOME}/Desktop/Block-Microsoft.txt
 You have chosen to install the removeMS
 script which will block the Pi from accessing
 the Microsoft repository. The block has not
-been applied yet. To apply the block, open a 
+been applied yet. To apply the block, open a
 terminal window and run the following command:
 
 removeMS
@@ -485,4 +476,3 @@ More information is available in this video
 https://youtu.be/I7jLVgnnUW0
 EOF
 }
-

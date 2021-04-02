@@ -4,240 +4,236 @@
 #to help diagnose issues
 #20200616 km4ack
 #11FEB2021 review km4ack
-clear;echo;echo
-read -p "What is your call sign? " CALL
+clear
+echo
+echo
+read -rp "What is your call sign? " CALL
 
-DIR=$HOME/Desktop/$CALL-diagnostic-report
-
+DIR=${HOME}/Desktop/${CALL}-diagnostic-report
 
 #create temp dir
-mkdir -p $DIR
+mkdir -p ${DIR}
 
 #check to see which apps are installed
-CHECK(){
-#----------------------------------------------------#
-#		Hotspot
-#----------------------------------------------------#
-HOTSPOT="/usr/bin/autohotspotN"
-if [ ! -f "$HOTSPOT" ]; then
-HOTSPOT="Not Installed"
-else
-HOTSPOT="Installed"
-fi
-
-#----------------------------------------------------#
-#		AX25
-#----------------------------------------------------#
-if [ ! -d /etc/ax25 ]; then
-AX25="Not Installed"
-else
-AX25="Installed"
-fi
-#----------------------------------------------------#
-#		GPS
-#----------------------------------------------------#
-if ! hash gpsd 2>/dev/null; then
-GPS="Not Installed"
-else
-GPS="Installed"
-fi
-#----------------------------------------------------#
-#		PULSE
-#----------------------------------------------------#
-if ! hash pulseaudio 2>/dev/null; then
-PULSE="Not Installed"
-else
-PULSE="Installed"
-fi
-#----------------------------------------------------#
-#		ARDOP
-#----------------------------------------------------#
-if [ -f $HOME/ardop/piardopc ]; then
-ARDOP="Installed"
-else
-ARDOP="Not Installed"
-fi
-#----------------------------------------------------#
-#		ARDOP GUI
-#----------------------------------------------------#
-if [ -f $HOME/ardop/piARDOP_GUI ]; then
-ARDOPGUI="Installed"
-else
-ARDOPGUI="Not Installed"
-fi
-
-#----------------------------------------------------#
-#		RIG CONTROL - HAMLIB
-#----------------------------------------------------#
-if ! hash rigctl 2>/dev/null; then
-RIG="Not_Installed"
-else
-echo "Checking Rig Control"
-RIG=$(rigctl --version | grep Hamlib | sed s/"rigctl(d),\ Hamlib\ "//)
-NEWRIG=$(curl -s https://sourceforge.net/projects/hamlib/files/latest/download | \
-grep -o https://downloads.sourceforge.net/project/hamlib/hamlib/[0-9].[0-9] | \
-head -n 1 | awk -F "/" '{print $7}') 
-
-	if (( $(echo "$NEWRIG $RIG" | awk '{print ($1 > $2)}') ))
-	then
-	RIG=NEEDS-UPDATE
+CHECK() {
+	#----------------------------------------------------#
+	#		Hotspot
+	#----------------------------------------------------#
+	HOTSPOT="/usr/bin/autohotspotN"
+	if [ ! -f "${HOTSPOT}" ]; then
+		HOTSPOT="Not Installed"
 	else
-	RIG="is_latest_version"
+		HOTSPOT="Installed"
 	fi
-fi
 
-#----------------------------------------------------#
-#			FLRIG
-#----------------------------------------------------#
-echo "Checking FLRIG"
-if ! hash flrig 2>/dev/null; then
-FLRIG="Not_Installed"
-else
-FLRIG=$(flrig --version | awk 'FNR == 1 {print $2}')
-NEWFLRIG=$(curl -s https://sourceforge.net/projects/fldigi/files/flrig/ | \
-grep .tar.gz | head -1 | awk -F "-" '{print $2}' | awk -F ".tar.gz" '{print $1}')
-
-	if (( $(echo "$NEWFLRIG $FLRIG" | awk '{print ($1 > $2)}') ))
-	then
-	FLRIG=NEEDS-UPDATE
+	#----------------------------------------------------#
+	#		AX25
+	#----------------------------------------------------#
+	if [ ! -d /etc/ax25 ]; then
+		AX25="Not Installed"
 	else
-	FLRIG="is_latest_version"
+		AX25="Installed"
 	fi
-fi
-
-#----------------------------------------------------#
-#		Pat Winlink
-#----------------------------------------------------#
-echo "Checking Pat Winlink"
-if ! hash pat 2>/dev/null; then
-PAT="Not_Installed"
-else
-PAT=$(pat version | awk -F 'v' '{print $2}' | head -c 5)
-NEWPAT=$(curl -s https://github.com/la5nta/pat/releases | grep -m 1 "amd64.deb"\
- | awk -F '_' '{print $2}')
-
-	if (( $(echo "$NEWPAT $PAT" | awk '{print ($1 > $2)}') ))
-	then
-	PAT=NEEDS-UPDATE
+	#----------------------------------------------------#
+	#		GPS
+	#----------------------------------------------------#
+	if ! hash gpsd 2>/dev/null; then
+		GPS="Not Installed"
 	else
-	PAT="is_latest_version"
-fi
-fi
-
-#----------------------------------------------------#
-#		DIREWOLF
-#----------------------------------------------------#
-echo "Checking Direwolf"
-if ! hash direwolf 2>/dev/null; then
-DIRE="Not_Installed"
-else
-DIRE=$(direwolf -S -t 0 | head -1 | sed 's/Dire\ Wolf\ version\ //')
-wget -P /tmp/ https://raw.githubusercontent.com/wb2osz/direwolf/master/CHANGES.md > /dev/null 2>&1
-NEWDIRE=$(cat /tmp/CHANGES.md | head -5 | tail -1 | awk '{ print $3 }')
-
-	if (( $(echo "$NEWDIRE $DIRE" | awk '{print ($1 > $2)}') ))
-	then
-	DIRE=NEEDS-UPDATE
-	else
-	DIRE="is_latest_version"
+		GPS="Installed"
 	fi
-fi
-#----------------------------------------------------#
-#		Pat Menu
-#----------------------------------------------------#
-echo "Checking Pat Menu"
-if [ ! -d $HOME/patmenu2 ]; then
-PATMENU="Not_Installed"
-else
-cd $HOME/patmenu2/
-wget -O $HOME/patmenu2/latest https://raw.githubusercontent.com/km4ack/patmenu2/master/changelog > /dev/null 2>&1
-LATEST=$(cat $HOME/patmenu2/latest | grep '^release' | sed 's/release=//')
-CURRENT=$(cat $HOME/patmenu2/changelog | grep '^release' | sed 's/release=//')
-rm $HOME/patmenu2/latest > /dev/null 2>&1
-	if (( $(echo "$LATEST $CURRENT" | awk '{print ($1 > $2)}') ))
-	then
-	PATMENU="NEEDS-UPDATE"
+	#----------------------------------------------------#
+	#		PULSE
+	#----------------------------------------------------#
+	if ! hash pulseaudio 2>/dev/null; then
+		PULSE="Not Installed"
 	else
-	PATMENU="is_latest_version"
+		PULSE="Installed"
 	fi
-fi
-
-#----------------------------------------------------#
-#		Hot Spot Tools
-#----------------------------------------------------#
-if [ ! -d $HOME/hotspot-tools2 ]; then
-HSTOOLS="Not_Installed"
-else
-CURRENT=$(cat $HOME/hotspot-tools2/changelog | grep version= | sed 's/version=//')
-LATEST=$(curl -s https://raw.githubusercontent.com/km4ack/hotspot-tools2/master/changelog | grep version= | sed 's/version=//')
-	if (( $(echo "$LATEST $CURRENT" | awk '{print ($1 > $2)}') ))
-	then
-	HSTOOLS="NEEDS-UPDATE"
+	#----------------------------------------------------#
+	#		ARDOP
+	#----------------------------------------------------#
+	if [ -f ${HOME}/ardop/piardopc ]; then
+		ARDOP="Installed"
 	else
-	HSTOOLS="is_latest_version"
+		ARDOP="Not Installed"
 	fi
-fi
+	#----------------------------------------------------#
+	#		ARDOP GUI
+	#----------------------------------------------------#
+	if [ -f ${HOME}/ardop/piARDOP_GUI ]; then
+		ARDOPGUI="Installed"
+	else
+		ARDOPGUI="Not Installed"
+	fi
 
-#----------------------------------------------------#
-#		EES
-#----------------------------------------------------#
-if [ -f /var/www/html/email.php ]; then
-EES="Installed"
-else
-EES="Not Installed"
-fi
+	#----------------------------------------------------#
+	#		RIG CONTROL - HAMLIB
+	#----------------------------------------------------#
+	if ! hash rigctl 2>/dev/null; then
+		RIG="Not_Installed"
+	else
+		echo "Checking Rig Control"
+		RIG=$(rigctl --version | grep Hamlib | sed s/"rigctl(d),\ Hamlib\ "//)
+		NEWRIG=$(curl -s https://sourceforge.net/projects/hamlib/files/latest/download |
+			grep -o https://downloads.sourceforge.net/project/hamlib/hamlib/[0-9].[0-9] |
+			head -n 1 | awk -F "/" '{print $7}')
 
-#----------------------------------------------------#
-#		CONKY
-#----------------------------------------------------#
-if [ -f $HOME/.conkyrc ]; then
-CONKY=Installed
-else
-CONKY="Not Installed"
-fi
+		if (($(echo "${NEWRIG} ${RIG}" | awk '{print ($1 > $2)}'))); then
+			RIG=NEEDS-UPDATE
+		else
+			RIG="is_latest_version"
+		fi
+	fi
+
+	#----------------------------------------------------#
+	#			FLRIG
+	#----------------------------------------------------#
+	echo "Checking FLRIG"
+	if ! hash flrig 2>/dev/null; then
+		FLRIG="Not_Installed"
+	else
+		FLRIG=$(flrig --version | awk 'FNR == 1 {print $2}')
+		NEWFLRIG=$(curl -s https://sourceforge.net/projects/fldigi/files/flrig/ |
+			grep .tar.gz | head -1 | awk -F "-" '{print $2}' | awk -F ".tar.gz" '{print $1}')
+
+		if (($(echo "${NEWFLRIG} ${FLRIG}" | awk '{print ($1 > $2)}'))); then
+			FLRIG=NEEDS-UPDATE
+		else
+			FLRIG="is_latest_version"
+		fi
+	fi
+
+	#----------------------------------------------------#
+	#		Pat Winlink
+	#----------------------------------------------------#
+	echo "Checking Pat Winlink"
+	if ! hash pat 2>/dev/null; then
+		PAT="Not_Installed"
+	else
+		PAT=$(pat version | awk -F 'v' '{print $2}' | head -c 5)
+		NEWPAT=$(curl -s https://github.com/la5nta/pat/releases | grep -m 1 "amd64.deb" |
+			awk -F '_' '{print $2}')
+
+		if (($(echo "${NEWPAT} ${PAT}" | awk '{print ($1 > $2)}'))); then
+			PAT=NEEDS-UPDATE
+		else
+			PAT="is_latest_version"
+		fi
+	fi
+
+	#----------------------------------------------------#
+	#		DIREWOLF
+	#----------------------------------------------------#
+	echo "Checking Direwolf"
+	if ! hash direwolf 2>/dev/null; then
+		DIRE="Not_Installed"
+	else
+		DIRE=$(direwolf -S -t 0 | head -1 | sed 's/Dire\ Wolf\ version\ //')
+		wget -P /tmp/ https://raw.githubusercontent.com/wb2osz/direwolf/master/CHANGES.md >/dev/null 2>&1
+		NEWDIRE=$(cat /tmp/CHANGES.md | head -5 | tail -1 | awk '{ print $3 }')
+
+		if (($(echo "${NEWDIRE} ${DIRE}" | awk '{print ($1 > $2)}'))); then
+			DIRE=NEEDS-UPDATE
+		else
+			DIRE="is_latest_version"
+		fi
+	fi
+	#----------------------------------------------------#
+	#		Pat Menu
+	#----------------------------------------------------#
+	echo "Checking Pat Menu"
+	if [ ! -d ${HOME}/patmenu2 ]; then
+		PATMENU="Not_Installed"
+	else
+		cd ${HOME}/patmenu2/ || ! echo "Failure"
+		wget -O ${HOME}/patmenu2/latest https://raw.githubusercontent.com/km4ack/patmenu2/master/changelog >/dev/null 2>&1
+		LATEST=$(cat ${HOME}/patmenu2/latest | grep '^release' | sed 's/release=//')
+		CURRENT=$(cat ${HOME}/patmenu2/changelog | grep '^release' | sed 's/release=//')
+		rm ${HOME}/patmenu2/latest >/dev/null 2>&1
+		if (($(echo "${LATEST} ${CURRENT}" | awk '{print ($1 > $2)}'))); then
+			PATMENU="NEEDS-UPDATE"
+		else
+			PATMENU="is_latest_version"
+		fi
+	fi
+
+	#----------------------------------------------------#
+	#		Hot Spot Tools
+	#----------------------------------------------------#
+	if [ ! -d ${HOME}/hotspot-tools2 ]; then
+		HSTOOLS="Not_Installed"
+	else
+		CURRENT=$(cat ${HOME}/hotspot-tools2/changelog | grep version= | sed 's/version=//')
+		LATEST=$(curl -s https://raw.githubusercontent.com/km4ack/hotspot-tools2/master/changelog | grep version= | sed 's/version=//')
+		if (($(echo "${LATEST} ${CURRENT}" | awk '{print ($1 > $2)}'))); then
+			HSTOOLS="NEEDS-UPDATE"
+		else
+			HSTOOLS="is_latest_version"
+		fi
+	fi
+
+	#----------------------------------------------------#
+	#		EES
+	#----------------------------------------------------#
+	if [ -f /var/www/html/email.php ]; then
+		EES="Installed"
+	else
+		EES="Not Installed"
+	fi
+
+	#----------------------------------------------------#
+	#		CONKY
+	#----------------------------------------------------#
+	if [ -f ${HOME}/.conkyrc ]; then
+		CONKY=Installed
+	else
+		CONKY="Not Installed"
+	fi
 
 }
 CHECK
 
-
 #get system info
 WHO=$(whoami)
 KERNAL=$(uname -r)
-echo "User Name is $WHO" > $DIR/systeminfo.txt
-echo "" >> $DIR/systeminfo.txt
-echo "Kernal version is $KERNAL" >> $DIR/systeminfo.txt
-echo "" >> $DIR/systeminfo.txt
-cat /etc/os-release >> $DIR/systeminfo.txt
-echo;echo;echo "#####uname######" >> $DIR/systeminfo.txt
-uname -a >> $DIR/systeminfo.txt
+echo "User Name is ${WHO}" >${DIR}/systeminfo.txt
+echo "" >>${DIR}/systeminfo.txt
+echo "Kernal version is ${KERNAL}" >>${DIR}/systeminfo.txt
+echo "" >>${DIR}/systeminfo.txt
+cat /etc/os-release >>${DIR}/systeminfo.txt
+echo
+echo
+echo "#####uname######" >>${DIR}/systeminfo.txt
+uname -a >>${DIR}/systeminfo.txt
 
 #get direwolf.conf file
-cat $HOME/direwolf.conf > $DIR/direwolf.conf
+cat ${HOME}/direwolf.conf >${DIR}/direwolf.conf
 
 #get pat config file
-cat $HOME/.wl2k/config.json > $DIR/patconfig.txt
+cat ${HOME}/.wl2k/config.json >${DIR}/patconfig.txt
 #remove winlink password
-sed -i 's/"secure_login_password":.*$/PASSWORD-REMOVED-FOR-YOUR-SECURITY/' $DIR/patconfig.txt
+sed -i 's/"secure_login_password":.*$/PASSWORD-REMOVED-FOR-YOUR-SECURITY/' ${DIR}/patconfig.txt
 
 #get pat menu config file
-cat $HOME/patmenu2/config > $DIR/patmenu.conf
+cat ${HOME}/patmenu2/config >${DIR}/patmenu.conf
 
 #Get wpa_supplicant
-sudo cat /etc/wpa_supplicant/wpa_supplicant.conf > $DIR/wpa.txt
-sed -i 's/psk=.*$/PASSWORD-REMOVED/' $DIR/wpa.txt
+sudo cat /etc/wpa_supplicant/wpa_supplicant.conf >${DIR}/wpa.txt
+sed -i 's/psk=.*$/PASSWORD-REMOVED/' ${DIR}/wpa.txt
 
 #get sound info
-echo "" >> $DIR/sound.info
-echo "ARECORD INFO" > $DIR/sound.info
-arecord -l >> $DIR/sound.info
-echo "" >> $DIR/sound.info
-echo "" >> $DIR/sound.info
-echo "APLAY INFO" >> $DIR/sound.info
-aplay -l >> $DIR/sound.info
-echo "" >> $DIR/sound.info
-echo "" >> $DIR/sound.info
-echo "Using sound card" >> $DIR/sound.info
-sudo lsof /dev/snd/* >> $DIR/sound.info
+echo "" >>${DIR}/sound.info
+echo "ARECORD INFO" >${DIR}/sound.info
+arecord -l >>${DIR}/sound.info
+echo "" >>${DIR}/sound.info
+echo "" >>${DIR}/sound.info
+echo "APLAY INFO" >>${DIR}/sound.info
+aplay -l >>${DIR}/sound.info
+echo "" >>${DIR}/sound.info
+echo "" >>${DIR}/sound.info
+echo "Using sound card" >>${DIR}/sound.info
+sudo lsof /dev/snd/* >>${DIR}/sound.info
 
 #Get hotspot info
 HS=$(systemctl is-active autohotspot)
@@ -250,64 +246,70 @@ CIP=$(ifconfig | grep -A 1 wlan0 | grep inet | awk '{ print $2 }')
 CHECK=$(ls /etc/wpa_supplicant/ | grep FORCE)
 AUTORUN=$(crontab -l | grep autohotspotN | awk '{print $1}' | sed 's/*\///')
 if [ -z "$CHECK" ]; then
-FORCE="Hotspot Not in force mode"
+	FORCE="Hotspot Not in force mode"
 else
-FORCE="Hotspot IS in force mode"
+	FORCE="Hotspot IS in force mode"
 fi
 
-if [ $HSS = $CIP ]
-then
-HSS=ACTIVE
+if [ ${HSS} = ${CIP} ]; then
+	HSS=ACTIVE
 else
-HSS=INACTIVE
+	HSS=INACTIVE
 fi
 
-FILE=$DIR/hotspot.info
+FILE=${DIR}/hotspot.info
 
-echo "Hotspot status $HS" > $FILE
-echo "Hotspot state $HSS" >> $FILE
-echo "Hotspot Name is $CURRENTNAME" >> $FILE
-echo "Hotspot IP = $HSIP" >> $FILE
-echo "Wireless IP = $CIP" >> $FILE
-echo "CAT5 IP = $WIREIP" >> $FILE
-echo "$FORCE" >> $FILE
-echo "crontab set to auto run ever $AUTORUN minutes" >> $FILE
+echo "Hotspot status ${HS}" >${FILE}
+echo "Hotspot state ${HSS}" >>${FILE}
+echo "Hotspot Name is ${CURRENTNAME}" >>${FILE}
+echo "Hotspot IP = ${HSIP}" >>${FILE}
+echo "Wireless IP = ${CIP}" >>${FILE}
+echo "CAT5 IP = ${WIREIP}" >>${FILE}
+echo "${FORCE}" >>${FILE}
+echo "crontab set to auto run ever ${AUTORUN} minutes" >>${FILE}
 
 #get cron contents
-crontab -l > $DIR/cron.txt
+crontab -l >${DIR}/cron.txt
 
 #get gps info
 GPSD=$(systemctl is-active gpsd)
 CHRONY=$(systemctl is-active chronyd)
-echo "/etc/default/gpsd file contents" > $DIR/gps.info
-echo;echo >> $DIR/gps.info
-cat /etc/default/gpsd >> $DIR/gps.info
-echo;echo;echo >> $DIR/gps.info
-echo "GPSD is $GPSD" >> $DIR/gps.info
-echo "Chrony is $CHRONY" >> $DIR/gps.info
-echo;echo;echo "#####TIME SOURCES#####" >> $DIR/gps.info
-chronyc sources -v >> $DIR/gps.info
+echo "/etc/default/gpsd file contents" >${DIR}/gps.info
+echo
+echo >>${DIR}/gps.info
+cat /etc/default/gpsd >>${DIR}/gps.info
+echo
+echo
+echo >>${DIR}/gps.info
+echo "GPSD is $GPSD" >>${DIR}/gps.info
+echo "Chrony is $CHRONY" >>${DIR}/gps.info
+echo
+echo
+echo "#####TIME SOURCES#####" >>${DIR}/gps.info
+chronyc sources -v >>${DIR}/gps.info
 
 #Check installed apps
-echo "Hotspot $HOTSPOT" > $DIR/apps.info
-echo "HS Tools $HSTOOLS" >> $DIR/apps.info
-echo "AX25 $AX25" >> $DIR/apps.info
-echo "GPS $GPS" >> $DIR/apps.info
-echo "Pulse $PULSE" >> $DIR/apps.info
-echo "ARDOP GUI $ARDOPGUI" >> $DIR/apps.info
-echo "CONKY $CONKY" >> $DIR/apps.info
-echo "HAMLIB $RIG" >> $DIR/apps.info
-echo "FLRIG $FLRIG" >> $DIR/apps.info
-echo "PAT $PAT" >> $DIR/apps.info
-echo "DIREWOLF $DIRE" >> $DIR/apps.info
-echo "Pat Menu $PATMENU" >> $DIR/apps.info
-echo "EES $EES" >> $DIR/apps.info
+echo "Hotspot $HOTSPOT" >${DIR}/apps.info
+echo "HS Tools $HSTOOLS" >>${DIR}/apps.info
+echo "AX25 $AX25" >>${DIR}/apps.info
+echo "GPS $GPS" >>${DIR}/apps.info
+echo "Pulse $PULSE" >>${DIR}/apps.info
+echo "ARDOP GUI $ARDOPGUI" >>${DIR}/apps.info
+echo "CONKY $CONKY" >>${DIR}/apps.info
+echo "HAMLIB $RIG" >>${DIR}/apps.info
+echo "FLRIG $FLRIG" >>${DIR}/apps.info
+echo "PAT $PAT" >>${DIR}/apps.info
+echo "DIREWOLF $DIRE" >>${DIR}/apps.info
+echo "Pat Menu $PATMENU" >>${DIR}/apps.info
+echo "EES $EES" >>${DIR}/apps.info
 
-cd $HOME/Desktop
-zip -r $CALL-diagnostic.zip $DIR > /dev/null 2>&1
+cd ${HOME}/Desktop || ! echo "Failure"
+zip -r ${CALL}-diagnostic.zip ${DIR} >/dev/null 2>&1
 
-rm -rf $DIR > /dev/null 2>&1
-clear;echo;echo
+rm -rf ${DIR} >/dev/null 2>&1
+clear
+echo
+echo
 
 cat <<EOF
 DONE!!
@@ -316,20 +318,10 @@ Email the diagnostic.zip file located on your desktop
 to km4ack@arrl.net along with a description of your issue
 and a link to the original forum post.
 
-All discussion/help is provided on the forum to 
+All discussion/help is provided on the forum to
 benefit the community at large.
 
 https://groups.io/g/KM4ACK-Pi/topics
 
 73, de KM4ACK
 EOF
-
-
-
-
-
-
-
-
-
-
