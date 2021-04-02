@@ -725,7 +725,7 @@ fi
 #----------------------------------------------------#
 #		ZYGRIB Viewer
 #----------------------------------------------------#
-if [ -f /usr/share/zygrib ]; then
+if [ -f /usr/bin/zyGrib ]; then
 	ZYGRIB=Installed
 else
 	ZYGRIB="Not Installed"
