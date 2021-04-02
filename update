@@ -761,6 +761,7 @@ else
 	else
 		GRIDCALC="is_latest_version"
 	fi
+fi
 
 CHECK
 ####################################################################
