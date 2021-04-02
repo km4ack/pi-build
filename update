@@ -981,11 +981,6 @@ if [ ${BUT} = 1 ] || [ ${BUT} = 252 ]; then
 	exit
 fi
 
-HAMCLOCKOLD(){
-#This is old code left for reference. Added as a function that is never called instead of commenting out.
-#This is no longer needed as the developer of hamclock changed the way it builds. Setting to less than
-#fullscreen is an option inside the application as of early 2021
-
 #check if hamclock is being installed
 HCCHECK=$(cat ${ADDITIONAL} | grep HAMCLOCK)
 if [ -n "$HCCHECK" ]; then
@@ -999,7 +994,7 @@ if [ -n "$HCCHECK" ]; then
 	sed -i 's/HAMCLOCK//' ${ADDITIONAL}
 	echo $HC >>${ADDITIONAL}
 fi
-}
+
 
 PATCHECK=$(cat ${ADDITIONAL} | grep PAT)
 if [ -n "$PATCHECK" ]; then
