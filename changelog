@@ -8,6 +8,7 @@ version=3.0.8
 		update hamclock to new style build
 		fix temp not changing to C in setconky (conky-prefs) - https://github.com/km4ack/pi-build/issues/218
 		add gridcalc software - https://github.com/km4ack/pi-build/issues/214
+		fix xastir update check
 		
 
 3.0.7		patch to fix flrig from not installing correctly https://github.com/km4ack/pi-build/issues/229
