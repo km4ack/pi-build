@@ -386,7 +386,7 @@ Categories=Network;HamRadio;
 EOF
 
 	sudo mv yaac.desktop /usr/share/applications/
-	unzip ${DIR}/YAAC.zip
+	unzip -o ${DIR}/YAAC.zip
 }
 
 ##################################
