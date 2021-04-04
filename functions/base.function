@@ -166,3 +166,30 @@ AX25() {
 PULSE() {
     sudo apt-get install -y pavucontrol
 }
+
+##################################
+#	GPS update tool
+##################################
+GPSUPDATE() {
+    #remove existing file if needed before installing
+    if [ -f ${HOME}/bin/gpsupdate ]; then
+        rm ${HOME}/bin/gpsupdate
+    fi
+
+    cd ${HOME}/bin || return
+    wget https://raw.githubusercontent.com/km4ack/pi-scripts/master/gpsupdate
+    chmod +x gpsupdate
+
+    cat >gpsupdate.desktop <<EOF
+[Desktop Entry]
+Name=GPS Update Tool
+GenericName=Used to change between GPS units
+Comment=Used to change between GPS units
+Exec=${HOME}/bin/gpsupdate
+Terminal=false
+Type=Application
+Categories=Utility
+EOF
+
+    sudo mv gpsupdate.desktop /usr/share/applications/
+}
