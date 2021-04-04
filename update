@@ -822,6 +822,7 @@ yad --center --list --checklist --width=600 --height=600 --separator="" \
 	false "HOTSPOT" "$HOTSPOT" "Hot Spot Generator for Portable Ops" \
 	false "HSTOOLS" "$HSTOOLS" "Tools to Manage HotSpot" \
 	false "GPS" "${GPS}" "GPS Software" \
+	false "GPSUPDATE" "${GPSUPDATE}" "Tool to Manage GPS Devices" \
 	false "ARDOP" "$ARDOP" "Mode for HF" \
 	false "ARDOPGUI" "$ARDOPGUI" "GUI for ARDOP" \
 	false "DIREWOLF" "$DIRE" "Software TNC" \
@@ -1041,7 +1042,6 @@ yad --center --list --checklist --width=600 --height=600 --separator="" \
 	false "BATT" "$BATT" "Battery Test Script" \
 	false "VNC" "$VNC" "VNC Viewer Application" \
 	false "ZYGRIB" "$ZYGRIB" "Grib File Viewer" \
-	false "GPSUPDATE" "${GPS}UPDATE" "Tool to Manage GPS Devices" \
 	--button="Exit":1 \
 	--button="Install/Update Selected":2 >${UTILITY}
 BUT=$?
