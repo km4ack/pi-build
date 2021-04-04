@@ -176,6 +176,7 @@ yad --center --list --checklist --width=600 --height=600 --separator="" \
 	false "HOTSPOT" "Hot Spot Generator for Portable Ops" \
 	false "HSTOOLS" "Tools to Manage Hot Spot" \
 	false "GPS" "GPS Software" \
+	false "GPSUPDATE" "Tool to Manage GPS Devices" \
 	false "ARDOP" "Modem for HF" \
 	false "ARDOPGUI" "GUI for ARDOP" \
 	false "HAMLIB" "Needed for Rig Control" \
@@ -191,7 +192,7 @@ if [ ${BUT} = 252 ] || [ ${BUT} = 1 ]; then
 fi
 
 if [ ${BUT} = 3 ]; then
-	BASEAPPS=(HOTSPOT HSTOOLS GPS ARDOP ARDOPGUI HAMLIB DIREWOLF AX25 PULSE)
+	BASEAPPS=(HOTSPOT HSTOOLS GPS ARDOP ARDOPGUI HAMLIB DIREWOLF AX25 PULSE GPSUPDATE)
 	for i in "${BASEAPPS[@]}"; do
 		echo "$i" >>${BASE}
 	done
@@ -416,7 +417,6 @@ yad --center --list --checklist --width=600 --height=600 --separator="" \
 	false "BATT" "Battery Test Script" \
 	false "VNC" "VNC Client Application" \
 	false "ZYGRIB" "Grib File Viewer" \
-	false "GPSUPDATE" "Tool to Manage GPS Devices" \
 	--button="Exit":1 \
 	--button="Check All and Continue":3 \
 	--button="Install Selected":2 >${UTILITY}
@@ -426,7 +426,7 @@ if [ ${BUT} = 252 ] || [ ${BUT} = 1 ]; then
 fi
 
 if [ ${BUT} = 3 ]; then
-	UTILAPPS=(DIPOLE CALLSIGN TEMPCONVERT GPARTED SHOWLOG PISTATS TELNET PITERM SECURITY YGATE BPQ BATT VNC ZYGRIB GPSUPDATE)
+	UTILAPPS=(DIPOLE CALLSIGN TEMPCONVERT GPARTED SHOWLOG PISTATS TELNET PITERM SECURITY YGATE BPQ BATT VNC ZYGRIB)
 	for i in "${UTILAPPS[@]}"; do
 		echo "$i" >>${UTILITY}
 	done
