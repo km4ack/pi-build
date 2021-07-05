@@ -98,6 +98,7 @@ FLWRAP() {
 #	FLDIGI
 ##################################
 FLDIGI() {
+	sudo apt install libudev-dev
 	#Determine latest FLDIGI
 	FLTAR=$(curl -s http://www.w1hkj.com/files/fldigi/ | grep .tar.gz | sed 's/<li><a\ href="//' | sed 's/">\ fldigi.*$//')
 	FLPKG=$(echo ${FLTAR} | sed 's/.tar.gz//')
