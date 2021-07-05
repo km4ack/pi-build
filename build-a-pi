@@ -440,6 +440,9 @@ ${MYPATH}/.funfacts &
 sudo apt-get -y upgrade
 sudo apt -y full-upgrade
 
+#fix issue 254 05JULY2021
+sudo sed -i 's/#hdmi_force_hotplug=1/hdmi_force_hotplug=1/' config.txt
+
 #set wallpaper
 #fix issue 193
 sudo cp $HOME/pi-build/bap-wallpaper.jpg /usr/share/rpd-wallpaper/
