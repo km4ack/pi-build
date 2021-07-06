@@ -769,6 +769,17 @@ else
 	fi
 fi
 
+#----------------------------------------------------#
+#		HAMRS
+#----------------------------------------------------#
+if [ ! -f /usr/local/bin/hamrs ]; then
+	HAMRS="Not_Installed"
+else
+HAMRS="Installed"
+fi
+
+
+
 CHECK
 ####################################################################
 ####################################################################
@@ -973,6 +984,7 @@ yad --center --list --checklist --width=600 --height=600 --separator="" \
 	false "PYQSO" "$PYQSO" "Logging Software" \
 	false "CQRLOG" "$CQRLOG" "Logging Software" \
 	false "XLOG" "$XLOG" "Logging Software" \
+	false "HAMRS" "$HAMRS" "Logging Software" \
 	false "QSSTV" "$QSSTV" "Slow scan TV" \
 	false "GRIDTRACKER" "$GRIDTRACK" "Track grids in WSJTX" \
 	false "HAMCLOCK" "$HAMCLOCK" "Clock for Ham Radio Ops" \
