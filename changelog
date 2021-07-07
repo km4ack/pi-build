@@ -9,6 +9,11 @@ version=3.0.8
 		fix temp not changing to C in setconky (conky-prefs) - https://github.com/km4ack/pi-build/issues/218
 		add gridcalc software - https://github.com/km4ack/pi-build/issues/214
 		fix xastir update check
+		fix fldigi not installing https://github.com/km4ack/pi-build/issues/263
+		fix gridtracker not installing/updating https://github.com/km4ack/pi-build/issues/253
+		fix display issue https://github.com/km4ack/pi-build/issues/254
+		add HAMRS.app logging software - https://github.com/km4ack/pi-build/issues/264
+		add packet search - Winlink Packet Tool
 		
 
 3.0.7		patch to fix flrig from not installing correctly https://github.com/km4ack/pi-build/issues/229
