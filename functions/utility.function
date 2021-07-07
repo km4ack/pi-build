@@ -476,3 +476,38 @@ More information is available in this video
 https://youtu.be/I7jLVgnnUW0
 EOF
 }
+
+
+##################################
+#	Packet Search
+##################################
+PACKETSEARCH(){
+cd ${HOME}/bin || return
+wget --tries 2 --connect-timeout=60 https://raw.githubusercontent.com/km4ack/pi-scripts/master/packetsearch
+chmod +x packetsearch
+
+cat > /run/user/$UID/packetsearch.desktop <<EOF
+[Desktop Entry]
+Name=PacketSearch
+GenericName=Search for Winlink Packet Gateways
+Comment=Search for Winlink Packet Gateways
+Exec=$HOME/bin/packetsearch
+Icon=/usr/share/icons/gnome/32x32/apps/openterm.png
+Terminal=true
+Type=Application
+Categories=Utility;HamRadio
+EOF
+
+sudo mv /run/user/$UID/packetsearch.desktop /usr/share/applications/
+
+}
+
+
+
+
+
+
+
+
+
+
