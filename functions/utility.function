@@ -502,8 +502,32 @@ sudo mv /run/user/$UID/packetsearch.desktop /usr/share/applications/
 
 }
 
+##################################
+#	PiQtSoundModem
+##################################
+#Documentation - https://www.cantab.net/users/john.wiseman/Documents/QtSoundModem.html
 
+QTSOUND(){
+sudo apt install libqt5serialbus5
+cd ${HOME}/bin || return
+wget --tries 2 --connect-timeout=60 https://www.cantab.net/users/john.wiseman/Downloads/Beta/piQtSoundModem
+chmod +x piQtSoundModem
 
+cat > /run/user/$UID/qtsoundmodem.desktop <<EOF
+[Desktop Entry]
+Name=piQtSoundModem
+GenericName=port of UZ7HO's SoundModem
+Comment=port of UZ7HO's SoundModem
+Exec=$HOME/bin/piQtSoundModem
+Icon=/usr/share/icons/gnome/32x32/apps/preferences-system-sharing.png
+Terminal=false
+Type=Application
+Categories=Utility;HamRadio
+
+sudo mv /run/user/$UID/qtsoundmodem.desktop /usr/share/applications/
+
+EOF
+}
 
 
 
