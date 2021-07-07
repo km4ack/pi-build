@@ -778,7 +778,22 @@ else
 HAMRS="Installed"
 fi
 
+#----------------------------------------------------#
+#			PacketSearch
+#----------------------------------------------------#
+echo "Checking Packet Search"
+	if [ ! -f $HOME/bin/packetsearch ]; then
+		PACKETSEARCH="Not_Installed"
+	else
+		PACKETSEARCH=$(grep VERSION $HOME/bin/packetsearch | sed 's/VERSION=//')
+		NEWPACKETSEARCH=$(curl -s https://raw.githubusercontent.com/km4ack/pi-scripts/master/packetsearch | grep VERSION | sed 's/VERSION=//')
 
+		if (($(echo "${NEWFLNET} ${FLNET}" | awk '{print ($1 > $2)}'))); then
+			PACKETSEARCH=NEEDS-UPDATE
+		else
+			PACKETSEARCH="is_latest_version"
+		fi
+	fi
 
 CHECK
 ####################################################################
@@ -1040,6 +1055,7 @@ yad --center --list --checklist --width=600 --height=600 --separator="" \
 	--window-icon=${LOGO} --image-on-top --text-align=center \
 	--text="<big><big><b>UTILITIES</b></big></big>" --title="Update" \
 	false "DIPOLE" "$DIPOLE" "Dipole Calculator" \
+	false "PACKETSEARCH" "$PACKETSEARCH" "Winlink Packet Tool" \
 	false "CALLSIGN" "${CALL}SIGN" "Call Sign Lookup Utility" \
 	false "TEMPCONVERT" "$TEMPCONVERT" "Temperature Converter" \
 	false "GPARTED" "$GPARTED" "Disk Utility Application" \
