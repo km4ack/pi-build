@@ -405,6 +405,7 @@ yad --center --list --checklist --width=600 --height=600 --separator="" \
 	--print-column=2 --window-icon=${LOGO} --image-on-top --text-align=center \
 	--text="<b>Utilities</b>" --title="Build-a-Pi" \
 	false "DIPOLE" "Dipole Calculator" \
+	false "PACKETSEARCH" "Winlink Packet Tool" \
 	false "CALLSIGN" "Call sign lookup" \
 	false "TEMPCONVERT" "Temperature Converter" \
 	false "GPARTED" "Disk Utility Tool" \
@@ -427,7 +428,7 @@ if [ ${BUT} = 252 ] || [ ${BUT} = 1 ]; then
 fi
 
 if [ ${BUT} = 3 ]; then
-	UTILAPPS=(DIPOLE CALLSIGN TEMPCONVERT GPARTED SHOWLOG PISTATS TELNET PITERM SECURITY YGATE BPQ BATT VNC ZYGRIB)
+	UTILAPPS=(DIPOLE PACKETSEARCH CALLSIGN TEMPCONVERT GPARTED SHOWLOG PISTATS TELNET PITERM SECURITY YGATE BPQ BATT VNC ZYGRIB)
 	for i in "${UTILAPPS[@]}"; do
 		echo "$i" >>${UTILITY}
 	done
