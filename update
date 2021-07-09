@@ -795,6 +795,15 @@ echo "Checking Packet Search"
 		fi
 	fi
 
+	#----------------------------------------------------#
+	#		piQtSoundModem
+	#----------------------------------------------------#
+	if [ -f /usr/local/bin/piQtSoundModem ]; then
+		QTSOUND="Installed"
+	else
+		QTSOUND="Not Installed"
+	fi
+
 CHECK
 ####################################################################
 ####################################################################
@@ -1064,6 +1073,7 @@ yad --center --list --checklist --width=600 --height=600 --separator="" \
 	false "PISTATS" "$PISTATS" "Pi3/4 Stats Monitor" \
 	false "TELNET" "$TEL" "Telnet Protocol" \
 	false "PITERM" "$PITERM" "PiQTermTCP Terminal Program" \
+	false "QTSOUND" "$QTSOUND" "PiQtSoundModem" \
 	false "SECURITY" "$SECURITY" "File Encryption Software" \
 	false "YGATE" "$YGATE" "Yaesu APRS Software" \
 	false "BPQ" "$BPQ" "LinBPQ Software" \
