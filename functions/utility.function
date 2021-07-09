@@ -186,10 +186,10 @@ by connecting to the internet or attaching a GPS" \
 ##################################
 PISTATS() {
     cd ${HOME} || return
-    CUR=$(curl -s http://www.w1hkj.com/pi3/ | grep .tgz | sed 's/.*pistats//' | sed 's/<\/a><br>//')
-    wget http://www.w1hkj.com/pi3/pistats${CUR}
-    tar -xzvf pistats${CUR}
-    rm pistats${CUR}
+    CUR=$(curl http://www.w1hkj.com/pi3/ | grep tgz | sed 's/^.*href="//;s/">.*//')
+    wget http://www.w1hkj.com/pi3/${CUR}
+    tar -xzvf ${CUR}
+    rm ${CUR}
     PISTATDIR=$(ls ${HOME} | grep pistats)
     cd ${PISTATDIR} || return
     sudo apt-get install -y libfltk1.3-dev
