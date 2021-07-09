@@ -14,6 +14,7 @@ version=3.0.8
 		fix display issue https://github.com/km4ack/pi-build/issues/254
 		add HAMRS.app logging software - https://github.com/km4ack/pi-build/issues/264
 		add packet search - Winlink Packet Tool
+		add piQtSoundModem - https://github.com/km4ack/pi-build/issues/256
 		
 
 3.0.7		patch to fix flrig from not installing correctly https://github.com/km4ack/pi-build/issues/229
