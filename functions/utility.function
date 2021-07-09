@@ -519,7 +519,7 @@ cat > /run/user/$UID/qtsoundmodem.desktop <<EOF
 Name=piQtSoundModem
 GenericName=port of UZ7HO's SoundModem
 Comment=port of UZ7HO's SoundModem
-Exec=$HOME/bin/piQtSoundModem
+Exec=/usr/local/bin/piQtSoundModem
 Icon=/usr/share/icons/gnome/32x32/apps/preferences-system-sharing.png
 Terminal=false
 Type=Application
