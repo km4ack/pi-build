@@ -509,9 +509,10 @@ sudo mv /run/user/$UID/packetsearch.desktop /usr/share/applications/
 
 QTSOUND(){
 sudo apt install libqt5serialbus5
-cd ${HOME}/bin || return
+cd ${HOME}/Downloads || return
 wget --tries 2 --connect-timeout=60 https://www.cantab.net/users/john.wiseman/Downloads/Beta/piQtSoundModem
 chmod +x piQtSoundModem
+sudo mv piQtSoundModem /usr/local/bin
 
 cat > /run/user/$UID/qtsoundmodem.desktop <<EOF
 [Desktop Entry]
