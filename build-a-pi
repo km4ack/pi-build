@@ -413,6 +413,7 @@ yad --center --list --checklist --width=600 --height=600 --separator="" \
 	false "PISTATS" "Pi3/4 Stats Monitor" \
 	false "TELNET" "Telnet Protocol" \
 	false "PITERM" "piQtTermTCP Terminal Program" \
+	false "QTSOUND" "piQtSoundModem" \
 	false "SECURITY" "File Encryption Software" \
 	false "YGATE" "Yaesu APRS Software" \
 	false "BPQ" "LinBPQ Software" \
@@ -428,7 +429,7 @@ if [ ${BUT} = 252 ] || [ ${BUT} = 1 ]; then
 fi
 
 if [ ${BUT} = 3 ]; then
-	UTILAPPS=(DIPOLE PACKETSEARCH CALLSIGN TEMPCONVERT GPARTED SHOWLOG PISTATS TELNET PITERM SECURITY YGATE BPQ BATT VNC ZYGRIB)
+	UTILAPPS=(DIPOLE PACKETSEARCH CALLSIGN TEMPCONVERT GPARTED SHOWLOG PISTATS TELNET PITERM QTSOUND SECURITY YGATE BPQ BATT VNC ZYGRIB)
 	for i in "${UTILAPPS[@]}"; do
 		echo "$i" >>${UTILITY}
 	done
