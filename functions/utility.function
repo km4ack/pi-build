@@ -525,9 +525,8 @@ Terminal=false
 Type=Application
 Categories=Utility;HamRadio
 
-sudo mv /run/user/$UID/qtsoundmodem.desktop /usr/share/applications/
-
 EOF
+sudo mv /run/user/$UID/qtsoundmodem.desktop /usr/share/applications/
 }
 
 
