@@ -320,7 +320,7 @@ GRIDTRACKER() {
 	tar -xzvf $GRIDTAR
 	rm ./*.gz
 	OLDFOLDER=$(ls | grep Grid)
-	mv $OLDFOLER GridTracker
+	mv "$OLDFOLDER" $HOME/GridTracker
 	cat >gridtracker.desktop <<EOF
 [Desktop Entry]
 Name=GridTracker
