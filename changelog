@@ -18,6 +18,7 @@ version=3.0.8
 		add new menu sub categories
 		fix garbled conky display (#213) Thanks Terry K4HNT!
 		fix VNC viewer download
+		update PiStats url to new location
 		
 
 3.0.7		patch to fix flrig from not installing correctly https://github.com/km4ack/pi-build/issues/229
