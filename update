@@ -1065,7 +1065,7 @@ yad --center --list --checklist --width=600 --height=600 --separator="" \
 	--text="<big><big><b>UTILITIES</b></big></big>" --title="Update" \
 	false "DIPOLE" "$DIPOLE" "Dipole Calculator" \
 	false "PACKETSEARCH" "$PACKETSEARCH" "Winlink Packet Tool" \
-	false "CALLSIGN" "${CALL}SIGN" "Call Sign Lookup Utility" \
+	false "CALLSIGN" "${CALLSIGN}" "Call Sign Lookup Utility" \
 	false "TEMPCONVERT" "$TEMPCONVERT" "Temperature Converter" \
 	false "GPARTED" "$GPARTED" "Disk Utility Application" \
 	false "RTC" "$RTC" "Real Time Clock" \
