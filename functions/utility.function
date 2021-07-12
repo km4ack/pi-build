@@ -404,7 +404,7 @@ EOF
 ##################################
 VNC() {
     cd ${HOME} || return
-    PACKAGE=$(curl -s https://www.realvnc.com/en/connect/download/viewer/raspberrypi/ | grep .deb | awk '{print $2}' |
+    PACKAGE=$(curl -s https://www.realvnc.com/en/connect/download/viewer/raspberrypi/ | grep ARM.deb | awk '{print $2}' |
         sed 's/href="\/download\/file\/viewer.files\///' | sed 's/"//')
 
     wget https://realvnc.com/download/file/viewer.files/${PACKAGE}
