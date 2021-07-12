@@ -507,7 +507,7 @@ sudo mv build-a-pi.desktop /usr/share/applications/
 
 #create new menu subcategories. One for FLDIGI Suite and
 #one for Build a Pi.
-bash ${HOME}/bin/menu-update
+bash ${HOME}/pi-build/menu-update
 
 #####################################
 #	Install Base Apps
