@@ -1109,6 +1109,10 @@ sudo apt-get -y update
 sudo apt-get -y upgrade
 sudo apt -y full-upgrade
 
+#create new menu subcategories. One for FLDIGI Suite and
+#one for Build a Pi.
+bash ${HOME}/bin/menu-update
+
 #####################################
 #	Install Base Apps
 #####################################
