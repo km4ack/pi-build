@@ -143,7 +143,7 @@ CONKY() {
 Name=Conky
 Comment=Conky
 GenericName=Conky Screen Background Monitor
-Exec=conky
+Exec=conky --pause=5
 Icon=/home/pi/pi-build/conky/conky-logo.png
 Type=Application
 Encoding=UTF-8
