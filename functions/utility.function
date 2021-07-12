@@ -187,7 +187,7 @@ by connecting to the internet or attaching a GPS" \
 PISTATS() {
     cd ${HOME} || return
     CUR=$(curl http://www.w1hkj.com/PI/pistats.html | grep tgz | sed 's/^.*href="//;s/">.*//')
-    wget http://www.w1hkj.com/pi3/${CUR}
+    wget http://www.w1hkj.com/PI/${CUR}
     tar -xzvf ${CUR}
     rm ${CUR}
     PISTATDIR=$(ls ${HOME} | grep pistats)
