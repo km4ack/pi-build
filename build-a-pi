@@ -336,7 +336,6 @@ yad --center --list --checklist --width=600 --height=600 --separator="" \
 	false "WSJTX" "Weak Signal Digital Mode Software" \
 	false "PYQSO" "Logging Software" \
 	false "CQRLOG" "Logging Software" \
-	false "XLOG" "Logging Software" \
 	false "HAMRS" "Logging Software" \
 	false "EES" "KM4ACK Emergency Email Server" \
 	false "QSSTV" "Slow Scan TV" \
@@ -358,7 +357,7 @@ fi
 
 if [ ${BUT} = 3 ]; then
 	ADDAPPS=(CONKY PI-APRS CHIRP GARIM PAT PAT-MENU JS8CALL M0IAX WSJTX PYQSO
-		CQRLOG XLOG HAMRS EES QSSTV GRIDTRACKER HAMCLOCK PROPAGATION YAAC XASTIR GPREDICT TQSL
+		CQRLOG HAMRS EES QSSTV GRIDTRACKER HAMCLOCK PROPAGATION YAAC XASTIR GPREDICT TQSL
 		GRIDCALC)
 
 	for i in "${ADDAPPS[@]}"; do
