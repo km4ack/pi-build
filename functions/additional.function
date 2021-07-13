@@ -596,7 +596,8 @@ TQSL() {
 ##################################
 #	XLOG
 ##################################
-
+#xlog removed due to xlog bug. - https://github.com/km4ack/pi-build/issues/215
+#This code left so BAP can support it again once the bug is resolved.
 XLOG() {
 	#verify hamlib installed
 	if ! hash rigctld 2>/dev/null; then
