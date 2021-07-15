@@ -1,4 +1,26 @@
-version=3.0.7
+version=3.0.8
+3.0.8
+		add support to direwolf for CM108/CM119 - https://github.com/km4ack/pi-build/issues/243
+		fix zygrib update error - https://github.com/km4ack/pi-build/issues/235
+		mark libjpg9 as manual install - https://github.com/km4ack/pi-build/issues/233
+		add autoremove back to BAP primary script - https://github.com/km4ack/pi-build/issues/233
+		fix wallpaper path - https://github.com/km4ack/pi-build/issues/230
+		update hamclock to new style build
+		fix temp not changing to C in setconky (conky-prefs) - https://github.com/km4ack/pi-build/issues/218
+		add gridcalc software - https://github.com/km4ack/pi-build/issues/214
+		fix xastir update check
+		fix fldigi not installing https://github.com/km4ack/pi-build/issues/263
+		fix gridtracker not installing/updating https://github.com/km4ack/pi-build/issues/253
+		fix display issue https://github.com/km4ack/pi-build/issues/254
+		add HAMRS.app logging software - https://github.com/km4ack/pi-build/issues/264
+		add packet search - Winlink Packet Tool
+		add piQtSoundModem - https://github.com/km4ack/pi-build/issues/256
+		add new menu sub categories
+		fix garbled conky display (#213) Thanks Terry K4HNT!
+		fix VNC viewer download
+		update PiStats url to new location
+		remove support for xlog - https://github.com/km4ack/pi-build/issues/215
+		
 
 3.0.7		patch to fix flrig from not installing correctly https://github.com/km4ack/pi-build/issues/229
 

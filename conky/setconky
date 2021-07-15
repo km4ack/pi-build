@@ -49,7 +49,7 @@ sed -i '/#TEMP/a \
 ${font Arial:bold:size=10}${color White}Temp: $alignr ${exec /opt/vc/bin/vcgencmd measure_temp | cut -c6-9} C' $TEMPFILE
 elif [ "$TEMP" = 'C' ] && [ "$CS" = 'conky-small' ]; then
 #delete F line
-echo
+${font Arial:bold:size=08}${color White}Temp: $alignr ${exec /opt/vc/bin/vcgencmd measure_temp | cut -c6-9} C' $TEMPFILE
 elif [ "$TEMP" = 'C' ] && [ "$CS" = 'conky-7inch' ]; then
 #delete F line
 echo
