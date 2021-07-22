@@ -24,7 +24,7 @@ FLSTART() {
 	#	DEPENDS
 	##################################
 	#install needed depends
-	sudo apt-get install -y libfltk1.3-dev libjpeg9-dev libxft-dev libxinerama-dev libxcursor-dev libsndfile1-dev libsamplerate0-dev portaudio19-dev libpulse-dev libusb-1.0-0-dev texinfo
+	sudo apt-get install -y libfltk1.3-dev libjpeg9-dev libxft-dev libxinerama-dev libxcursor-dev libsndfile1-dev libsamplerate0-dev portaudio19-dev libpulse-dev libusb-1.0-0-dev texinfo libudev-dev
 
 	##################################
 	#	FLXMLRPC
@@ -98,7 +98,6 @@ FLWRAP() {
 #	FLDIGI
 ##################################
 FLDIGI() {
-	sudo apt install libudev-dev
 	#Determine latest FLDIGI
 	FLTAR=$(curl -s http://www.w1hkj.com/files/fldigi/ | grep .tar.gz | sed 's/<li><a\ href="//' | sed 's/">\ fldigi.*$//')
 	FLPKG=$(echo ${FLTAR} | sed 's/.tar.gz//')
