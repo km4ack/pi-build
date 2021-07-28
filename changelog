@@ -21,6 +21,7 @@ version=3.0.8
 		update PiStats url to new location
 		remove support for xlog - https://github.com/km4ack/pi-build/issues/215
 		fix qsstv install - https://github.com/km4ack/pi-build/issues/225
+		fix error in conky-prefs script
 		
 
 3.0.7		patch to fix flrig from not installing correctly https://github.com/km4ack/pi-build/issues/229
