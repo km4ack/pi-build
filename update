@@ -1108,10 +1108,6 @@ sudo apt-get -y update
 sudo apt-get -y upgrade
 sudo apt -y full-upgrade
 
-#create new menu subcategories. One for FLDIGI Suite and
-#one for Build a Pi.
-bash ${HOME}/pi-build/menu-update
-
 #####################################
 #	Install Base Apps
 #####################################
@@ -1157,6 +1153,10 @@ while read i; do
 	source ${FUNCTIONS}/utility.function
 	$i
 done <${UTILITY}
+
+#create new menu subcategories. One for FLDIGI Suite and
+#one for Build a Pi.
+bash ${HOME}/pi-build/menu-update
 
 #####################################
 #	END CLEANUP
