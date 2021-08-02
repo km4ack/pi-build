@@ -504,10 +504,6 @@ EOF
 
 sudo mv build-a-pi.desktop /usr/share/applications/
 
-#create new menu subcategories. One for FLDIGI Suite and
-#one for Build a Pi.
-bash ${HOME}/pi-build/menu-update
-
 #####################################
 #	Install Base Apps
 #####################################
@@ -551,6 +547,10 @@ source ${FUNCTIONS}/utility.function
 while read i; do
 	$i
 done <${UTILITY}
+
+#create new menu subcategories. One for FLDIGI Suite and
+#one for Build a Pi.
+bash ${HOME}/pi-build/menu-update
 
 #####################################
 #	END CLEANUP
