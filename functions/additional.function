@@ -295,7 +295,19 @@ QSSTV() {
 	make
 	sudo make install
 
-	sudo sed -i 's/Education;/Network;HamRadio;/' /usr/local/share/applications/qsstv.desktop
+cat >qsstv.desktop <<EOF
+[Desktop Entry]
+Name=QSSTV
+Comment=Slow Scan TV
+GenericName=QSSTV
+Exec=/usr/local/bin/qsstv
+Icon=${HOME}/GridTracker/gridtracker.png
+Type=Application
+Terminal=false
+Categories=HamRadio;
+EOF
+
+	sudo mv qsstv.desktop /usr/share/applications/
 
 }
 ##################################
