@@ -1,3 +1,26 @@
 #!/bin/bash
+
+#This test-patch script should serve as a 
+#template for future patch scripts.
+#20210805 KM4ACK
+
+PATCHNAME=test-patch20210805
+PATCHFILE=$HOME/.config/patch
+touch PATCHFILE
+
+#check to see if patch already applied
+PATCHCHECK=$(grep "$PATCHNAME" $PATCHFILE)
+
+#if not, then apply the patch
+if [ -z $PATCHCHECK ]; then
 clear;echo;echo
 echo "This is a test patch"
+echo "$PATCHNAME" >> $PATCHFILE
+sleep 3
+bash $HOME/pi-build/patch/patch
+else
+#if patch previously applied, notify user and exit
+echo "$PATCHNAME already applied to this system"
+sleep 3
+exit
+fi
