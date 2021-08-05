@@ -54,6 +54,9 @@ echo "bind-dynamic" >> /etc/dnsmasq.conf
 echo "server=8.8.8.8" >> /etc/dnsmasq.conf
 echo "domain-needed" >> /etc/dnsmasq.conf
 echo "bogus-priv" >> /etc/dnsmasq.conf
+# these two lines make it so you can connect to your pi using piname.local
+echo "domain=local" >> /etc/dnsmasq.conf
+echo "local=/local/" >> /etc/dnsmasq.conf
 echo "dhcp-range=10.10.10.150,10.10.10.200,255.255.255.0,12h" >> /etc/dnsmasq.conf
 echo "#Set up redirect for email.com" >> /etc/dnsmasq.conf
 echo "dhcp-option=3,10.10.10.10" >> /etc/dnsmasq.conf
