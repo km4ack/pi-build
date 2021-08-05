@@ -4,6 +4,12 @@
 #template for future patch scripts.
 #20210805 KM4ACK
 
+HEADER(){
+clear;echo;echo "====================="
+echo "Build a Pi Patch Tool"
+echo "====================="
+}
+
 PATCHNAME=test-patch20210805
 PATCHFILE=$HOME/.config/patch
 touch $PATCHFILE
@@ -21,6 +27,7 @@ bash $HOME/pi-build/patch/patch
 else
 #if patch previously applied, notify user and exit
 clear;echo;echo
+HEADER
 echo "$PATCHNAME already applied to this system"
 sleep 3
 bash $HOME/pi-build/patch/patch
