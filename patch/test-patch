@@ -10,20 +10,28 @@ echo "Build a Pi Patch Tool"
 echo "====================="
 }
 
+#Give this patch a unique name. A good idea is
+#to give it the application name that is being 
+#patched followed by the date. ie FLDIDI20210805
+
 PATCHNAME=test-patch20210805
+
 PATCHFILE=$HOME/.config/patch
 touch $PATCHFILE
 
 #check to see if patch already applied
 PATCHCHECK=$(grep "$PATCHNAME" $PATCHFILE)
 
-#if not, then apply the patch
 if [ -z $PATCHCHECK ]; then
+#if patch hasn't been applied before, apply it now
 clear;echo;echo
 echo "This is a test patch"
+#write patch name to a file so we can
+#look and see if it has been applied before.
 echo "$PATCHNAME" >> $PATCHFILE
 sleep 3
 bash $HOME/pi-build/patch/patch
+
 else
 #if patch previously applied, notify user and exit
 clear;echo;echo
