@@ -6,7 +6,7 @@
 
 PATCHNAME=test-patch20210805
 PATCHFILE=$HOME/.config/patch
-touch PATCHFILE
+touch $PATCHFILE
 
 #check to see if patch already applied
 PATCHCHECK=$(grep "$PATCHNAME" $PATCHFILE)
