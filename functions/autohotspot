@@ -13,12 +13,11 @@ shackwifi=$1
 shackpass=$2
 wifipasswd=$3
 #escape all "&" incase used in HS password
-wifipasswd=$(sed 's|&|\\&|g' <<< $wifipasswd)
-
+wifipasswd=$(sed 's|&|\\&|g' <<<${wifipasswd})
 
 #unblock wifi
 #needed after buster 20200205
-rfkill unblock all > /dev/null 2>&1
+rfkill unblock all >/dev/null 2>&1
 
 #install hostapd, dnsmasq
 apt-get install -y hostapd
@@ -31,18 +30,18 @@ systemctl unmask hostapd
 systemctl disable hostapd
 systemctl disable dnsmasq
 
-mkdir -p $HOME/temp
-cd $HOME/temp
+mkdir -p ${HOME}/temp
+cd ${HOME}/temp || return
 
 wget http://www.raspberryconnect.com/images/Autohotspot/autohotspot-95-4/hostapd.txt
 
 #set new hotspot passwd
-sed -i "s|wpa_passphrase=1234567890|wpa_passphrase=$wifipasswd|" $HOME/temp/hostapd.txt
+sed -i "s|wpa_passphrase=1234567890|wpa_passphrase=${wifipasswd}|" ${HOME}/temp/hostapd.txt
 #set country to US
-sed -i 's/country_code=GB/country_code=US/' $HOME/temp/hostapd.txt
+sed -i 's/country_code=GB/country_code=US/' ${HOME}/temp/hostapd.txt
 
 #move hostapd to correct location
-mv $HOME/temp/hostapd.txt /etc/hostapd/hostapd.conf
+mv ${HOME}/temp/hostapd.txt /etc/hostapd/hostapd.conf
 
 sed -i s'/#DAEMON_CONF=""/DAEMON_CONF="\/etc\/hostapd\/hostapd.conf"/' /etc/default/hostapd
 sed -i s'/DAEMON_OPTS=""/#DAEMON_OPTS=""/' /etc/default/hostapd
@@ -64,15 +63,14 @@ echo "address=/email.com/10.10.10.10" >> /etc/dnsmasq.conf
 
 mv /etc/network/interfaces /etc/network/interfaces.org
 
-echo "source-directory /etc/network/interfaces.d" >> /etc/network/interfaces
+echo "source-directory /etc/network/interfaces.d" >>/etc/network/interfaces
 
-
-echo "nohook wpa_supplicant" >> /etc/dhcpcd.conf
+echo "nohook wpa_supplicant" >>/etc/dhcpcd.conf
 
 #setup ip forward
 sed 's/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/' /etc/sysctl.conf
 
-cd $HOME/temp
+cd ${HOME}/temp || return
 
 wget http://www.raspberryconnect.com/images/autohotspotN/autohotspotn-95-4/autohotspot-service.txt
 
@@ -85,13 +83,12 @@ systemctl enable autohotspot.service
 #check if iw installed. install if not
 
 iwcheck=$(dpkg --get-selections | grep -w "iw")
-if [ -z "iw" ]
-then
-apt-get install iw
+if [ -z "iw" ]; then #THIS MIGHT NEED TO SOME LOOKING AT -- SEE SC2157
+    apt-get install iw
 fi
 
 #install autohotspot script
-cd $HOME/temp
+cd ${HOME}/temp || return
 wget http://www.raspberryconnect.com/images/autohotspotN/autohotspotn-95-4/autohotspotN.txt
 #mod ip address for our custom setup
 sed -i 's/192.168.50.5/10.10.10.10/' autohotspotN.txt
@@ -99,8 +96,8 @@ mv autohotspotN.txt /usr/bin/autohotspotN
 chmod +x /usr/bin/autohotspotN
 
 #add shack wifi to wpa_supplicant.conf
-echo "network={" >> /etc/wpa_supplicant/wpa_supplicant.conf
-echo "ssid=\"$shackwifi\"" >> /etc/wpa_supplicant/wpa_supplicant.conf
-echo "psk=\"$shackpass\"" >> /etc/wpa_supplicant/wpa_supplicant.conf
-echo "key_mgmt=WPA-PSK" >> /etc/wpa_supplicant/wpa_supplicant.conf
-echo "}" >> /etc/wpa_supplicant/wpa_supplicant.conf
+echo "network={" >>/etc/wpa_supplicant/wpa_supplicant.conf
+echo "ssid=\"$shackwifi\"" >>/etc/wpa_supplicant/wpa_supplicant.conf
+echo "psk=\"$shackpass\"" >>/etc/wpa_supplicant/wpa_supplicant.conf
+echo "key_mgmt=WPA-PSK" >>/etc/wpa_supplicant/wpa_supplicant.conf
+echo "}" >>/etc/wpa_supplicant/wpa_supplicant.conf

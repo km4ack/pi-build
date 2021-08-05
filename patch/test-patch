@@ -1,0 +1,3 @@
+#!/bin/bash
+clear;echo;echo
+echo "This is a test patch"
