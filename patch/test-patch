@@ -20,7 +20,8 @@ sleep 3
 bash $HOME/pi-build/patch/patch
 else
 #if patch previously applied, notify user and exit
+clear;echo;echo
 echo "$PATCHNAME already applied to this system"
 sleep 3
-exit
+bash $HOME/pi-build/patch/patch
 fi
