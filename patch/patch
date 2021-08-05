@@ -1,0 +1,63 @@
+#!/bin/bash
+
+#alpha script to test a patch system for quick fixes in BAP
+#KM4ACK 20210805
+
+DIR=/run/user/$UID/
+#Setup temp directory for BAP patches and download patches
+cd $DIR
+git init pi-build
+cd pi-build
+git remote add -f origin https://github.com/km4ack/pi-build.git
+git config core.sparseCheckout true
+echo "/patch" >> .git/info/sparse-checkout
+git pull origin dev
+
+HEADER(){
+clear;echo;echo "====================="
+echo "Build a Pi Patch Tool"
+echo "====================="
+}
+
+PATCHLIST(){
+BAPDIR=/run/user/$UID/pi-build/patch
+HEADER
+echo;echo "For patch description please visit 
+https://github.com/km4ack/pi-build/blob/dev/patch/readme"
+echo;echo "Current patches available."
+echo "========================================"
+cd $BAPDIR
+ls
+echo "========================================"
+
+echo;echo 'Enter "exit" to exit without applying any patch'
+echo
+read -p "Which patch would you like to apply? " PATCHNAME
+
+if [ $PATCHNAME = "exit" ];then
+echo "no patch applied"
+sleep 3
+rm -rf /run/user/$UID/pi-build
+exit
+fi
+
+#verify patch exist
+CHECK=$(ls $BAPDIR | grep $PATCHNAME)
+if [ -z $CHECK ];then
+clear
+HEADER
+echo;echo "Patch not found. Please verify spelling.
+Patch names are case sensitive"
+echo
+read -n 1 -s -r -p "Press any key to continue"
+PATCHLIST
+fi
+}
+PATCHLIST
+
+
+
+bash $PATCHNAME
+
+
+rm -rf /run/user/$UID/pi-build
