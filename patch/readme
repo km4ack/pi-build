@@ -1,1 +1,1 @@
-This directory holds patches that may be needed for a Build a Pi user
+This directory holds patches that may be needed for a Build a Pi user. Currently it only holds a test patch that does nothing more than echo to the terminal. This readme file will be used in the future to provide a description of each patch.
