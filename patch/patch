@@ -35,7 +35,7 @@ echo
 read -p "Which patch would you like to apply? " PATCHNAME
 
 if [ $PATCHNAME = "exit" ];then
-echo "no patch applied"
+echo "exiting....."
 sleep 3
 rm -rf /run/user/$UID/pi-build
 exit
