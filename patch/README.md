@@ -1,5 +1,5 @@
 # Description
-Occasionally small changes are needed to the Build a Pi code. These changes are usually due to a temporary or minor issue that needs to be addressed but doesn't warrent a full release of BAP. This directory holds those patches. Below you will find a description for each patch that is currently available. If a patch is currently available, the Build a Pi Update Tool will notify you and guide you through installing the patch.
+Occasionally small changes (patches) are needed for the Build a Pi code. These changes are usually due to a temporary or minor issue that needs to be addressed but doesn't warrent a full release of BAP. This directory holds those patches. Below you will find a description for each patch that is currently available. If a patch is currently available, the Build a Pi Update Tool will notify you and guide you through installing the patch.
 
 
 
