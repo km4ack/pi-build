@@ -123,7 +123,7 @@ if [ ${PATCHCHECK} = "YES" ]; then
 cat <<EOF >${MYPATH}/patch.txt
 One or more patch scripts are currently
 available for Build a Pi. Learn more at
-https://github.com/km4ack/pi-build/blob/dev/patch/readme
+https://github.com/km4ack/pi-build/tree/dev/patch
 
 Would you like to review/apply 
 available patch scripts?
