@@ -4,12 +4,6 @@
 #template for future patch scripts.
 #20210805 KM4ACK
 
-HEADER(){
-clear;echo;echo "====================="
-echo "Build a Pi Patch Tool"
-echo "====================="
-}
-
 #Give this patch a unique name. A good idea is
 #to give it the application name that is being 
 #patched followed by the date. ie FLDIDI20210805
@@ -18,20 +12,17 @@ PATCHNAME=test-patch20210805
 
 PATCHFILE=$HOME/.config/patch
 touch $PATCHFILE
-
-#check to see if patch already applied
-PATCHCHECK=$(grep "$PATCHNAME" $PATCHFILE)
-
-if [ -z $PATCHCHECK ]; then
-#if patch hasn't been applied before, apply it now
+###############################
+#Patch script commands go here#
+###############################
 clear;echo;echo
 echo "This is a test patch"
-#write patch name to a file so we can
-#look and see if it has been applied before.
-echo "$PATCHNAME" >> $PATCHFILE
 
-else
-#if patch previously applied, notify user and exit
-echo "$PATCHNAME already applied to this system"
-exit 1
-fi
+
+#############################################
+#write patch name to a file so we can       #
+#look and see if it has been applied before.#
+#This is checked by the patch-menu script   #
+#before running the patch                   #
+#############################################
+echo "$PATCHNAME" >> $PATCHFILE
