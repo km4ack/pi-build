@@ -122,15 +122,16 @@ PATCHCHECK=$(curl -s https://raw.githubusercontent.com/km4ack/pi-build/dev/patch
 if [ ${PATCHCHECK} = "YES" ]; then
 cat <<EOF >${MYPATH}/patch.txt
 One or more patch scripts are currently
-available for Build a Pi. Learn more at
+available for Build a Pi. Full description
+of each available patch can be found at
 https://github.com/km4ack/pi-build/tree/dev/patch
 
 Would you like to review/apply 
 available patch scripts?
 EOF
 
-INTRO=$(yad --width=650 --height=250 --text-align=center --center --title="Build-a-Pi Patch Tool" --show-uri \
-	--image ${LOGO} --window-icon=${LOGO} --image-on-top --separator="|" --item-separator="|" \
+INTRO=$(yad --width=650 --height=300 --text-align=center --center --title="Build-a-Pi Patch Tool" --show-uri \
+	--image ${LOGO} --window-icon=${LOGO} --image-on-top --separator="|" --item-separator="|" --text="Build-a-Pi Patch Tool" \
 	--text-info \
 	--button="Yes":1 \
 	--button="No":2 <${MYPATH}/patch.txt \
