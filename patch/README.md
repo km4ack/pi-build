@@ -6,6 +6,6 @@ Occasionally small changes (patches) are needed for the Build a Pi code. These c
 # test-patch
 This patch is for testing purposes only. It will echo "This is a test patch" to the terminal. 
 
-Last Edit 05AUG2021
+Last Edit 06AUG2021
 
 PATCH=YES
