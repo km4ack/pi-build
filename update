@@ -114,6 +114,45 @@ rm ${MYPATH}/updatebap.txt >>/dev/null 2>&1
 rm ${MYPATH}/complete.txt >>/dev/null 2>&1
 clear
 
+#####################################
+#	Patch Check
+#####################################
+PATCHCHECK=$(curl -s https://raw.githubusercontent.com/km4ack/pi-build/dev/patch/readme | grep PATCH | sed 's/PATCH=//')
+
+if [ ${PATCHCHECK} = "YES" ]; then
+cat <<EOF >${MYPATH}/patch.txt
+One or more patch scripts are currently
+available for Build a Pi. Learn more at
+https://github.com/km4ack/pi-build/blob/dev/patch/readme
+
+Would you like to review/apply 
+available patch scripts?
+EOF
+
+INTRO=$(yad --width=650 --height=250 --text-align=center --center --title="Build-a-Pi Patch Tool" --show-uri \
+	--image ${LOGO} --window-icon=${LOGO} --image-on-top --separator="|" --item-separator="|" \
+	--text-info \
+	--button="Yes":1 \
+	--button="No":2 <${MYPATH}/patch.txt \
+	>/dev/null 2>&1)
+BUT=$?
+
+if [ ${BUT} = 252 ]; then
+	rm ${MYPATH}/patch.txt
+	exit
+elif [ ${BUT} = 1 ]; then
+rm ${MYPATH}/patch.txt
+lxterminal -e bash $HOME/pi-build/patch-menu && exit
+elif [ ${BUT} = 2 ]; then
+rm ${MYPATH}/patch.txt
+echo "user declined patch updates
+continuing with Build a Pi update"
+fi
+
+fi
+
+
+
 #Scan system for updated applications
 yad --width=550 --height=250 --text-align=center --center --title="Update" \
 	--image ${LOGO} --window-icon=${LOGO} --image-on-top --separator="|" --item-separator="|" \
