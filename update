@@ -117,7 +117,7 @@ clear
 #####################################
 #	Patch Check
 #####################################
-PATCHCHECK=$(curl -s https://raw.githubusercontent.com/km4ack/pi-build/dev/patch/readme | grep PATCH | sed 's/PATCH=//')
+PATCHCHECK=$(curl -s https://raw.githubusercontent.com/km4ack/pi-build/dev/patch/README.md | grep PATCH= | sed 's/PATCH=//')
 
 if [ ${PATCHCHECK} = "YES" ]; then
 cat <<EOF >${MYPATH}/patch.txt
