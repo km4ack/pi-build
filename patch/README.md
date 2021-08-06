@@ -6,4 +6,5 @@ Occasionally small changes are needed to the Build a Pi code. These changes are 
 This patch is for testing purposes only. It will echo "This is a test patch" to the terminal. 
 
 Last Edit 05AUG2021
+
 PATCH=YES
