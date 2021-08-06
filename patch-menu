@@ -18,7 +18,7 @@ git pull origin dev
 
 TEMP=/run/user/$UID/patch.txt
 MENU(){
-ls -I readme -I patch $DIR/pi-build/patch > $TEMP
+ls -I README.md $DIR/pi-build/patch > $TEMP
 
 INFO=$(PARSER='OFS="\n" {print $1}'
 MYTEMP=/run/user/$UID/patch1.txt
