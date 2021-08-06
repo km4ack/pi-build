@@ -16,12 +16,22 @@ touch $PATCHFILE
 #Patch script commands go here#
 ###############################
 clear;echo;echo
-	##################################
-	#	DEPENDS
-	##################################
-	#install needed depends
-	sudo apt-get install -y libfltk1.3-dev libjpeg9-dev libxft-dev libxinerama-dev libxcursor-dev libsndfile1-dev libsamplerate0-dev portaudio19-dev libpulse-dev libusb-1.0-0-dev texinfo libudev-dev
+echo "################################
+This patch will take ~20 minutes
+to complete. DO NOT close this
+window! You will be notified once
+the patch has completed.
+################################"
+sleep 3
+sudo apt -y update
 
+##################################
+#	DEPENDS
+##################################
+#install needed depends
+sudo apt-get install -y libfltk1.3-dev libjpeg9-dev libxft-dev libxinerama-dev libxcursor-dev libsndfile1-dev libsamplerate0-dev portaudio19-dev libpulse-dev libusb-1.0-0-dev texinfo libudev-dev
+
+#download and compile FLMSG 4.0.19
 cd $HOME/Downloads
 wget http://www.w1hkj.com/files/flmsg/flmsg-4.0.19.tar.gz
 tar -zxvf flmsg-4.0.19.tar.gz
