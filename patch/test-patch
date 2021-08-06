@@ -29,8 +29,6 @@ echo "This is a test patch"
 #write patch name to a file so we can
 #look and see if it has been applied before.
 echo "$PATCHNAME" >> $PATCHFILE
-sleep 3
-bash $HOME/pi-build/patch/patch
 
 else
 #if patch previously applied, notify user and exit
@@ -38,5 +36,4 @@ clear;echo;echo
 HEADER
 echo "$PATCHNAME already applied to this system"
 sleep 3
-bash $HOME/pi-build/patch/patch
 fi
