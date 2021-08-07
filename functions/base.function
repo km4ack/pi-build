@@ -113,10 +113,8 @@ EOF
 ################################
 HAMLIB() {
     cd ${DIR} || return
-    NEWRIG=$(curl -s https://sourceforge.net/projects/hamlib/files/latest/download |
-        grep -o https://downloads.sourceforge.net/project/hamlib/hamlib/[0-9].[0-9] |
-        head -n 1 | awk -F "/" '{print $7}')
-    HAMLIBLINK=https://sourceforge.net/projects/hamlib/files/hamlib/${NEWRIG}/hamlib-${NEWRIG}.tar.gz
+    NEWRIG=$(curl -s https://api.github.com/repos/Hamlib/Hamlib/releases/latest| jq -r '.tag_name')
+    HAMLIBLINK=https://github.com/Hamlib/Hamlib/releases/download/${NEWRIG/hamlib-${NEWRIG}.tar.gz
     cd ${HOME}/Downloads || return
     echo "###################################"
     echo "#		Installing Hamlib	"
