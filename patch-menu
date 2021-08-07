@@ -1,20 +1,11 @@
 #!/bin/bash
 
-#alpha script to test a patch system for quick fixes in BAP
+#script to test a patch system for quick fixes in BAP
 #KM4ACK 20210805
 
 MYPATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 LOGO=${MYPATH}/logo.png
 DIR=/run/user/$UID
-
-#Setup temp directory for BAP patches and download patches
-cd $DIR
-git init pi-build
-cd pi-build
-git remote add -f origin https://github.com/km4ack/pi-build.git
-git config core.sparseCheckout true
-echo "/patch" >> .git/info/sparse-checkout
-git pull origin dev
 
 TEMP=/run/user/$UID/patch.txt
 MENU(){
@@ -37,6 +28,7 @@ PATCH=$(echo ${INFO} | awk -F "|" '{print $1}')
 if [ ${BUT} = 1 ] || [ ${BUT} = 252 ];then
 echo "cleanup and exit Build a Pi patch tool"
 rm -rf $TEMP $DIR/pi-build
+#send user back to BAP update tool
 ${MYPATH}/update && exit
 fi
 
