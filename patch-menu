@@ -22,6 +22,7 @@ yad --title="Build a Pi Patch Tool" --width=500 --height=500 \
     --button="Apply Patch":2)
 BUT=$?
 
+
 PATCH=$(echo ${INFO} | awk -F "|" '{print $1}')
 
 #cleanup and exit upon user request
@@ -30,6 +31,17 @@ echo "cleanup and exit Build a Pi patch tool"
 rm -rf $TEMP $DIR/pi-build
 #send user back to BAP update tool
 ${MYPATH}/update && exit
+fi
+
+
+#check to verify that a patch has been selected
+#Thank Ken, NB6S for catching this bug!
+if [ -z $INFO ]; then
+	yad --form --width=500 --text-align=center --center --title="Build-a-Pi Patch Tool" --text-align=center \
+		--image ${LOGO} --window-icon=${LOGO} --image-on-top --separator="|" --item-separator="|" \
+		--text="<b>Please select a patch\rand try again.</b>" \
+		--button=gtk-close
+MENU
 fi
 
 #verify patch has not been applied already
