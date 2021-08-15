@@ -7,9 +7,9 @@
 #flsuite - flsuite subcategory
 #bap - Build a Pi subcategory
 #km4ack - km4ack subcategory
+# 2021/08/15 - wb0sio - added flrig.desktop update
 
-
-REV=20210411
+REV=20210815
 
 source $HOME/.config/KM4ACK
 
@@ -25,6 +25,11 @@ FLPATH=/usr/local/share/applications
 if [ -f $FLPATH/fldigi.desktop ]; then
 echo "updating fldigi"
 sudo sed -i "s/Categories.*/Categories=$CATEGORY/" $FLPATH/fldigi.desktop
+fi
+
+if [ -f $FLPATH/flrig.desktop ]; then
+echo "updating flrig"
+sudo sed -i "s/Categories.*/Categories=$CATEGORY/" $FLPATH/flrig.desktop
 fi
 
 if [ -f $FLPATH/flamp.desktop ]; then

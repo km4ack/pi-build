@@ -178,6 +178,61 @@ FLNET() {
 	sudo make install
 	sudo ldconfig
 }
+
+# 2021/08/15 - wb0sio - copied from menu-update so menu items are updated when installed from the update script.
+FLSUITE(){
+##########################
+#	FLSUITE 
+##########################
+CATEGORY=flsuite
+
+FLPATH=/usr/local/share/applications
+
+if [ -f $FLPATH/fldigi.desktop ]; then
+echo "updating fldigi"
+sudo sed -i "s/Categories.*/Categories=$CATEGORY/" $FLPATH/fldigi.desktop
+fi
+
+if [ -f $FLPATH/flrig.desktop ]; then
+echo "updating flrig"
+sudo sed -i "s/Categories.*/Categories=$CATEGORY/" $FLPATH/flrig.desktop
+fi
+
+if [ -f $FLPATH/flamp.desktop ]; then
+echo "updating flamp"
+sudo sed -i "s/Categories.*/Categories=$CATEGORY/" $FLPATH/flamp.desktop
+fi
+
+if [ -f $FLPATH/flarq.desktop ]; then
+echo "updating flarq"
+sudo sed -i "s/Categories.*/Categories=$CATEGORY/" $FLPATH/flarq.desktop
+fi
+
+if [ -f $FLPATH/flmsg.desktop ]; then
+echo "updating flmsg"
+sudo sed -i "s/Categories.*/Categories=$CATEGORY/" $FLPATH/flmsg.desktop
+fi
+
+if [ -f $FLPATH/flnet.desktop ]; then
+echo "updating flnet"
+sudo sed -i "s/Categories.*/Categories=$CATEGORY/" $FLPATH/flnet.desktop
+fi
+
+if [ -f $FLPATH/flwrap.desktop ]; then
+echo "updating flwrap"
+sudo sed -i "s/Categories.*/Categories=$CATEGORY/" $FLPATH/flwrap.desktop
+fi
+
+if [ -f $FLPATH/flwrap.desktop ]; then
+echo "updating flrig"
+sudo sed -i "s/Categories.*/Categories=$CATEGORY/" $FLPATH/flrig.desktop
+fi
+}
+
+FLSUITE
+
+# end wb0sio update
+
 ##################################
 #	RESET SWAP
 ##################################
