@@ -12,8 +12,8 @@ This patch is for testing purposes only. It will echo "This is a test patch" to 
 # flmsg-20210806
 This patch will install FLMSG 4.0.19 which as of 06AUG2021 will not compile on the Pi with the current Build a Pi code. This patch takes ~20 minutes to complete.
 
-# hamlib4.2-20210901
-This patch will install hamlib 4.2 until the issue with hamlib 4.3 can be resolved. See https://github.com/km4ack/pi-build/issues/296
+# hamlib4.3-20210905
+This patch will install the latest version of libusb-1.0 and hamlib 4.3. See https://github.com/km4ack/pi-build/issues/296 This patch take ~30 minutes to complete.
 
 Last Edit 01SEPT2021
 
