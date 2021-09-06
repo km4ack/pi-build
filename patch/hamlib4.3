@@ -18,6 +18,7 @@ touch $PATCHFILE
 ###############################
 clear;echo;echo
 echo "installing libusb library"
+sudo apt install libudev-dev
 cd $HOME/Downloads
 wget https://sourceforge.net/projects/libusb/files/libusb-1.0/libusb-1.0.24/libusb-1.0.24.tar.bz2
 tar -xf libusb-1.0.24.tar.bz2
