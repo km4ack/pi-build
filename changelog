@@ -1,4 +1,7 @@
-version=3.0.8
+version=3.1.0
+
+3.1.0		add Build a Pi Patch Tool
+
 3.0.8
 		add support to direwolf for CM108/CM119 - https://github.com/km4ack/pi-build/issues/243
 		fix zygrib update error - https://github.com/km4ack/pi-build/issues/235
