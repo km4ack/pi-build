@@ -12,6 +12,9 @@ This patch will install FLMSG 4.0.19 which as of 06AUG2021 will not compile on t
 hamlib4.2-20210909
 This patch will install hamlib 4.2 onto your Pi. This patch takes ~20 minutes to complete. https://github.com/km4ack/pi-build/issues/296
 
+# flamp-20210912
+This patch will install FLAMP. See this issue https://github.com/km4ack/pi-build/issues/301 for more details. This patch takes ~20 minutes to complete.
+
 Last Edit 01SEPT2021
 
 PATCH=YES
