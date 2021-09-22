@@ -45,7 +45,6 @@ MENU
 fi
 
 #verify patch has not been applied already
-echo "getting patchname"
 PATCHNAME=$(grep PATCHNAME= $DIR/pi-build/patch/${PATCH} | sed 's/PATCHNAME=//')
 PATCHCHECK=$(grep ${PATCHNAME} $HOME/.config/patch)
 
