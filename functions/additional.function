@@ -254,7 +254,7 @@ CHIRP() {
 	cd ${DIR} || return
 	wget --tries 2 --connect-timeout=60 https://trac.chirp.danplanet.com/chirp_daily/LATEST/
 	CHIRPBUILD=$(cat index.html | grep .tar.gz | grep chirp-daily- | awk '{ print $6 }' | sed 's/.*"//' | sed 's/>//' | sed 's/[<].*$//')
-	sudo apt-get -y install python-gtk2 python-serial python-libxml2
+	sudo apt-get -y install python-gtk2 python-serial python-libxml2 python-suds
 	mkdir ${HOME}/chirp
 	cd ${HOME}/chirp || return
 	wget --tries 2 --connect-timeout=60 https://trac.chirp.danplanet.com/chirp_daily/LATEST/$CHIRPBUILD
