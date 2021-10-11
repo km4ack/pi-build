@@ -324,7 +324,7 @@ GRIDTRACKER() {
 	GRIDTAR=$(echo $GRIDDLL | sed 's/.*\///g')
 	tar -xzvf $GRIDTAR
 	rm ./*.gz
-	OLDFOLDER=$(ls | grep Grid)
+	OLDFOLDER=$(ls | grep GridTracker*-linux-arm)
 	mv "$OLDFOLDER" $HOME/GridTracker
 	cat >gridtracker.desktop <<EOF
 [Desktop Entry]
