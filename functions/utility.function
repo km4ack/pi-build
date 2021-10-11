@@ -361,7 +361,7 @@ his/her station.
 
 After completing the config file, you can
 start LinBPQ from the command line by running:
-~/linbpq/.linbpq
+~/linbpq/./linbpq
 
 Depending on your station setup, you may
 need to start rig control, direwolf, or
