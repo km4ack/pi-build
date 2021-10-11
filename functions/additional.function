@@ -650,7 +650,7 @@ fi
 cd ${HOME}/Downloads
 DL=$(curl https://www.hamrs.app | grep armv7 | sed 's/^.*href="//;s/">//')
 wget ${DL}
-HAMRS=$(ls | grep hamrs)
+HAMRS=$(ls | grep hamrs-)
 mv ${HAMRS} hamrs
 chmod +x hamrs
 sudo mv hamrs /usr/local/bin/
