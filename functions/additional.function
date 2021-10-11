@@ -640,7 +640,7 @@ EOF
 ##################################
 HAMRS() {
 #move any existing hamrs files that might get in the way - https://github.com/km4ack/pi-build/issues/288
-HAMRSCHECK=$(ls ~/Downloads/ | grep hamrs)
+HAMRSCHECK=$(ls ~/Downloads/ | grep hamrs-)
 if [ -n $HAMRSCHECK ]; then
 echo "moving old hamrs file(s)"
 mkdir -p $HOME/Downloads/old-hamrs
