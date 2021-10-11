@@ -22,7 +22,6 @@ CONFIG=${MYPATH}/config
 LOGO=${MYPATH}/logo.png
 TEMPCRON=${MYPATH}/cron.tmp
 VERSION=$(grep "version=" ${MYPATH}/changelog | sed 's/version=//')
-RB=${HOME}/.config/KM4ACK
 DATE=$(date)
 
 FINISH() {
@@ -1193,8 +1192,8 @@ sudo apt -y full-upgrade
 #####################################
 #	Install Base Apps
 #####################################
-touch ${RB}
-echo "BAP update ran $DATE Version $VERSION" >> ${RB}
+touch ${HOME}/.config/KM4ACK
+echo "BAP update ran $DATE Version $VERSION" >> ${HOME}/.config/KM4ACK
 while read i; do
 	source ${FUNCTIONS}/base.function
 	$i
