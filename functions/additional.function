@@ -318,8 +318,9 @@ EOF
 GRIDTRACKER() {
 	cd ${HOME} || return
 	sudo apt-get install -y libgconf-2-4
+	GRIDDLL=$(curl -s https://tagloomis.com/downloads/ | grep linux-arm32 | sed 's/^.*href="//;s/".*//')
 	#Line below changed 05JULY2021 to correct https://github.com/km4ack/pi-build/issues/253
-	GRIDDLL=$(curl -s https://tagloomis.com/downloads/ | grep linux-arm | sed 's/^.*href="//;s/".*//')
+	#GRIDDLL=$(curl -s https://tagloomis.com/downloads/ | grep linux-arm | sed 's/^.*href="//;s/".*//')
 	wget --tries 2 --connect-timeout=60 $GRIDDLL
 	GRIDTAR=$(echo $GRIDDLL | sed 's/.*\///g')
 	tar -xzvf $GRIDTAR
