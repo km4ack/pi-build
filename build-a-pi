@@ -510,7 +510,7 @@ sudo mv build-a-pi.desktop /usr/share/applications/
 #	Install Base Apps
 #####################################
 touch ${RB}
-echo "Intitial build date $DATE version $VERSION" >> ${RB}
+echo "INITIAL=\"build date $DATE version $VERSION\"" >> ${RB}
 source ${FUNCTIONS}/base.function
 while read i; do
 	$i
