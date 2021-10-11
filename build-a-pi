@@ -25,6 +25,7 @@ TEMPCRON=${MYPATH}/cron.tmp
 DIR=${MYPATH}/temp
 WHO=$(whoami)
 VERSION=$(grep "version=" ${MYPATH}/changelog | sed 's/version=//')
+DATE=$(date)
 
 FINISH() {
 	if [ -f "${BASE}" ]; then
@@ -508,6 +509,7 @@ sudo mv build-a-pi.desktop /usr/share/applications/
 #	Install Base Apps
 #####################################
 touch ${RB}
+echo "Intitial build date $DATE version $VERSION" >> ${RB}
 source ${FUNCTIONS}/base.function
 while read i; do
 	$i
