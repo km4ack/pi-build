@@ -639,6 +639,14 @@ EOF
 #	HAMRS
 ##################################
 HAMRS() {
+#move any existing hamrs files that might get in the way - https://github.com/km4ack/pi-build/issues/288
+HAMRSCHECK=$(ls ~/Downloads/ | grep hamrs)
+if [ -n $HAMRSCHECK ]; then
+echo "moving old hamrs file(s)"
+mkdir -p $HOME/Downloads/old-hamrs
+mv $HOME/Downloads/hamrs* $HOME/Downloads/old-hamrs
+fi
+
 cd ${HOME}/Downloads
 DL=$(curl https://www.hamrs.app | grep armv7 | sed 's/^.*href="//;s/">//')
 wget ${DL}
