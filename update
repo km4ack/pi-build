@@ -1193,7 +1193,7 @@ sudo apt -y full-upgrade
 #	Install Base Apps
 #####################################
 touch ${HOME}/.config/KM4ACK
-echo "BAP update ran $DATE Version $VERSION" >> ${HOME}/.config/KM4ACK
+echo "UPDATE=\"ran $DATE Version $VERSION\"" >> ${HOME}/.config/KM4ACK
 while read i; do
 	source ${FUNCTIONS}/base.function
 	$i
