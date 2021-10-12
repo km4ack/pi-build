@@ -275,7 +275,7 @@ if [ -n "${GPSINSTALL}" ]; then
 		exit
 	fi
 	USB=$(ls /dev/serial/by-id)
-	USB=$(echo "NONE $GPS") #see https://github.com/km4ack/pi-build/issues/293
+	USB=$(echo "NONE $USB") #see https://github.com/km4ack/pi-build/issues/293
 	USB=$(echo $USB | sed "s/\s/|/g")
 
 	GPS=$(yad --center --height="600" --width="300" --form --separator="|" --item-separator="|" --title="GPS" \
