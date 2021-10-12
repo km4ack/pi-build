@@ -131,7 +131,7 @@ FLMSG() {
 
 	#Build FLMSG
 	cd ${MSGPKG} || return
-	./configure --prefix=/usr/local --enable-static
+	./configure --prefix=/usr/local --enable-static --without-flxmlrpc
 	make
 	sudo make install
 	sudo ldconfig
