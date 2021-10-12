@@ -16,7 +16,7 @@ version=3.1.1
 		fix hamrs install bug - https://github.com/km4ack/pi-build/issues/288
 		fix gpsd issue - https://github.com/km4ack/pi-build/issues/316
 		resolve issue 199 - https://github.com/km4ack/pi-build/issues/199
-		remove exit option for GPS selection during initial build
+		remove exit option for GPS - https://github.com/km4ack/pi-build/issues/318
 		
 
 3.1.0		add Build a Pi Patch Tool
