@@ -69,9 +69,10 @@ GPS() {
 #end gpsd change 11OCT2021
 
     #Set GPS by serial ID
-    #GPS Variable set by main script or update script
-    #and placed in config file
+    #GPS Variable set by main script or update script and placed in config file
+    if [ "$GPS" != 'NONE' ]; then
     sudo sed -i "s|DEVICES.*$|DEVICES=\"$GPS\"|g" /etc/default/gpsd
+    fi
 
     #add xgps to menu
     cat >xgps.desktop <<EOF
