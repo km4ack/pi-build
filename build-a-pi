@@ -267,13 +267,10 @@ if [ -n "${GPSINSTALL}" ]; then
 	yad --center --height="300" --width="300" --form --separator="|" --item-separator="|" --title="GPS" \
 		--image ${LOGO} --window-icon=${LOGO} --image-on-top \
 		--text="\r\r\r\r\r<b><big>Connect your GPS to the pi</big></b>" \
-		--button="Exit":1 \
 		--button="Continue":2
 
 	BUT=$?
-	if [ ${BUT} = 1 ] || [ ${BUT} = 252 ]; then
-		exit
-	fi
+
 	USB=$(ls /dev/serial/by-id)
 	USB=$(echo "NONE $USB") #see https://github.com/km4ack/pi-build/issues/293
 	USB=$(echo $USB | sed "s/\s/|/g")
