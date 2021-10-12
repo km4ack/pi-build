@@ -2,6 +2,22 @@ version=3.1.1
 
 3.1.1		Remove echo statement from patch menu script.
 		Add libusb-1.0 and libusb-dev to hamlib build section https://github.com/km4ack/pi-build/issues/296
+		fix FLAMP install - https://github.com/km4ack/pi-build/issues/301
+		fix BAP menu - https://github.com/km4ack/pi-build/issues/302
+		fix pat secutiry issue - https://github.com/km4ack/pi-build/issues/299
+		add build/update logging - https://github.com/km4ack/pi-build/issues/294
+		add "none" to GPS selection - https://github.com/km4ack/pi-build/issues/293
+		fix spelling of i2c - https://github.com/km4ack/pi-build/issues/289
+		fix linbpq help file - https://github.com/km4ack/pi-build/issues/287
+		fix python-suds error - https://github.com/km4ack/pi-build/issues/272
+		fix conky awk error - https://github.com/km4ack/pi-build/issues/306
+		fix gridtracker link - https://github.com/km4ack/pi-build/issues/314
+		fix gridtracker install error - https://github.com/km4ack/pi-build/issues/286
+		fix hamrs install bug - https://github.com/km4ack/pi-build/issues/288
+		fix gpsd issue - https://github.com/km4ack/pi-build/issues/316
+		resolve issue 199 - https://github.com/km4ack/pi-build/issues/199
+		remove exit option for GPS selection during initial build
+		
 
 3.1.0		add Build a Pi Patch Tool
 
