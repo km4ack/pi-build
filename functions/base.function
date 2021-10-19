@@ -65,7 +65,10 @@ GPS() {
     sudo ldconfig
     sudo wget https://raw.githubusercontent.com/km4ack/pi-scripts/master/gpsd -P /etc/default/
     sudo rm -rf gpsd-3.23.1/
+    CHRONYCHK=$(grep "refclock SHM 0 offset 0.5 delay 0.2 refid NMEA" /etc/chrony/chrony.conf)
+    if [ -z "$CHRONYCHK" ]; then
     echo "refclock SHM 0 offset 0.5 delay 0.2 refid NMEA" | sudo tee -a /etc/chrony/chrony.conf
+    fi
 #end gpsd change 11OCT2021
 
     #Set GPS by serial ID
