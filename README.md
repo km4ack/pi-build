@@ -91,7 +91,7 @@ Software TNC. In this setup, direwolf is used for 2M packet connection with Pat 
 AX25 tools for Direwolf & Pat. Recommended if installing Pat. 
 
 #### HAMLIB:
-Rig contol software. https://sourceforge.net/projects/hamlib/
+Rig contol software. https://github.com/Hamlib/Hamlib
 
 #### PULSE:
 Pulse audio. Provides a way to configure virtual sound cards. REQUIRED for AMRRON ops. 

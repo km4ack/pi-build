@@ -306,9 +306,7 @@ CHECK() {
 	else
 		echo "Checking Rig Control"
 		RIG=$(rigctl --version | grep Hamlib | sed s/"rigctl(d),\ Hamlib\ "//)
-		NEWRIG=$(curl -s https://sourceforge.net/projects/hamlib/files/latest/download |
-			grep -o https://downloads.sourceforge.net/project/hamlib/hamlib/[0-9].[0-9] |
-			head -n 1 | awk -F "/" '{print $7}')
+		NEWRIG=$(curl -s https://api.github.com/repos/Hamlib/Hamlib/releases/latest| jq -r '.tag_name')
 
 		if (($(echo "${NEWRIG} ${RIG}" | awk '{print ($1 > $2)}'))); then
 			RIG=NEEDS-UPDATE
