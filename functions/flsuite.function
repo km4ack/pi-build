@@ -99,7 +99,7 @@ FLWRAP() {
 ##################################
 FLDIGI() {
 	#Determine latest FLDIGI
-	FLTAR=$(curl -s http://www.w1hkj.com/files/fldigi/ | grep .tar.gz | sed 's/<li><a\ href="//' | sed 's/">\ fldigi.*$//')
+	FLTAR=$(curl -s http://www.w1hkj.com/files/fldigi/ | grep .tar.gz | sed 's/.*fldigi/fldigi/;s/.gz.*$/.gz/')
 	FLPKG=$(echo ${FLTAR} | sed 's/.tar.gz//')
 
 	#Download latest FLDIGI tar file
