@@ -22,6 +22,7 @@ CONFIG=${MYPATH}/config
 LOGO=${MYPATH}/logo.png
 TEMPCRON=${MYPATH}/cron.tmp
 VERSION=$(grep "version=" ${MYPATH}/changelog | sed 's/version=//')
+DATE=$(date)
 
 FINISH() {
 	if [ -f "${BASE}" ]; then
@@ -1192,6 +1193,7 @@ sudo apt -y full-upgrade
 #	Install Base Apps
 #####################################
 touch ${HOME}/.config/KM4ACK
+echo "UPDATE=\"ran $DATE Version $VERSION\"" >> ${HOME}/.config/KM4ACK
 while read i; do
 	source ${FUNCTIONS}/base.function
 	$i

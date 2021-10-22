@@ -1,23 +1,35 @@
 #!/bin/bash
 
-#This test-patch script should serve as a 
-#template for future patch scripts.
-#20210805 KM4ACK
+#This script installs FLAMP.
+#20210912 km4ack
 
 #Give this patch a unique name. A good idea is
 #to give it the application name that is being 
 #patched followed by the date. ie FLDIDI20210805
 
-PATCHNAME=test-patch20210807
+PATCHNAME=flamp-20210912
 
 PATCHFILE=$HOME/.config/patch
 touch $PATCHFILE
 ###############################
 #Patch script commands go here#
 ###############################
-clear;echo;echo
-echo "This is a test patch"
+	#determine latest FLAMP
+	AMPTAR=$(curl -s http://www.w1hkj.com/files/flamp/ | grep .tar.gz | sed 's/<li><a\ href="//' | sed 's/">\ flamp.*$//' | tac | head -1)
+	AMPPKG=$(echo ${AMPTAR} | sed 's/.tar.gz//')
 
+	#download FLAMP
+	cd ${HOME}/Downloads || return
+	wget --tries 2 --connect-timeout=60 http://www.w1hkj.com/files/flamp/$AMPTAR
+	tar -zxvf ${AMPTAR}
+
+
+	#build FLAMP
+	cd ${AMPPKG} || return
+	./configure --prefix=/usr/local --enable-static
+	make
+	sudo make install
+	sudo ldconfig
 
 #############################################
 #write patch name to a file so we can       #

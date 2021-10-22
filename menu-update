@@ -13,6 +13,8 @@ REV=20210411
 
 source $HOME/.config/KM4ACK
 
+sudo mkdir -p /usr/local/share/applications
+
 
 FLSUITE(){
 ##########################

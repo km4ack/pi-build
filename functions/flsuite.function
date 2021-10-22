@@ -99,7 +99,7 @@ FLWRAP() {
 ##################################
 FLDIGI() {
 	#Determine latest FLDIGI
-	FLTAR=$(curl -s http://www.w1hkj.com/files/fldigi/ | grep .tar.gz | sed 's/<li><a\ href="//' | sed 's/">\ fldigi.*$//')
+	FLTAR=$(curl -s http://www.w1hkj.com/files/fldigi/ | grep .tar.gz | sed 's/.*fldigi/fldigi/;s/.gz.*$/.gz/')
 	FLPKG=$(echo ${FLTAR} | sed 's/.tar.gz//')
 
 	#Download latest FLDIGI tar file
@@ -131,7 +131,7 @@ FLMSG() {
 
 	#Build FLMSG
 	cd ${MSGPKG} || return
-	./configure --prefix=/usr/local --enable-static
+	./configure --prefix=/usr/local --enable-static --without-flxmlrpc
 	make
 	sudo make install
 	sudo ldconfig
@@ -141,7 +141,7 @@ FLMSG() {
 ##################################
 FLAMP() {
 	#determine latest FLAMP
-	AMPTAR=$(curl -s http://www.w1hkj.com/files/flamp/ | grep .tar.gz | sed 's/<li><a\ href="//' | sed 's/">\ flamp.*$//')
+	AMPTAR=$(curl -s http://www.w1hkj.com/files/flamp/ | grep .tar.gz | sed 's/<li><a\ href="//' | sed 's/">\ flamp.*$//' | tac | head -1)
 	AMPPKG=$(echo ${AMPTAR} | sed 's/.tar.gz//')
 
 	#download FLAMP
