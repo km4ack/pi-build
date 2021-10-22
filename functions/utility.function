@@ -123,11 +123,11 @@ RTC() {
         IC2ACTIVE=$(ls /dev/*i2c*)
 
         if [ ${IC2ACTIVE} = '/dev/i2c-1' ]; then
-            echo "IC2 is active"
+            echo "I2C is active"
         else
             yad --form --width=500 --text-align=center --center --title="Build-a-Pi" --text-align=center \
                 --image ${LOGO} --window-icon=${LOGO} --image-on-top --separator="|" --item-separator="|" \
-                --text="Please enable IC2 interface in the Raspberry Pi Configuration and try again" \
+                --text="Please enable I2C interface in the Raspberry Pi Configuration and try again" \
                 --button=gtk-close
             exit 1
         fi
@@ -361,7 +361,7 @@ his/her station.
 
 After completing the config file, you can
 start LinBPQ from the command line by running:
-~/linbpq/.linbpq
+~/linbpq/./linbpq
 
 Depending on your station setup, you may
 need to start rig control, direwolf, or

@@ -45,14 +45,37 @@ HSTOOLS() {
 ################################
 GPS() {
     cd ${DIR} || return
-    wget --tries 2 --connect-timeout=60 https://raw.githubusercontent.com/km4ack/pi-scripts/master/gpsinstall
-    chmod +x ${DIR}/gpsinstall
-    sudo ${DIR}/gpsinstall
-    rm ${DIR}/gpsinstall
+
+    #old gpsd install left for reference
+    #wget --tries 2 --connect-timeout=60 https://raw.githubusercontent.com/km4ack/pi-scripts/master/gpsinstall
+    #chmod +x ${DIR}/gpsinstall
+    #sudo ${DIR}/gpsinstall
+    #rm ${DIR}/gpsinstall
+
+#begin gpsd change 11OCT2021 - see https://github.com/km4ack/pi-build/issues/316  
+    sudo apt-get -y install scons libncurses5-dev python-dev pps-tools chrony
+    sudo ldconfig
+    cd $HOME/Downloads
+    wget http://download.savannah.gnu.org/releases/gpsd/gpsd-3.23.1.tar.gz
+    tar -xzf gpsd-3.23.1.tar.gz
+    rm gpsd-3.23.1.tar.gz
+    cd gpsd-3.23.1/
+    scons prefix=/usr --config=force 
+    sudo scons udev-install
+    sudo ldconfig
+    sudo wget https://raw.githubusercontent.com/km4ack/pi-scripts/master/gpsd -P /etc/default/
+    sudo rm -rf gpsd-3.23.1/
+    CHRONYCHK=$(grep "refclock SHM 0 offset 0.5 delay 0.2 refid NMEA" /etc/chrony/chrony.conf)
+    if [ -z "$CHRONYCHK" ]; then
+    echo "refclock SHM 0 offset 0.5 delay 0.2 refid NMEA" | sudo tee -a /etc/chrony/chrony.conf
+    fi
+#end gpsd change 11OCT2021
+
     #Set GPS by serial ID
-    #GPS Variable set by main script or update script
-    #and placed in config file
+    #GPS Variable set by main script or update script and placed in config file
+    if [ "$GPS" != 'NONE' ]; then
     sudo sed -i "s|DEVICES.*$|DEVICES=\"$GPS\"|g" /etc/default/gpsd
+    fi
 
     #add xgps to menu
     cat >xgps.desktop <<EOF
@@ -112,6 +135,7 @@ EOF
 #	HAMLIB
 ################################
 HAMLIB() {
+    sudo apt install -y libusb-1.0 libusb-dev
     cd ${DIR} || return
     NEWRIG=$(curl -s https://sourceforge.net/projects/hamlib/files/latest/download |
         grep -o https://downloads.sourceforge.net/project/hamlib/hamlib/[0-9].[0-9] |
