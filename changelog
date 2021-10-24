@@ -1,4 +1,6 @@
-version=3.1.2
+version=3.1.3
+
+3.1.3		Split app check from update script into new app-check script
 
 3.1.2		Fix FLSUITE links
 
