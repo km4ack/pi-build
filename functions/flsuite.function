@@ -33,7 +33,7 @@ FLSTART() {
 
 	if [ -z "$FLX" ]; then
 		#determine latest FLXMLRPC & download
-		FLXM=$(flxmpc - curl -s http://www.w1hkj.com/files/flxmlrpc/ | grep .tar.gz | sed 's/.*ref="//;s/">.*$//')
+		FLXM=$(curl -s http://www.w1hkj.com/files/flxmlrpc/ | grep .tar.gz | sed 's/.*ref="//;s/">.*$//')
 		XMPKG=$(echo ${FLXM} | sed 's/.tar.gz//')
 		cd ${HOME}/Downloads || return
 		wget --tries 2 --connect-timeout=60 http://www.w1hkj.com/files/flxmlrpc/${FLXM}
