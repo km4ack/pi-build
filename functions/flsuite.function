@@ -33,7 +33,7 @@ FLSTART() {
 
 	if [ -z "$FLX" ]; then
 		#determine latest FLXMLRPC & download
-		FLXM=$(curl -s http://www.w1hkj.com/files/flxmlrpc/ | grep .tar.gz | sed 's/<li><a\ href="//' | sed 's/">\ flxmlrpc.*$//')
+		FLXM=$(curl -s http://www.w1hkj.com/files/flxmlrpc/ | grep .tar.gz | sed 's/.*ref="//;s/">.*$//')
 		XMPKG=$(echo ${FLXM} | sed 's/.tar.gz//')
 		cd ${HOME}/Downloads || return
 		wget --tries 2 --connect-timeout=60 http://www.w1hkj.com/files/flxmlrpc/${FLXM}
@@ -54,7 +54,7 @@ FLSTART() {
 ##################################
 FLRIG() {
 	#Determine latest FLRIG
-	RIGTAR=$(curl -s http://www.w1hkj.com/files/flrig/ | grep .tar.gz | sed 's/<li><a\ href="//' | sed 's/">\ flrig.*$//' | tail -1)
+	RIGTAR=$(curl -s http://www.w1hkj.com/files/flrig/ | grep .tar.gz | sed 's/.*ref="//;s/".*$//')
 	RIGPKG=$(echo ${RIGTAR} | sed 's/.tar.gz//')
 
 	#Download latest FLRIG
@@ -77,7 +77,7 @@ FLRIG() {
 ##################################
 FLWRAP() {
 	#Determine latest FLWRAP
-	WRAPTAR=$(curl -s http://www.w1hkj.com/files/flwrap/ | grep .tar.gz | sed 's/<li><a\ href="//' | sed 's/">\ flwrap.*$//')
+	WRAPTAR=$(curl -s http://www.w1hkj.com/files/flwrap/ | grep .tar.gz | sed 's/.*ref="//;s/".*$//')
 	WRAPPKG=$(echo ${WRAPTAR} | sed 's/.tar.gz//')
 
 	#Download latest FLWRAP
@@ -120,7 +120,7 @@ FLDIGI() {
 ##################################
 FLMSG() {
 	#Determine latest FLMSG
-	MSGTAR=$(curl -s http://www.w1hkj.com/files/flmsg/ | grep .tar.gz | sed 's/<li><a\ href="//' | sed 's/">\ flmsg.*$//' | tail -1)
+	MSGTAR=$(curl -s http://www.w1hkj.com/files/flmsg/ | grep .tar.gz | sed 's/.*ref="//;s/">.*$//')
 	MSGPKG=$(echo ${MSGTAR} | sed 's/.tar.gz//')
 
 	#download FLMSG
@@ -141,7 +141,7 @@ FLMSG() {
 ##################################
 FLAMP() {
 	#determine latest FLAMP
-	AMPTAR=$(curl -s http://www.w1hkj.com/files/flamp/ | grep .tar.gz | sed 's/<li><a\ href="//' | sed 's/">\ flamp.*$//' | tac | head -1)
+	AMPTAR=$(curl -s http://www.w1hkj.com/files/flamp/ | grep .tar.gz | tail -1 | sed 's/.*ref="//;s/">.*$//')
 	AMPPKG=$(echo ${AMPTAR} | sed 's/.tar.gz//')
 
 	#download FLAMP
@@ -162,7 +162,7 @@ FLAMP() {
 ##################################
 FLNET() {
 	#determine lastest FLNET
-	NETTAR=$(curl -s http://www.w1hkj.com/files/flnet/ | grep .tar.gz | sed 's/<li><a\ href="//' | sed 's/">\ flnet.*$//')
+	NETTAR=$(curl -s http://www.w1hkj.com/files/flnet/ | grep .tar.gz | sed 's/.*ref="//;s/">.*$//')
 	NETPKG=$(echo ${NETTAR} | sed 's/.tar.gz//')
 
 	#download FLNET
