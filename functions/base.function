@@ -4,8 +4,20 @@
 TEMPCRON=${MYPATH}/cron.tmp
 DIR=${MYPATH}/temp
 mkdir -p ${DIR}
+BUILDDIR=$HOME/.bap-source-files
+mkdir -p ${BUILDDIR}
 
 source ${MYPATH}/config
+
+CLEANSOURCE(){
+#this function removes any old source files before
+#new files are downloaded for installation. This
+#function is called by install functions below.
+PACKAGE=$(ls $BUILDDIR | grep $PACKAGE)
+if [ -d $BUILDDIR/$PACKAGE ]; then
+sudo rm -rf $BUILDDIR/$PACKAGE*
+fi
+}
 
 ################################
 #	HOTSPOT
@@ -44,7 +56,7 @@ HSTOOLS() {
 #	GPS
 ################################
 GPS() {
-    cd ${DIR} || return
+    cd ${BUILDDIR} || return
 
     #old gpsd install left for reference
     #wget --tries 2 --connect-timeout=60 https://raw.githubusercontent.com/km4ack/pi-scripts/master/gpsinstall
@@ -55,7 +67,7 @@ GPS() {
 #begin gpsd change 11OCT2021 - see https://github.com/km4ack/pi-build/issues/316  
     sudo apt-get -y install scons libncurses5-dev python-dev pps-tools chrony
     sudo ldconfig
-    cd $HOME/Downloads
+    cd ${BUILDDIR}
     wget http://download.savannah.gnu.org/releases/gpsd/gpsd-3.23.1.tar.gz
     tar -xzf gpsd-3.23.1.tar.gz
     rm gpsd-3.23.1.tar.gz
@@ -63,8 +75,8 @@ GPS() {
     scons prefix=/usr --config=force 
     sudo scons udev-install
     sudo ldconfig
+    sudo scons clean
     sudo wget https://raw.githubusercontent.com/km4ack/pi-scripts/master/gpsd -P /etc/default/
-    sudo rm -rf gpsd-3.23.1/
     CHRONYCHK=$(grep "refclock SHM 0 offset 0.5 delay 0.2 refid NMEA" /etc/chrony/chrony.conf)
     if [ -z "$CHRONYCHK" ]; then
     echo "refclock SHM 0 offset 0.5 delay 0.2 refid NMEA" | sudo tee -a /etc/chrony/chrony.conf
@@ -135,13 +147,14 @@ EOF
 #	HAMLIB
 ################################
 HAMLIB() {
+    PACKAGE=hamlib
+    CLEANSOURCE
     sudo apt install -y libusb-1.0 libusb-dev
-    cd ${DIR} || return
+    cd ${BUILDDIR} || return
     NEWRIG=$(curl -s https://sourceforge.net/projects/hamlib/files/latest/download |
         grep -o https://downloads.sourceforge.net/project/hamlib/hamlib/[0-9].[0-9] |
         head -n 1 | awk -F "/" '{print $7}')
     HAMLIBLINK=https://sourceforge.net/projects/hamlib/files/hamlib/${NEWRIG}/hamlib-${NEWRIG}.tar.gz
-    cd ${HOME}/Downloads || return
     echo "###################################"
     echo "#		Installing Hamlib	"
     echo "###################################"
@@ -154,25 +167,27 @@ HAMLIB() {
     make
     sudo make install
     sudo ldconfig
+    sudo make clean
 }
 
 ################################
 #	DIREWOLF
 ################################
 DIREWOLF() {
-    cd ${HOME} || return
+    cd ${BUILDDIR} || return
     git clone https://www.github.com/wb2osz/direwolf
-    cd ${HOME}/direwolf || return
+    cd ${BUILDDIR}/direwolf || return
     mkdir build && cd build
     sudo apt-get install -y libasound2-dev cmake libudev-dev
     cmake ..
     make -j 4
     sudo make install
     make install-conf
+    sudo make clean
     sed -i "s/N0CALL/${CALL}/" "${HOME}/direwolf.conf"
     sed -i 's/# ADEVICE  plughw:1,0/ADEVICE  plughw:2,0/' ${HOME}/direwolf.conf
     sed -i '/#PTT\ \/dev\/ttyUSB0\ RTS/a #Uncomment line below for PTT with sabrent sound card\n#PTT RIG 2 localhost:4532' ${HOME}/direwolf.conf
-    rm -rf ${HOME}/direwolf
+
 }
 
 ################################
