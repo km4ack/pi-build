@@ -2,6 +2,10 @@ version=3.1.3
 
 3.1.3		Split app check from update script into new app-check script
 		fix variable in menu-update script
+		update flsuite with new build directory
+		update base apps with new build directory
+		update utility apps with new build directory
+		update ham app with new build directory
 
 3.1.2		Fix FLSUITE links
 
