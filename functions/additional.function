@@ -21,6 +21,8 @@ PAT() {
 	cd ${DIR}
 	if [ -f ${HOME}/.wl2k/config.json ]; then
 		cp ${HOME}/.wl2k/config.json ${DIR}/config.json
+	elif [ -f ${XDG_CONFIG_HOME}/pat/config.json ]; then
+		cp $XDG_CONFIG_HOME/pat/config.json ${DIR}/config.json
 	fi
 	NEWPATV=$(curl -s https://github.com/la5nta/pat/releases | grep armhf | head -1 | sed 's/.*pat_/pat_/' | sed 's/<\/a>.*$//')
 	NEWPAT=$(echo ${NEWPATV} | sed 's/pat_//' | sed 's/_linux_armhf.deb//' | sed 's/0\.//')
@@ -33,7 +35,18 @@ PAT() {
 	sudo systemctl start pat@${WHO}
 	sudo systemctl enable pat@${WHO}
 	cd ${DIR}
-	FIG=${HOME}/.wl2k/config.json
+	PAT_VERSION=$(pat version | awk '{print $2}' | sed 's/v0.//;s/.0//')
+	#The Pat Winlink config file will change location in version 0.12. The below if statement
+	#checks to see which version is installed.
+	#check to see if pat version is 12 or greater. Change config file location
+	#depending on which version.
+	if [ "$PAT_VERSION" -le 11 ]; then
+	echo "pat version 11 detected"
+	FIG=$HOME/.wl2k/config.json
+	else
+	echo "pat version 12 or greater detected"
+	FIG=$XDG_CONFIG_HOME/pat/config.json
+	fi
 	#set callsign
 	sed -i "s/\"mycall\": \".*\",/\"mycall\": \"${CALL}\",/" ${FIG}
 	#set password
