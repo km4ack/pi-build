@@ -58,7 +58,7 @@ PAT() {
 	#This is a secutiry risk. See https://github.com/km4ack/pi-build/issues/299
 	#Changed to 127.0.0.1 on 11OCT2021 KM4ACK
 	sed -i "s/\"http_addr\": \".*\",/\"http_addr\": \"127.0.0.1:$PORT\",/" ${FIG}
-	jq '.ax25.rig = '\"my-rig\"'' ${HOME}/.wl2k/config.json | jq '.ardop.rig = '\"my-rig\"'' | jq '.hamlib_rigs = {'\"my-rig\"': {"address": "127.0.0.1:4532", "network": "tcp"}}' >~/Desktop/config.json
+	jq '.ax25.rig = '\"my-rig\"'' ${FIG} | jq '.ardop.rig = '\"my-rig\"'' | jq '.hamlib_rigs = {'\"my-rig\"': {"address": "127.0.0.1:4532", "network": "tcp"}}' >~/Desktop/config.json
 	mv ${HOME}/Desktop/config.json ${FIG}
 	sed -i 's/"enable_http": false,/"enable_http": true,/' ${FIG}
 
