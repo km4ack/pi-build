@@ -8,6 +8,7 @@ version=3.1.3
 		update ham app with new build directory
 		change pat config file location for Pat version 0.12
 		add pat 12 check to update script - https://github.com/km4ack/pi-build/issues/328
+		fix mistake in jq command with new pat path
 
 3.1.2		Fix FLSUITE links
 
