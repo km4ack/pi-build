@@ -303,7 +303,7 @@ GARIM() {
 #	QSSTV
 ##################################
 QSSTV() {
-	sudo apt-get install -y g++ libfftw3-dev qt5-default libpulse-dev libhamlib-dev libasound2-dev libv4l-dev libopenjp2-7 libopenjp2-7-dev
+	sudo apt-get install -y g++ libfftw3-dev qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools libpulse-dev libhamlib-dev libasound2-dev libv4l-dev libopenjp2-7 libopenjp2-7-dev
 
 	cd ${BUILDDIR} || return
 
