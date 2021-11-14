@@ -400,7 +400,7 @@ YAAC() {
 	cd ${DIR} || return
 	#wget --tries 2 --connect-timeout=60 https://sourceforge.net/projects/yetanotheraprsc/files/YAAC.zip/
 	wget --tries 2 --connect-timeout=60 https://www.ka2ddo.org/ka2ddo/YAAC.zip
-	sudo apt-get install -y openjdk-8-jre librxtx-java
+	sudo apt-get install -y librxtx-java openjdk-10-dbg
 	mkdir -p ${HOME}/YAAC
 	cd ${HOME}/YAAC || return
 	touch YAAC
