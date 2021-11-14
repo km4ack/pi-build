@@ -2,7 +2,7 @@
 
 #this script used to check for apps that need updates
 
-UPDATEFILE=/run/user/1000/bapupdate.txt
+UPDATEFILE=/run/user/$UID/bapupdate.txt
 
 #Delete file if exist
 if [ -f $UPDATEFILE ]; then
