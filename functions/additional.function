@@ -608,7 +608,7 @@ GPREDICT() {
 #	TQSL
 ##################################
 TQSL() {
-	sudo apt install -y cmake g++ libexpat1-dev libssl-dev libdb++-dev libcurl4-openssl-dev libwxgtk3.0-dev
+	sudo apt install -y cmake g++ libexpat1-dev libssl-dev libdb++-dev libcurl4-openssl-dev libwxgtk3.0-gtk3-dev
 	cd ${BUILDDIR} || return
 	CUR=$(curl -s http://www.arrl.org/tqsl-download | grep "for Linux" | sed 's/.*TQSL //' | awk '{print $1}')
 	wget http://www.arrl.org/tqsl/tqsl-${CUR}.tar.gz
