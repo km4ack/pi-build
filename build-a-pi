@@ -472,7 +472,7 @@ cat >tempsound <<EOF
 options snd-bcm2835 index=0
 
 #USB soundcard
-options snd-usb-audio index=2
+options snd-usb-audio index=3
 EOF
 sudo chown root:root tempsound
 sudo mv tempsound /etc/modprobe.d/alsa.conf
