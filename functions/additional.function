@@ -83,7 +83,7 @@ PAT-MENU() {
 	cd ${HOME}
 	git clone https://github.com/km4ack/patmenu2.git ${HOME}/patmenu2 && bash ${HOME}/patmenu2/setup
 	sed -i "s/N0CALL/${CALL}/" ${HOME}/patmenu2/config
-	sed -i 's/1,0/2,0/g' ${HOME}/patmenu2/config
+	sed -i 's/1,0/3,0/g' ${HOME}/patmenu2/config
 	#restore config files
 	if [ -d ${DIR}/patconfig/ ]; then
 		mv ${DIR}/patconfig/* ${HOME}/patmenu2/
