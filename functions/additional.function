@@ -318,6 +318,8 @@ QSSTV() {
 	sudo make clean
 	cd ${BUILDDIR} || return
 	rm *.gz
+	mkdir -p /usr/local/share/pixmaps/
+	sudo cp ${BUILDDIR}/${SSTVTAR}/icons/qsstv.png /usr/local/share/pixmaps/
 
 cat >qsstv.desktop <<EOF
 [Desktop Entry]
@@ -325,7 +327,7 @@ Name=QSSTV
 Comment=Slow Scan TV
 GenericName=QSSTV
 Exec=/usr/local/bin/qsstv
-Icon=${HOME}/GridTracker/gridtracker.png
+Icon=qsstv.png
 Type=Application
 Terminal=false
 Categories=HamRadio;
