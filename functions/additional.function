@@ -154,6 +154,8 @@ WSJTX() {
 	cmake -DWSJT_SKIP_MANPAGES=ON -DWSJT_GENERATE_DOCS=OFF
 	sudo cmake --build . --target install
 	sudo mv ${BUILDDIR}/${FT8DIR}/bin/* /usr/local/bin/
+	sudo cp ${BUILDDIR}/${FT8DIR}/share/applications/wsjtx.desktop /usr/share/applications/
+	sudo cp ${BUILDDIR}/${FT8DIR}/share/pixmaps/wsjtx_icon.png /usr/share/pixmaps/
 
 #old way of installing. left for reference
 	#cd ${DIR}
