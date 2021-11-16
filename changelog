@@ -1,4 +1,21 @@
-version=3.1.3
+version=3.2.0
+
+3.2.0		fix hamlib - https://github.com/km4ack/pi-build/issues/338
+		fix YAAC install - https://github.com/km4ack/pi-build/issues/339
+		fix variable - https://github.com/km4ack/pi-build/issues/340
+		fix QSSTV install - https://github.com/km4ack/pi-build/issues/346
+		fix TQSL install - https://github.com/km4ack/pi-build/issues/347
+		fix xgps error - https://github.com/km4ack/pi-build/issues/342
+		fix sound card number issue - https://github.com/km4ack/pi-build/issues/348
+		fix conky temperature display error - https://github.com/km4ack/pi-build/issues/334 
+		fix qsstv icon - https://github.com/km4ack/pi-build/issues/333 
+		build JS8Call from source - https://github.com/km4ack/pi-build/issues/341
+		build wsjtx from source
+		revert chirp to apt install until it can be built from source on Bullseye - https://github.com/km4ack/pi-build/issues/337
+		revert cqrlog to apt install  until it can be built from source on Bullseye		
+		NOTE: This version will NOT support Buster
+
+3.1.4		last update for Build a Pi to support Buster
 
 3.1.3		Split app check from update script into new app-check script
 		fix variable in menu-update script
