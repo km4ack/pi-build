@@ -97,7 +97,7 @@ JS8CALL() {
 
 #Verify HAMLIB installed or JS8 Won't Build.
 if ! hash rigctl 2>/dev/null; then
-	source ${MYPATH}/functions/base.functions && HAMLIB
+	source ${MYPATH}/functions/base.function && HAMLIB
 	source ${MYPATH}/config
 fi
 
