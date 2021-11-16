@@ -278,7 +278,11 @@ PYQSO() {
 #	CQRLOG
 ##################################
 CQRLOG() {
-	#sudo apt-get install -y cqrlog
+
+	sudo apt-get install -y cqrlog
+
+OLDCODE(){
+	#Old code left for reference
 	sudo apt-get install -y lcl-2.0 lazarus-2.0 fp-compiler-3.0.4 fpc-3.0.4 libssl-dev git build-essential \
 		libmariadbclient-dev lazarus-ide lcl lcl-gtk2 lcl-nogui lcl-units lcl-utils lazarus lazarus-doc lazarus-src \
 		fp-units-misc fp-units-rtl fp-utils fpc fpc-source libssl-dev default-mysql-client-core default-mysql-server \
@@ -312,6 +316,7 @@ Categories=HamRadio;Utility
 EOF
 
 	sudo mv cqrlog.desktop /usr/share/applications/
+}
 
 }
 
@@ -319,6 +324,11 @@ EOF
 #	CHIRP
 ##################################
 CHIRP() {
+
+sudo apt install -y chirp
+
+OLDCODE(){
+	#left for reference
 	cd ${DIR} || return
 	wget --tries 2 --connect-timeout=60 https://trac.chirp.danplanet.com/chirp_daily/LATEST/
 	CHIRPBUILD=$(cat index.html | grep .tar.gz | grep chirp-daily- | awk '{ print $6 }' | sed 's/.*"//' | sed 's/>//' | sed 's/[<].*$//')
@@ -331,6 +341,7 @@ CHIRP() {
 	cd $CHIRPDIR || return
 	sudo python setup.py install
 	pip install future
+}
 }
 
 ##################################
