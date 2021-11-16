@@ -93,13 +93,47 @@ PAT-MENU() {
 #	JS8Call
 ##################################
 JS8CALL() {
-	cd ${DIR}
-	JS8LATE=$(curl -s http://files.js8call.com/latest.html | grep armhf | awk '{ print $2 }' | sed 's/href=//' | sed 's/"//g')
-	JS8PKG=$(curl -s http://files.js8call.com/latest.html | grep armhf | awk '{ print $2 }' | sed 's/\///g' | sed 's/href="http:files.js8call.com[0-9].[0-9].[0-9]//' | sed 's/"//')
-	wget --tries 2 --connect-timeout=60 ${JS8LATE} || echo "Can't Download JS8Call" >>${BUILDLOG}
-	sudo dpkg -i ${JS8PKG}
-	sudo apt-get --fix-broken -y install
-	sudo dpkg -i ${JS8PKG}
+#https://9a3gos.com/install-js8call-2-0-0-rc3-on-ubuntu-19-10-hamlib/
+
+#Verify HAMLIB installed or JS8 Won't Build.
+if ! hash rigctl 2>/dev/null; then
+	source ${MYPATH}/functions/base.functions && HAMLIB
+	source ${MYPATH}/config
+fi
+
+echo "###############################"
+echo "Installing JS8Call Dependancies"
+echo "###############################"
+sudo apt-get install -y build-essential gfortran autoconf automake libtool cmake git asciidoctor libfftw3-dev qtdeclarative5-dev texinfo libqt5multimedia5 libqt5multimedia5-plugins qtmultimedia5-dev libusb-1.0.0-dev libqt5serialport5-dev asciidoc libudev-dev
+
+JS8PKG=$(curl -s http://files.js8call.com/latest.html | grep .tgz | sed 's/.*js8call-/js8call-/;s/<.*$//')
+JS8VERSION=$(echo $JS8PKG | sed 's/js8call-//;s/.tgz.*$//')
+cd ${BUILDDIR}
+echo "###################"
+echo "Downloading JS8Call"
+echo "###################"
+wget http://files.js8call.com/$JS8VERSION/$JS8PKG
+tar -xvf $JS8PKG
+rm $JS8PKG
+cd ${BUILDDIR}/js8call
+echo "#################"
+echo "Compiling JS8Call"
+echo "#################"
+cmake -D CMAKE_INSTALL_PREFIX=$HOME/Downloads/js8call
+cmake --build . -- -j4
+sudo cp js8 js8call /usr/local/bin
+sudo cp js8call.desktop /usr/share/applications
+sudo cp ./artwork/icon_128.svg /usr/share/pixmaps/js8call_icon.svg
+
+
+#Old Way left for reference
+	#cd ${DIR}
+	#JS8LATE=$(curl -s http://files.js8call.com/latest.html | grep armhf | awk '{ print $2 }' | sed 's/href=//' | sed 's/"//g')
+	#JS8PKG=$(curl -s http://files.js8call.com/latest.html | grep armhf | awk '{ print $2 }' | sed 's/\///g' | sed 's/href="http:files.js8call.com[0-9].[0-9].[0-9]//' | sed 's/"//')
+	#wget --tries 2 --connect-timeout=60 ${JS8LATE} || echo "Can't Download JS8Call" >>${BUILDLOG}
+	#sudo dpkg -i ${JS8PKG}
+	#sudo apt-get --fix-broken -y install
+	#sudo dpkg -i ${JS8PKG}
 }
 
 ##################################
