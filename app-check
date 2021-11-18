@@ -609,12 +609,12 @@ else
 fi
 
 #----------------------------------------------------#
-#		ZYGRIB Viewer
+#		XYGRIB Viewer
 #----------------------------------------------------#
-if [ -f /usr/bin/zyGrib ]; then
-	echo "ZYGRIB=Installed" >> $UPDATEFILE
+if [ -f /usr/bin/xyGrib ]; then
+	echo "XYGRIB=Installed" >> $UPDATEFILE
 else
-	echo "ZYGRIB=Not_Installed" >> $UPDATEFILE
+	echo "XYGRIB=Not_Installed" >> $UPDATEFILE
 fi
 
 #----------------------------------------------------#
