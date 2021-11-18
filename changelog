@@ -12,7 +12,7 @@ version=3.2.0
 		build JS8Call from source - https://github.com/km4ack/pi-build/issues/341
 		build wsjtx from source
 		revert chirp to apt install until it can be built from source on Bullseye - https://github.com/km4ack/pi-build/issues/337
-		removed zygrib support - app not available with apt
+		replace zybrig with xygrib
 		remove cqrlog - installing from apt breaks hamlib		
 		NOTE: This version will NOT support Buster
 
