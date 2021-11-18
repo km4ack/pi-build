@@ -377,7 +377,6 @@ yad --center --list --checklist --width=600 --height=600 --separator="" \
 	false "M0IAX" "Tools for JS8Call Messages" \
 	false "WSJTX" "Weak Signal Digital Mode Software" \
 	false "PYQSO" "Logging Software" \
-	false "CQRLOG" "Logging Software" \
 	false "HAMRS" "Logging Software" \
 	false "EES" "KM4ACK Emergency Email Server" \
 	false "QSSTV" "Slow Scan TV" \
@@ -399,7 +398,7 @@ fi
 
 if [ ${BUT} = 3 ]; then
 	ADDAPPS=(CONKY PI-APRS CHIRP GARIM PAT PAT-MENU JS8CALL M0IAX WSJTX PYQSO
-		CQRLOG HAMRS EES QSSTV GRIDTRACKER HAMCLOCK PROPAGATION YAAC XASTIR GPREDICT TQSL
+		HAMRS EES QSSTV GRIDTRACKER HAMCLOCK PROPAGATION YAAC XASTIR GPREDICT TQSL
 		GRIDCALC)
 
 	for i in "${ADDAPPS[@]}"; do
@@ -460,7 +459,6 @@ yad --center --list --checklist --width=600 --height=600 --separator="" \
 	false "BPQ" "LinBPQ Software" \
 	false "BATT" "Battery Test Script" \
 	false "VNC" "VNC Client Application" \
-	false "ZYGRIB" "Grib File Viewer" \
 	--button="Exit":1 \
 	--button="Check All and Continue":3 \
 	--button="Install Selected":2 >${UTILITY}
@@ -470,7 +468,7 @@ if [ ${BUT} = 252 ] || [ ${BUT} = 1 ]; then
 fi
 
 if [ ${BUT} = 3 ]; then
-	UTILAPPS=(DIPOLE PACKETSEARCH CALLSIGN TEMPCONVERT GPARTED SHOWLOG PISTATS TELNET PITERM QTSOUND SECURITY YGATE BPQ BATT VNC ZYGRIB)
+	UTILAPPS=(DIPOLE PACKETSEARCH CALLSIGN TEMPCONVERT GPARTED SHOWLOG PISTATS TELNET PITERM QTSOUND SECURITY YGATE BPQ BATT VNC)
 	for i in "${UTILAPPS[@]}"; do
 		echo "$i" >>${UTILITY}
 	done
