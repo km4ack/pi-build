@@ -298,8 +298,7 @@ EOF
 ##################################
 PYQSO() {
 	sudo apt-get install -y pyqso
-	#remove b/c it breaks hamlib installed from source
-	sudo apt purge -y libhamlib4
+
 }
 
 ##################################
