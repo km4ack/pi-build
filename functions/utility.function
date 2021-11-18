@@ -417,11 +417,11 @@ VNC() {
 }
 
 ##################################
-#	ZYGRIB Viewer
+#	XYGRIB Viewer
 ##################################
-ZYGRIB() {
+XYGRIB() {
     sudo apt install -y zygrib
-    sudo apt install -y zygrib-maps
+
 }
 
 ##################################
