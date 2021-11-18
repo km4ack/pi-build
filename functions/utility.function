@@ -193,7 +193,7 @@ PISTATS() {
     wget http://www.w1hkj.com/PI/${CUR}
     tar -xzvf ${CUR}
     rm ${CUR}
-    PISTATDIR=$(ls ${HOME} | grep pistats)
+    PISTATDIR=$(ls ${BUILDDIR} | grep pistats)
     cd ${PISTATDIR} || return
     sudo apt-get install -y libfltk1.3-dev
     make
