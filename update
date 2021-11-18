@@ -454,7 +454,6 @@ yad --center --list --checklist --width=600 --height=600 --separator="" \
 	false "YAAC" "$YAAC" "Yet Another APRS Client" \
 	false "PI-APRS" "$PIAPRS" "APRS Messaging Client" \
 	false "PYQSO" "$PYQSO" "Logging Software" \
-	false "CQRLOG" "$CQRLOG" "Logging Software" \
 	false "HAMRS" "$HAMRS" "Logging Software" \
 	false "QSSTV" "$QSSTV" "Slow scan TV" \
 	false "GRIDTRACKER" "$GRIDTRACK" "Track grids in WSJTX" \
@@ -527,7 +526,6 @@ yad --center --list --checklist --width=600 --height=600 --separator="" \
 	false "BPQ" "$BPQ" "LinBPQ Software" \
 	false "BATT" "$BATT" "Battery Test Script" \
 	false "VNC" "$VNC" "VNC Viewer Application" \
-	false "ZYGRIB" "$ZYGRIB" "Grib File Viewer" \
 	--button="Exit":1 \
 	--button="Install/Update Selected":2 >${UTILITY}
 BUT=$?
