@@ -82,6 +82,7 @@ INTRO=$(yad --width=600 --height=300 --text-align=center --center --title="Out o
 	cd $HOME/pi-build
 	git checkout buster 
 	bash build-a-pi & exit
+fi
 
 #####################################
 #	end Old OS Check
