@@ -602,6 +602,10 @@ rm ${BASE} ${ADDITIONAL} ${UTILITY} ${FLSUITE} >/dev/null 2>&1
 rm -rf ${DIR} >/dev/null 2>&1
 sudo apt -y autoremove > /dev/null 2>&1
 
+#remove libham (rigctl) installed from apt
+#since it conflicts with hamlib installed from source
+sudo apt purge -y libhamlib4
+
 #restore crontab
 crontab ${TEMPCRON}
 rm ${TEMPCRON}
