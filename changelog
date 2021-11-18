@@ -12,7 +12,8 @@ version=3.2.0
 		build JS8Call from source - https://github.com/km4ack/pi-build/issues/341
 		build wsjtx from source
 		revert chirp to apt install until it can be built from source on Bullseye - https://github.com/km4ack/pi-build/issues/337
-		revert cqrlog to apt install  until it can be built from source on Bullseye		
+		removed zygrib support - app not available with apt
+		remove cqrlog - installing from apt breaks hamlib		
 		NOTE: This version will NOT support Buster
 
 3.1.4		last update for Build a Pi to support Buster
