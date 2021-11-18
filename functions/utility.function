@@ -512,7 +512,7 @@ sudo mv /run/user/$UID/packetsearch.desktop /usr/share/applications/
 #Documentation - https://www.cantab.net/users/john.wiseman/Documents/QtSoundModem.html
 
 QTSOUND(){
-sudo apt install libqt5serialbus5
+sudo apt install -y libqt5serialport5
 cd ${HOME}/Downloads || return
 wget --tries 2 --connect-timeout=60 https://www.cantab.net/users/john.wiseman/Downloads/Beta/piQtSoundModem
 chmod +x piQtSoundModem
