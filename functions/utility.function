@@ -197,9 +197,9 @@ PISTATS() {
     cd ${PISTATDIR} || return
     sudo apt-get install -y libfltk1.3-dev
     make
-    make clean
     sudo mv pistats /usr/local/bin
     sudo mv ${BUILDDIR}/${PISTATDIR}/data/pistats.desktop /usr/share/applications/
+    make clean
     cd ${HOME} || return
     
 }
