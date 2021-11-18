@@ -575,30 +575,6 @@ rm ${BASE} ${ADDITIONAL} ${UTILITY} ${FLSUITE} >/dev/null 2>&1
 crontab ${TEMPCRON}
 rm ${TEMPCRON}
 
-#####################################
-#	Pat 12 Temp Workaround
-#####################################
-#This will move the user to the "version12" branch of the Pat Menu code 
-#until this can be implemented into the main branch of code. This will
-#allow Pat Menu to support both the new version of Pat as well as older
-#versions. This section of code needs to be removed once the "version12"
-#branch is merged with the master branch
-
-PAT_VERSION=$(pat version | awk '{print $2}' | sed 's/v0.//;s/.0//')
-
-if [ "$PAT_VERSION" -le 11 ]; then
-echo "pat version 11 detected"
-else
-echo "pat version 12 or greater detected"
-echo "moving pat menu to the version12 branch"
-cd $HOME/patmenu2
-git pull
-git checkout version12
-fi
-
-#####################################
-#	END Pat 12 Temp Workaround
-#####################################
 #reboot when done
 yad --width=400 --height=200 --title="Reboot" --image ${LOGO} \
 	--text-align=center --skip-taskbar --image-on-top \
