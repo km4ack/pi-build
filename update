@@ -526,6 +526,7 @@ yad --center --list --checklist --width=600 --height=600 --separator="" \
 	false "BPQ" "$BPQ" "LinBPQ Software" \
 	false "BATT" "$BATT" "Battery Test Script" \
 	false "VNC" "$VNC" "VNC Viewer Application" \
+	false "XYGRIB" "$XYGRIB" "Grib file viewer" \
 	--button="Exit":1 \
 	--button="Install/Update Selected":2 >${UTILITY}
 BUT=$?
