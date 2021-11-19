@@ -420,7 +420,7 @@ VNC() {
 #	XYGRIB Viewer
 ##################################
 XYGRIB() {
-    sudo apt install -y zygrib
+    sudo apt install -y xygrib
 
 }
 
