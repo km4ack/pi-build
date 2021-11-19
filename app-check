@@ -611,7 +611,7 @@ fi
 #----------------------------------------------------#
 #		XYGRIB Viewer
 #----------------------------------------------------#
-if [ -f /usr/bin/xyGrib ]; then
+if [ -f /usr/share/xygrib ]; then
 	echo "XYGRIB=Installed" >> $UPDATEFILE
 else
 	echo "XYGRIB=Not_Installed" >> $UPDATEFILE
