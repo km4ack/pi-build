@@ -561,10 +561,10 @@ EOF
 
 EES() {
 
-	#install PHP7.3 if not installed
+	#install PHP7.4 if not installed
 	#this will also install apache2
-	if ! hash php7.3 2>/dev/null; then
-		sudo apt install -y php7.3
+	if ! hash php7.4 2>/dev/null; then
+		sudo apt install -y php7.4
 	fi
 	#install ghostwriter if needed
 	#this is used to mod the new index.html
