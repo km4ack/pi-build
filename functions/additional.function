@@ -587,7 +587,7 @@ EES() {
 	sudo sed -i 's/REMINDER\ FOR\ OPERATOR\ TO\ DO\ SOMETHING/ENABLE\ AUTO\ POST\ REPLY\ IN\ CRON/' /var/www/html/config.php
 	cd ${DIR} || return
 	#Change Pat Winlink port so it won't interfer with the EES
-	sed -i 's/0.0.0.0:8080/0.0.0.0:5000/' ${HOME}/.wl2k/config.json
+	sed -i 's/0.0.0.0:8080/0.0.0.0:5000/' ${XDG_CONFIG_HOME}/pat/config.json
 	sed -i 's/PORT=8080/PORT=5000/' ${HOME}/patmenu2/config
 
 	sudo killall pat
