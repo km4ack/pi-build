@@ -1,3 +1,6 @@
+BUILDDIR=$HOME/.bap-source-files
+mkdir -p ${BUILDDIR}
+
 ##################################
 #	DIPOLE CALC
 ##################################
@@ -123,11 +126,11 @@ RTC() {
         IC2ACTIVE=$(ls /dev/*i2c*)
 
         if [ ${IC2ACTIVE} = '/dev/i2c-1' ]; then
-            echo "IC2 is active"
+            echo "I2C is active"
         else
             yad --form --width=500 --text-align=center --center --title="Build-a-Pi" --text-align=center \
                 --image ${LOGO} --window-icon=${LOGO} --image-on-top --separator="|" --item-separator="|" \
-                --text="Please enable IC2 interface in the Raspberry Pi Configuration and try again" \
+                --text="Please enable I2C interface in the Raspberry Pi Configuration and try again" \
                 --button=gtk-close
             exit 1
         fi
@@ -185,7 +188,7 @@ by connecting to the internet or attaching a GPS" \
 #	PISTATS
 ##################################
 PISTATS() {
-    cd ${HOME} || return
+    cd ${BUILDDIR} || return
     CUR=$(curl http://www.w1hkj.com/PI/pistats.html | grep tgz | sed 's/^.*href="//;s/">.*//')
     wget http://www.w1hkj.com/PI/${CUR}
     tar -xzvf ${CUR}
@@ -194,10 +197,11 @@ PISTATS() {
     cd ${PISTATDIR} || return
     sudo apt-get install -y libfltk1.3-dev
     make
+    make clean
     sudo mv pistats /usr/local/bin
-    sudo mv ${HOME}/${PISTATDIR}/data/pistats.desktop /usr/share/applications/
+    sudo mv ${BUILDDIR}/${PISTATDIR}/data/pistats.desktop /usr/share/applications/
     cd ${HOME} || return
-    rm -rf "${PISTATDIR}"
+    
 }
 
 ##################################
@@ -361,7 +365,7 @@ his/her station.
 
 After completing the config file, you can
 start LinBPQ from the command line by running:
-~/linbpq/.linbpq
+~/linbpq/./linbpq
 
 Depending on your station setup, you may
 need to start rig control, direwolf, or

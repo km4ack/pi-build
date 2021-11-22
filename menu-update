@@ -13,6 +13,8 @@ REV=20210815
 
 source $HOME/.config/KM4ACK
 
+sudo mkdir -p /usr/local/share/applications
+
 
 FLSUITE(){
 ##########################
@@ -209,8 +211,8 @@ fi
 BAP
 
 #check to see if this script has already run
-if [ "$MENU" = "$REV" ]; then
 REV=$(cat $HOME/.config/KM4ACK | sed 's/MENU=//')
+if [ "$MENU" = "$REV" ]; then
 echo "menu mods already made"
 echo "Revision $REV installed"
 exit

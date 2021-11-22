@@ -1,7 +1,37 @@
-version=3.1.1
+version=3.1.3
+
+3.1.3		Split app check from update script into new app-check script
+		fix variable in menu-update script
+		update flsuite with new build directory
+		update base apps with new build directory
+		update utility apps with new build directory
+		update ham app with new build directory
+		change pat config file location for Pat version 0.12
+		add pat 12 check to update script - https://github.com/km4ack/pi-build/issues/328
+		fix mistake in jq command with new pat path
+
+3.1.2		Fix FLSUITE links
 
 3.1.1		Remove echo statement from patch menu script.
 		Add libusb-1.0 and libusb-dev to hamlib build section https://github.com/km4ack/pi-build/issues/296
+		fix FLAMP install - https://github.com/km4ack/pi-build/issues/301
+		fix BAP menu - https://github.com/km4ack/pi-build/issues/302
+		fix pat secutiry issue - https://github.com/km4ack/pi-build/issues/299
+		add build/update logging - https://github.com/km4ack/pi-build/issues/294
+		add "none" to GPS selection - https://github.com/km4ack/pi-build/issues/293
+		fix spelling of i2c - https://github.com/km4ack/pi-build/issues/289
+		fix linbpq help file - https://github.com/km4ack/pi-build/issues/287
+		fix python-suds error - https://github.com/km4ack/pi-build/issues/272
+		fix conky awk error - https://github.com/km4ack/pi-build/issues/306
+		fix gridtracker link - https://github.com/km4ack/pi-build/issues/314
+		fix gridtracker install error - https://github.com/km4ack/pi-build/issues/286
+		fix hamrs install bug - https://github.com/km4ack/pi-build/issues/288
+		fix gpsd issue - https://github.com/km4ack/pi-build/issues/316
+		resolve issue 199 - https://github.com/km4ack/pi-build/issues/199
+		remove exit option for GPS - https://github.com/km4ack/pi-build/issues/318
+		fix multiple chrony.conf entries - https://github.com/km4ack/pi-build/issues/317
+		fix FLDIGI download link
+		
 
 3.1.0		add Build a Pi Patch Tool
 

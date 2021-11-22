@@ -1,7 +1,9 @@
 #script to install FLDIGI from source
 #20200121 km4ack
 
-mkdir -p ${HOME}/Downloads
+BUILDDIR=$HOME/.bap-source-files
+mkdir -p ${BUILDDIR}
+
 FLSTART() {
 	#find how much memory we are working with
 	FREEMEM=$(free -m | grep Mem: | awk '{ print $2 }')
@@ -33,9 +35,9 @@ FLSTART() {
 
 	if [ -z "$FLX" ]; then
 		#determine latest FLXMLRPC & download
-		FLXM=$(curl -s http://www.w1hkj.com/files/flxmlrpc/ | grep .tar.gz | sed 's/<li><a\ href="//' | sed 's/">\ flxmlrpc.*$//')
+		FLXM=$(curl -s http://www.w1hkj.com/files/flxmlrpc/ | grep .tar.gz | sed 's/.*ref="//;s/">.*$//')
 		XMPKG=$(echo ${FLXM} | sed 's/.tar.gz//')
-		cd ${HOME}/Downloads || return
+		cd ${BUILDDIR} || return
 		wget --tries 2 --connect-timeout=60 http://www.w1hkj.com/files/flxmlrpc/${FLXM}
 		tar -zxvf ${FLXM}
 		rm ./*.gz #THIS IS DANGEROUS -- SEE SC2035
@@ -46,6 +48,7 @@ FLSTART() {
 		make
 		sudo make install
 		sudo ldconfig
+		sudo make clean
 	fi
 }
 
@@ -54,11 +57,11 @@ FLSTART() {
 ##################################
 FLRIG() {
 	#Determine latest FLRIG
-	RIGTAR=$(curl -s http://www.w1hkj.com/files/flrig/ | grep .tar.gz | sed 's/<li><a\ href="//' | sed 's/">\ flrig.*$//' | tail -1)
+	RIGTAR=$(curl -s http://www.w1hkj.com/files/flrig/ | grep .tar.gz | sed 's/.*ref="//;s/".*$//')
 	RIGPKG=$(echo ${RIGTAR} | sed 's/.tar.gz//')
 
 	#Download latest FLRIG
-	cd ${HOME}/Downloads || return
+	cd ${BUILDDIR} || return
 	wget --tries 2 --connect-timeout=60 http://www.w1hkj.com/files/flrig/${RIGTAR}
 	tar -zxvf ${RIGTAR}
 	rm ./*.gz #THIS IS DANGEROUS -- SEE SC2035
@@ -69,6 +72,7 @@ FLRIG() {
 	make
 	sudo make install
 	sudo ldconfig
+	sudo make clean
 	sudo apt-mark manual libjpeg9
 }
 
@@ -77,11 +81,11 @@ FLRIG() {
 ##################################
 FLWRAP() {
 	#Determine latest FLWRAP
-	WRAPTAR=$(curl -s http://www.w1hkj.com/files/flwrap/ | grep .tar.gz | sed 's/<li><a\ href="//' | sed 's/">\ flwrap.*$//')
+	WRAPTAR=$(curl -s http://www.w1hkj.com/files/flwrap/ | grep .tar.gz | sed 's/.*ref="//;s/".*$//')
 	WRAPPKG=$(echo ${WRAPTAR} | sed 's/.tar.gz//')
 
 	#Download latest FLWRAP
-	cd ${HOME}/Downloads || return
+	cd ${BUILDDIR} || return
 	wget --tries 2 --connect-timeout=60 http://www.w1hkj.com/files/flwrap/${WRAPTAR}
 	tar -zxvf ${WRAPTAR}
 	rm ./*.gz #THIS IS DANGEROUS -- SEE SC2035
@@ -92,6 +96,7 @@ FLWRAP() {
 	make
 	sudo make install
 	sudo ldconfig
+	sudo make clean
 }
 
 ##################################
@@ -99,11 +104,11 @@ FLWRAP() {
 ##################################
 FLDIGI() {
 	#Determine latest FLDIGI
-	FLTAR=$(curl -s http://www.w1hkj.com/files/fldigi/ | grep .tar.gz | sed 's/<li><a\ href="//' | sed 's/">\ fldigi.*$//')
+	FLTAR=$(curl -s http://www.w1hkj.com/files/fldigi/ | grep .tar.gz | sed 's/.*fldigi/fldigi/;s/.gz.*$/.gz/')
 	FLPKG=$(echo ${FLTAR} | sed 's/.tar.gz//')
 
 	#Download latest FLDIGI tar file
-	cd ${HOME}/Downloads || return
+	cd ${BUILDDIR} || return
 	wget --tries 2 --connect-timeout=60 http://www.w1hkj.com/files/fldigi/${FLTAR}
 	tar -zxvf ${FLTAR}
 	rm ./*.gz #THIS IS DANGEROUS -- SEE SC2035
@@ -114,38 +119,40 @@ FLDIGI() {
 	make
 	sudo make install
 	sudo ldconfig
+	sudo make clean
 }
 ##################################
 #	FLMSG
 ##################################
 FLMSG() {
 	#Determine latest FLMSG
-	MSGTAR=$(curl -s http://www.w1hkj.com/files/flmsg/ | grep .tar.gz | sed 's/<li><a\ href="//' | sed 's/">\ flmsg.*$//' | tail -1)
+	MSGTAR=$(curl -s http://www.w1hkj.com/files/flmsg/ | grep .tar.gz | sed 's/.*ref="//;s/">.*$//')
 	MSGPKG=$(echo ${MSGTAR} | sed 's/.tar.gz//')
 
 	#download FLMSG
-	cd ${HOME}/Downloads || return
+	cd ${BUILDDIR} || return
 	wget --tries 2 --connect-timeout=60 http://www.w1hkj.com/files/flmsg/${MSGTAR}
 	tar -zxvf ${MSGTAR}
 	rm ./*.gz #THIS IS DANGEROUS -- SEE SC2035
 
 	#Build FLMSG
 	cd ${MSGPKG} || return
-	./configure --prefix=/usr/local --enable-static
+	./configure --prefix=/usr/local --enable-static --without-flxmlrpc
 	make
 	sudo make install
 	sudo ldconfig
+	sudo make clean
 }
 ##################################
 #	FLAMP
 ##################################
 FLAMP() {
 	#determine latest FLAMP
-	AMPTAR=$(curl -s http://www.w1hkj.com/files/flamp/ | grep .tar.gz | sed 's/<li><a\ href="//' | sed 's/">\ flamp.*$//')
+	AMPTAR=$(curl -s http://www.w1hkj.com/files/flamp/ | grep .tar.gz | tail -1 | sed 's/.*ref="//;s/">.*$//')
 	AMPPKG=$(echo ${AMPTAR} | sed 's/.tar.gz//')
 
 	#download FLAMP
-	cd ${HOME}/Downloads || return
+	cd ${BUILDDIR} || return
 	wget --tries 2 --connect-timeout=60 http://www.w1hkj.com/files/flamp/$AMPTAR
 	tar -zxvf ${AMPTAR}
 	rm ./*.gz #THIS IS DANGEROUS -- SEE SC2035
@@ -156,17 +163,18 @@ FLAMP() {
 	make
 	sudo make install
 	sudo ldconfig
+	sudo make clean
 }
 ##################################
 #	FLNET
 ##################################
 FLNET() {
 	#determine lastest FLNET
-	NETTAR=$(curl -s http://www.w1hkj.com/files/flnet/ | grep .tar.gz | sed 's/<li><a\ href="//' | sed 's/">\ flnet.*$//')
+	NETTAR=$(curl -s http://www.w1hkj.com/files/flnet/ | grep .tar.gz | sed 's/.*ref="//;s/">.*$//')
 	NETPKG=$(echo ${NETTAR} | sed 's/.tar.gz//')
 
 	#download FLNET
-	cd ${HOME}/Downloads || return
+	cd ${BUILDDIR} || return
 	wget --tries 2 --connect-timeout=60 http://www.w1hkj.com/files/flnet/$NETTAR
 	tar -zxvf ${NETTAR}
 	rm ./*.gz #THIS IS DANGEROUS -- SEE SC2035
@@ -177,6 +185,7 @@ FLNET() {
 	make
 	sudo make install
 	sudo ldconfig
+	sudo make clean
 }
 
 # 2021/08/15 - wb0sio - copied from menu-update so menu items are updated when installed from the update script.

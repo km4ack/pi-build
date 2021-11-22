@@ -5,6 +5,8 @@ TEMPCRON=${MYPATH}/cron.tmp
 DIR=${MYPATH}/temp
 WHO=$(whoami)
 mkdir -p ${DIR}
+BUILDDIR=$HOME/.bap-source-files
+mkdir -p ${BUILDDIR}
 
 source ${MYPATH}/config
 
@@ -19,6 +21,8 @@ PAT() {
 	cd ${DIR}
 	if [ -f ${HOME}/.wl2k/config.json ]; then
 		cp ${HOME}/.wl2k/config.json ${DIR}/config.json
+	elif [ -f ${XDG_CONFIG_HOME}/pat/config.json ]; then
+		cp $XDG_CONFIG_HOME/pat/config.json ${DIR}/config.json
 	fi
 	NEWPATV=$(curl -s https://github.com/la5nta/pat/releases | grep armhf | head -1 | sed 's/.*pat_/pat_/' | sed 's/<\/a>.*$//')
 	NEWPAT=$(echo ${NEWPATV} | sed 's/pat_//' | sed 's/_linux_armhf.deb//' | sed 's/0\.//')
@@ -31,7 +35,18 @@ PAT() {
 	sudo systemctl start pat@${WHO}
 	sudo systemctl enable pat@${WHO}
 	cd ${DIR}
-	FIG=${HOME}/.wl2k/config.json
+	PAT_VERSION=$(pat version | awk '{print $2}' | sed 's/v0.//;s/.0//')
+	#The Pat Winlink config file will change location in version 0.12. The below if statement
+	#checks to see which version is installed.
+	#check to see if pat version is 12 or greater. Change config file location
+	#depending on which version.
+	if [ "$PAT_VERSION" -le 11 ]; then
+	echo "pat version 11 detected"
+	FIG=$HOME/.wl2k/config.json
+	else
+	echo "pat version 12 or greater detected"
+	FIG=$XDG_CONFIG_HOME/pat/config.json
+	fi
 	#set callsign
 	sed -i "s/\"mycall\": \".*\",/\"mycall\": \"${CALL}\",/" ${FIG}
 	#set password
@@ -40,8 +55,10 @@ PAT() {
 	#set locator
 	sed -i "s/\"locator\": \".*\",/\"locator\": \"$GRID\",/" ${FIG}
 	#Change localhost to 0.0.0.0
-	sed -i "s/\"http_addr\": \".*\",/\"http_addr\": \"0.0.0.0:$PORT\",/" ${FIG}
-	jq '.ax25.rig = '\"my-rig\"'' ${HOME}/.wl2k/config.json | jq '.ardop.rig = '\"my-rig\"'' | jq '.hamlib_rigs = {'\"my-rig\"': {"address": "127.0.0.1:4532", "network": "tcp"}}' >~/Desktop/config.json
+	#This is a secutiry risk. See https://github.com/km4ack/pi-build/issues/299
+	#Changed to 127.0.0.1 on 11OCT2021 KM4ACK
+	sed -i "s/\"http_addr\": \".*\",/\"http_addr\": \"127.0.0.1:$PORT\",/" ${FIG}
+	jq '.ax25.rig = '\"my-rig\"'' ${FIG} | jq '.ardop.rig = '\"my-rig\"'' | jq '.hamlib_rigs = {'\"my-rig\"': {"address": "127.0.0.1:4532", "network": "tcp"}}' >~/Desktop/config.json
 	mv ${HOME}/Desktop/config.json ${FIG}
 	sed -i 's/"enable_http": false,/"enable_http": true,/' ${FIG}
 
@@ -221,13 +238,14 @@ CQRLOG() {
 
 	sudo ln -s /usr/lib/arm-linux-gnueabihf/libmariadbclient.so /usr/lib/libmysqlclient.so
 
-	cd
+	cd ${BUILDDIR}
 	git clone https://github.com/ok2cqr/cqrlog.git
 	cd cqrlog
 	make
 	sudo make install
+	sudo make clean
 	cd ..
-	rm -rf cqrlog
+	#rm -rf cqrlog
 
 	cat >cqrlog.desktop <<EOF
 [Desktop Entry]
@@ -252,7 +270,7 @@ CHIRP() {
 	cd ${DIR} || return
 	wget --tries 2 --connect-timeout=60 https://trac.chirp.danplanet.com/chirp_daily/LATEST/
 	CHIRPBUILD=$(cat index.html | grep .tar.gz | grep chirp-daily- | awk '{ print $6 }' | sed 's/.*"//' | sed 's/>//' | sed 's/[<].*$//')
-	sudo apt-get -y install python-gtk2 python-serial python-libxml2
+	sudo apt-get -y install python-gtk2 python-serial python-libxml2 python-suds
 	mkdir ${HOME}/chirp
 	cd ${HOME}/chirp || return
 	wget --tries 2 --connect-timeout=60 https://trac.chirp.danplanet.com/chirp_daily/LATEST/$CHIRPBUILD
@@ -268,7 +286,7 @@ CHIRP() {
 ##################################
 GARIM() {
 	GPKG=$(curl -s https://www.whitemesa.net/garim/src/ | grep tar.gz | tail -1 | sed 's/^.*garim/garim/' | sed 's/tar.gz.*$/tar.gz/')
-	cd ${DIR} || return
+	cd ${BUILDDIR} || return
 	wget --tries 2 --connect-timeout=60 https://www.whitemesa.net/garim/src/$GPKG
 	tar -xzvf $GPKG
 	DIRR=$(echo $GPKG | sed 's/.tar.gz//')
@@ -276,6 +294,9 @@ GARIM() {
 	./configure
 	make
 	sudo make install
+	sudo make clean
+	cd ${BUILDDIR} || return
+	rm *.gz
 }
 
 ##################################
@@ -284,7 +305,7 @@ GARIM() {
 QSSTV() {
 	sudo apt-get install -y g++ libfftw3-dev qt5-default libpulse-dev libhamlib-dev libasound2-dev libv4l-dev libopenjp2-7 libopenjp2-7-dev
 
-	cd ${HOME}/Downloads || return
+	cd ${BUILDDIR} || return
 
 	TAR=$(curl -s http://users.telenet.be/on4qz/qsstv/downloads/ | grep tar.gz | sed 's/.*href="//' | sed 's/">.*$//' | tail -1)
 	wget --tries 2 --connect-timeout=60 http://users.telenet.be/on4qz/qsstv/downloads/$TAR
@@ -294,6 +315,9 @@ QSSTV() {
 	qmake
 	make
 	sudo make install
+	sudo make clean
+	cd ${BUILDDIR} || return
+	rm *.gz
 
 cat >qsstv.desktop <<EOF
 [Desktop Entry]
@@ -316,13 +340,14 @@ EOF
 GRIDTRACKER() {
 	cd ${HOME} || return
 	sudo apt-get install -y libgconf-2-4
+	GRIDDLL=$(curl -s https://tagloomis.com/downloads/ | grep linux-arm32 | sed 's/^.*href="//;s/".*//')
 	#Line below changed 05JULY2021 to correct https://github.com/km4ack/pi-build/issues/253
-	GRIDDLL=$(curl -s https://tagloomis.com/downloads/ | grep linux-arm | sed 's/^.*href="//;s/".*//')
+	#GRIDDLL=$(curl -s https://tagloomis.com/downloads/ | grep linux-arm | sed 's/^.*href="//;s/".*//')
 	wget --tries 2 --connect-timeout=60 $GRIDDLL
 	GRIDTAR=$(echo $GRIDDLL | sed 's/.*\///g')
 	tar -xzvf $GRIDTAR
 	rm ./*.gz
-	OLDFOLDER=$(ls | grep Grid)
+	OLDFOLDER=$(ls | grep GridTracker*-linux-arm32)
 	mv "$OLDFOLDER" $HOME/GridTracker
 	cat >gridtracker.desktop <<EOF
 [Desktop Entry]
@@ -348,22 +373,24 @@ PROPAGATION() {
 	sudo apt-get install -y gfortran yelp python3-gi python3-gi-cairo rarian-compat gnome-doc-utils pkg-config python3-dateutil python3-mpltoolkits.basemap python3-cairocffi libgtk-3-dev
 
 	#install primary program
-	cd ${HOME}/Downloads || return
+	cd ${BUILDDIR} || return
 	wget --tries 2 --connect-timeout=60 https://www.qsl.net/hz1jw/voacapl/downloads/voacapl-0.7.2.tar.gz
 	tar -xzf voacapl-0.7.2.tar.gz
 	cd voacapl-0.7.2 || return
 	./configure
 	make
 	sudo make install
+	sudo make clean
 
 	#install gui app for propagation reports
-	cd ${HOME}/Downloads
+	cd ${BUILDDIR}
 	wget --tries 2 --connect-timeout=60 https://www.qsl.net/hz1jw/pythonprop/downloads/pythonprop-0.28.tar.gz
 	tar -xzf pythonprop-0.28.tar.gz
 	cd pythonprop-0.28
 	./configure
 	sudo make install
-	${HOME}/Downloads/voacapl-0.7.2/makeitshfbc
+	sudo make clean
+	${BUILDDIR}/voacapl-0.7.2/makeitshfbc
 }
 
 ##################################
@@ -409,7 +436,7 @@ XASTIR() {
 		gv libcurl4-openssl-dev shapelib libshp-dev libpcre3-dev libproj-dev libdb-dev python-dev \
 		libax25-dev libwebp-dev libwebp-dev libgraphicsmagick1-dev festival festival-dev
 
-	cd || return
+	cd ${BUILDDIR} || return
 	git clone https://github.com/Xastir/Xastir.git
 	cd Xastir || return
 	./bootstrap.sh
@@ -418,8 +445,7 @@ XASTIR() {
 	../configure
 	make
 	sudo make install
-	cd || return
-	rm -rf Xastir
+	sudo make clean
 
 	cat >xastir.desktop <<EOF
 [Desktop Entry]
@@ -583,7 +609,7 @@ GPREDICT() {
 ##################################
 TQSL() {
 	sudo apt install -y cmake g++ libexpat1-dev libssl-dev libdb++-dev libcurl4-openssl-dev libwxgtk3.0-dev
-	cd ${HOME} || return
+	cd ${BUILDDIR} || return
 	CUR=$(curl -s http://www.arrl.org/tqsl-download | grep "for Linux" | sed 's/.*TQSL //' | awk '{print $1}')
 	wget http://www.arrl.org/tqsl/tqsl-${CUR}.tar.gz
 	tar -xzvf tqsl-${CUR}.tar.gz
@@ -592,8 +618,9 @@ TQSL() {
 	cmake .
 	make
 	sudo make install
-	sudo cp /home/pi/tqsl-${CUR}/apps/tqsl.desktop /usr/share/applications/
-	rm -rf "${HOME}/tqsl-${CUR}"
+	sudo make clean
+	sudo cp ${BUILDDIR}/tqsl-${CUR}/apps/tqsl.desktop /usr/share/applications/
+
 }
 
 ##################################
@@ -636,10 +663,18 @@ EOF
 #	HAMRS
 ##################################
 HAMRS() {
+#move any existing hamrs files that might get in the way - https://github.com/km4ack/pi-build/issues/288
+HAMRSCHECK=$(ls ~/Downloads/ | grep hamrs-)
+if [ -n $HAMRSCHECK ]; then
+echo "moving old hamrs file(s)"
+mkdir -p $HOME/Downloads/old-hamrs
+mv $HOME/Downloads/hamrs* $HOME/Downloads/old-hamrs
+fi
+
 cd ${HOME}/Downloads
 DL=$(curl https://www.hamrs.app | grep armv7 | sed 's/^.*href="//;s/">//')
 wget ${DL}
-HAMRS=$(ls | grep hamrs)
+HAMRS=$(ls | grep hamrs-)
 mv ${HAMRS} hamrs
 chmod +x hamrs
 sudo mv hamrs /usr/local/bin/

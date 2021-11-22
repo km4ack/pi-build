@@ -25,6 +25,7 @@ TEMPCRON=${MYPATH}/cron.tmp
 DIR=${MYPATH}/temp
 WHO=$(whoami)
 VERSION=$(grep "version=" ${MYPATH}/changelog | sed 's/version=//')
+DATE=$(date)
 
 FINISH() {
 	if [ -f "${BASE}" ]; then
@@ -266,14 +267,12 @@ if [ -n "${GPSINSTALL}" ]; then
 	yad --center --height="300" --width="300" --form --separator="|" --item-separator="|" --title="GPS" \
 		--image ${LOGO} --window-icon=${LOGO} --image-on-top \
 		--text="\r\r\r\r\r<b><big>Connect your GPS to the pi</big></b>" \
-		--button="Exit":1 \
 		--button="Continue":2
 
 	BUT=$?
-	if [ ${BUT} = 1 ] || [ ${BUT} = 252 ]; then
-		exit
-	fi
+
 	USB=$(ls /dev/serial/by-id)
+	USB=$(echo "NONE $USB") #see https://github.com/km4ack/pi-build/issues/293
 	USB=$(echo $USB | sed "s/\s/|/g")
 
 	GPS=$(yad --center --height="600" --width="300" --form --separator="|" --item-separator="|" --title="GPS" \
@@ -508,6 +507,7 @@ sudo mv build-a-pi.desktop /usr/share/applications/
 #	Install Base Apps
 #####################################
 touch ${RB}
+echo "INITIAL=\"build date $DATE version $VERSION\"" >> ${RB}
 source ${FUNCTIONS}/base.function
 while read i; do
 	$i
@@ -563,6 +563,31 @@ sudo apt -y autoremove > /dev/null 2>&1
 #restore crontab
 crontab ${TEMPCRON}
 rm ${TEMPCRON}
+
+#####################################
+#	Pat 12 Temp Workaround
+#####################################
+#This will move the user to the "version12" branch of the Pat Menu code 
+#until this can be implemented into the main branch of code. This will
+#allow Pat Menu to support both the new version of Pat as well as older
+#versions. This section of code needs to be removed once the "version12"
+#branch is merged with the master branch
+
+PAT_VERSION=$(pat version | awk '{print $2}' | sed 's/v0.//;s/.0//')
+
+if [ "$PAT_VERSION" -le 11 ]; then
+echo "pat version 11 detected"
+else
+echo "pat version 12 or greater detected"
+echo "moving pat menu to the version12 branch"
+cd $HOME/patmenu2
+git pull
+git checkout version12
+fi
+
+#####################################
+#	END Pat 12 Temp Workaround
+#####################################
 
 echo "WE ARE ALL DONE HERE.  If you close this window, you will have to reboot manually."
 

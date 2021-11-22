@@ -22,6 +22,8 @@ CONFIG=${MYPATH}/config
 LOGO=${MYPATH}/logo.png
 TEMPCRON=${MYPATH}/cron.tmp
 VERSION=$(grep "version=" ${MYPATH}/changelog | sed 's/version=//')
+DATE=$(date)
+UPDATEFILE=/run/user/1000/bapupdate.txt
 
 FINISH() {
 	if [ -f "${BASE}" ]; then
@@ -211,689 +213,9 @@ if ! hash bc >/dev/null; then
 	sudo apt install -y bc
 fi
 
-CHECK() {
-	#----------------------------------------------------#
-	#		Hotspot
-	#----------------------------------------------------#
-	HOTSPOT="/usr/bin/autohotspotN"
-	if [ ! -f "$HOTSPOT" ]; then
-		HOTSPOT="Not Installed"
-	else
-		HOTSPOT="Installed"
-	fi
 
-	#remove duplicate HST check
-
-	#----------------------------------------------------#
-	#		AX25
-	#----------------------------------------------------#
-	if [ ! -d /etc/ax25 ]; then
-		AX25="Not Installed"
-	else
-		AX25="Installed"
-	fi
-	#----------------------------------------------------#
-	#		GPS
-	#----------------------------------------------------#
-	if ! hash gpsd 2>/dev/null; then
-		GPS="Not Installed"
-	else
-		GPS="Installed"
-	fi
-	#----------------------------------------------------#
-	#		PULSE
-	#----------------------------------------------------#
-	if ! hash pavucontrol 2>/dev/null; then
-		PULSE="Not Installed"
-	else
-		PULSE="Installed"
-	fi
-	#----------------------------------------------------#
-	#		ARDOP
-	#----------------------------------------------------#
-	if [ -f ${HOME}/ardop/piardopc ]; then
-		ARDOP="Installed"
-	else
-		ARDOP="Not Installed"
-	fi
-	#----------------------------------------------------#
-	#		ARDOP GUI
-	#----------------------------------------------------#
-	if [ -f ${HOME}/ardop/piARDOP_GUI ]; then
-		ARDOPGUI="Installed"
-	else
-		ARDOPGUI="Not Installed"
-	fi
-	#----------------------------------------------------#
-	#		JS8Call
-	#----------------------------------------------------#
-	if ! hash js8call 2>/dev/null; then
-		JS8="Not Installed"
-	else
-		JS8="Installed"
-	fi
-	#----------------------------------------------------#
-	#		WSJTX
-	#----------------------------------------------------#
-	if ! hash wsjtx 2>/dev/null; then
-		FT8="Not Installed"
-	else
-		FT8="Installed"
-	fi
-	#----------------------------------------------------#
-	#		CONKY
-	#----------------------------------------------------#
-	if [ -f ${HOME}/.conkyrc ]; then
-		CONKY=Installed
-	else
-		CONKY="Not Installed"
-	fi
-	#----------------------------------------------------#
-	#		M0IAX
-	#----------------------------------------------------#
-	if [ -f /usr/local/bin/JS8CallUtils_v2 ]; then
-		M0IAX=Installed
-	else
-		M0IAX="Not Installed"
-	fi
-
-	#----------------------------------------------------#
-	#		RIG CONTROL - HAMLIB
-	#----------------------------------------------------#
-	if ! hash rigctl 2>/dev/null; then
-		RIG="Not_Installed"
-	else
-		echo "Checking Rig Control"
-		RIG=$(rigctl --version | grep Hamlib | sed s/"rigctl(d),\ Hamlib\ "//)
-		NEWRIG=$(curl -s https://sourceforge.net/projects/hamlib/files/latest/download |
-			grep -o https://downloads.sourceforge.net/project/hamlib/hamlib/[0-9].[0-9] |
-			head -n 1 | awk -F "/" '{print $7}')
-
-		if (($(echo "${NEWRIG} ${RIG}" | awk '{print ($1 > $2)}'))); then
-			RIG=NEEDS-UPDATE
-		else
-			RIG="is_latest_version"
-		fi
-	fi
-
-	#----------------------------------------------------#
-	#			FLDIGI
-	#----------------------------------------------------#
-	echo "Checking FLDIGI"
-	if ! hash fldigi 2>/dev/null; then
-		FLDIGI="Not_Installed"
-	else
-		FLDIGI=$(fldigi --version | awk 'FNR == 1 {print $2}')
-		NEWFLDIGI=$(curl -s https://sourceforge.net/projects/fldigi/files/fldigi/ |
-			grep .tar.gz | head -1 | awk -F "-" '{print $2}' | awk -F ".tar" '{print $1}')
-
-		if (($(echo "${NEWFLDIGI} ${FLDIGI}" | awk '{print ($1 > $2)}'))); then
-			FLDIGI=NEEDS-UPDATE
-		else
-			FLDIGI="is_latest_version"
-		fi
-	fi
-
-	#----------------------------------------------------#
-	#			FLWRAP
-	#----------------------------------------------------#
-	echo "Checking FLWRAP"
-	if ! hash flwrap 2>/dev/null; then
-		FLWRAP="Not_Installed"
-	else
-		FLWRAP=$(flwrap --version | awk 'FNR == 1 {print $2}')
-		NEWFLWRAP=$(curl -s http://www.w1hkj.com/files/flwrap/ | grep .tar.gz | sed 's/<li><a\ href="//' |
-			sed 's/">\ flwrap.*$//' | sed 's/flwrap-//' | sed 's/.tar.gz//')
-
-		if (($(echo "${NEWFLWRAP} ${FLWRAP}" | awk '{print ($1 > $2)}'))); then
-			FLWRAP=NEEDS-UPDATE
-		else
-			FLWRAP="is_latest_version"
-		fi
-	fi
-
-	#----------------------------------------------------#
-	#			FLRIG
-	#----------------------------------------------------#
-	echo "Checking FLRIG"
-	if ! hash flrig 2>/dev/null; then
-		FLRIG="Not_Installed"
-	else
-		FLRIG=$(flrig --version | awk 'FNR == 1 {print $2}')
-		NEWFLRIG=$(curl -s https://sourceforge.net/projects/fldigi/files/flrig/ |
-			grep .tar.gz | head -1 | awk -F "-" '{print $2}' | awk -F ".tar.gz" '{print $1}')
-
-		if (($(echo "${NEWFLRIG} ${FLRIG}" | awk '{print ($1 > $2)}'))); then
-			FLRIG=NEEDS-UPDATE
-		else
-			FLRIG="is_latest_version"
-		fi
-	fi
-	#----------------------------------------------------#
-	#			FLAMP
-	#----------------------------------------------------#
-	echo "Checking FLAMP"
-	if ! hash flamp 2>/dev/null; then
-		FLAMP="Not_Installed"
-	else
-		FLAMP=$(flamp --version | awk 'FNR == 1 {print $2}')
-		NEWFLAMP=$(curl -s https://sourceforge.net/projects/fldigi/files/flamp/ |
-			grep .tar.gz | head -1 | awk -F "-" '{print $2}' | awk -F ".tar.gz" '{print $1}')
-
-		if (($(echo "${NEWFLAMP} ${FLAMP}" | awk '{print ($1 > $2)}'))); then
-			FLAMP=NEEDS-UPDATE
-		else
-			FLAMP="is_latest_version"
-		fi
-	fi
-	#----------------------------------------------------#
-	#			FLMSG
-	#----------------------------------------------------#
-	echo "Checking FLMSG"
-	if ! hash flmsg 2>/dev/null; then
-		FLMSG="Not_Installed"
-	else
-		FLMSG=$(flmsg --version | awk 'FNR == 1 {print $2}')
-		NEWFLMSG=$(curl -s https://sourceforge.net/projects/fldigi/files/flmsg/ |
-			grep .tar.gz | head -1 | awk -F "-" '{print $2}' | awk -F ".tar.gz" '{print $1}')
-
-		if (($(echo "${NEWFLMSG} ${FLMSG}" | awk '{print ($1 > $2)}'))); then
-			FLMSG=NEEDS-UPDATE
-		else
-			FLMSG="is_latest_version"
-		fi
-	fi
-	#----------------------------------------------------#
-	#			FLNET
-	#----------------------------------------------------#
-	echo "Checking FLNET"
-	if ! hash flnet 2>/dev/null; then
-		FLNET="Not_Installed"
-	else
-		FLNET=$(flnet --version | awk 'FNR == 1 {print $2}')
-		NEWFLNET=$(curl -s https://sourceforge.net/projects/fldigi/files/flnet/ |
-			grep .tar.gz | head -1 | awk -F "-" '{print $2}' | awk -F ".tar" '{print $1}')
-
-		if (($(echo "${NEWFLNET} ${FLNET}" | awk '{print ($1 > $2)}'))); then
-			FLNET=NEEDS-UPDATE
-		else
-			FLNET="is_latest_version"
-		fi
-	fi
-	#----------------------------------------------------#
-	#		Pat Winlink
-	#----------------------------------------------------#
-	echo "Checking Pat Winlink"
-	if ! hash pat 2>/dev/null; then
-		PAT="Not_Installed"
-	else
-		PAT=$(pat version | awk '{print $2}' | sed 's/v//' | sed 's/0\.//')
-		NEWPATV=$(curl -s https://github.com/la5nta/pat/releases | grep armhf | head -1 | sed 's/.*pat_/pat_/' | sed 's/<\/a>.*$//')
-		NEWPAT=$(echo ${NEWPATV} | sed 's/pat_//' | sed 's/_linux_armhf.deb//' | sed 's/0\.//')
-		VERTEST=$(echo "${NEWPAT}>${PAT}" | bc)
-
-		if [ "$VERTEST" = 1 ]; then
-			PAT=NEEDS-UPDATE
-		else
-			PAT="is_latest_version"
-		fi
-	fi
-	#----------------------------------------------------#
-	#		CHRIP
-	#----------------------------------------------------#
-	echo "Checking Chirp"
-	if ! hash chirpw 2>/dev/null; then
-		CHIRP="Not_Installed"
-	else
-		CP=$(chirpw --version)
-		CHIRP=$(echo ${CP} | awk '{ print $2 }' | sed 's/daily-//')
-		NEWCHIRP=$(curl -s https://trac.chirp.danplanet.com/chirp_daily/LATEST/ |
-			grep .tar.gz | awk -F 'chirp-daily-' '{print $2}' | head -c 8)
-
-		if (($(echo "${NEWCHIRP} ${CHIRP}" | awk '{print ($1 > $2)}'))); then
-			CHIRP=NEEDS-UPDATE
-		else
-			CHIRP="is_latest_version"
-		fi
-	fi
-	#----------------------------------------------------#
-	#		DIREWOLF
-	#----------------------------------------------------#
-	echo "Checking Direwolf"
-	if ! hash direwolf 2>/dev/null; then
-		DIRE="Not_Installed"
-	else
-		DIRE=$(direwolf -S -t 0 | head -1 | sed 's/Dire\ Wolf\ version\ //')
-		wget -P /tmp/ https://raw.githubusercontent.com/wb2osz/direwolf/master/CHANGES.md >/dev/null 2>&1
-		NEWDIRE=$(cat /tmp/CHANGES.md | head -5 | tail -1 | awk '{ print $3 }')
-
-		if (($(echo "${NEWDIRE} ${DIRE}" | awk '{print ($1 > $2)}'))); then
-			DIRE=NEEDS-UPDATE
-		else
-			DIRE="is_latest_version"
-		fi
-	fi
-	#----------------------------------------------------#
-	#		Pat Menu
-	#----------------------------------------------------#
-	echo "Checking Pat Menu"
-	if [ ! -d ${HOME}/patmenu2 ]; then
-		PATMENU="Not_Installed"
-	else
-		cd ${HOME}/patmenu2/ || ! echo "Failure"
-		wget -O ${HOME}/patmenu2/latest https://raw.githubusercontent.com/km4ack/patmenu2/master/changelog >/dev/null 2>&1
-		LATEST=$(cat ${HOME}/patmenu2/latest | grep '^release' | sed 's/release=//')
-		CURRENT=$(cat ${HOME}/patmenu2/changelog | grep '^release' | sed 's/release=//')
-		rm ${HOME}/patmenu2/latest >/dev/null 2>&1
-		if (($(echo "${LATEST} ${CURRENT}" | awk '{print ($1 > $2)}'))); then
-			PATMENU="NEEDS-UPDATE"
-		else
-			PATMENU="is_latest_version"
-		fi
-	fi
-
-	#----------------------------------------------------#
-	#		Hot Spot Tools
-	#----------------------------------------------------#
-	if [ ! -d ${HOME}/hotspot-tools2 ]; then
-		HSTOOLS="Not_Installed"
-	else
-		CURRENT=$(cat ${HOME}/hotspot-tools2/changelog | grep version= | sed 's/version=//')
-		LATEST=$(curl -s https://raw.githubusercontent.com/km4ack/hotspot-tools2/master/changelog | grep version= | sed 's/version=//')
-		if (($(echo "${LATEST} ${CURRENT}" | awk '{print ($1 > $2)}'))); then
-			HSTOOLS="NEEDS-UPDATE"
-		else
-			HSTOOLS="is_latest_version"
-		fi
-	fi
-
-	#----------------------------------------------------#
-	#			GARIM
-	#----------------------------------------------------#
-	echo "Checking GARIM"
-	if ! hash garim 2>/dev/null; then
-		GARIM="Not_Installed"
-	else
-		GARIM=$(garim --version | head -n1 | awk -F ' ' '{print $2}')
-		NEWGARIM=$(curl -s https://www.whitemesa.net/garim/garim.html | grep -m 1 \
-			"armv7l.tar.gz" | awk -F '-' '{print $2}')
-		if (($(echo "${NEWGARIM} ${GARIM}" | awk '{print ($1 > $2)}'))); then
-			GARIM=NEEDS-UPDATE
-		else
-			GARIM="is_latest_version"
-		fi
-	fi
-
-	#----------------------------------------------------#
-	#		XASTIR
-	#----------------------------------------------------#
-	echo "Checking Xastir"
-	if ! hash xastir 2>/dev/null; then
-	XASTIR="Not_Installed"
-	else
-	LATESTXAS=$(curl -s https://github.com/Xastir/Xastir | grep Release- | head -1 | sed 's/.*Release-//;s/">//')
-	CURRENTXAS=$(xastir -V | sed 's/Xastir V//;s/(.*//;/^\s*$/d')
-
-		if (($(echo "${LATESTXAS} ${CURRENTXAS}" | awk '{print ($1 > $2)}'))); then
-			XASTIR=NEEDS-UPDATE
-		else
-			XASTIR="is_latest_version"
-		fi
-	fi
-
-	#----------------------------------------------------#
-	#		YAAC
-	#----------------------------------------------------#
-	YAAC="${HOME}/YAAC"
-	echo "Checking YAAC for updates"
-	if [ ! -d "$YAAC" ]; then
-		YAAC="Not Installed"
-	else
-
-		CURYAAC=$(java -jar ${HOME}/YAAC/YAAC.jar -version | grep core | awk '{print $7}' | sed 's/(.*//;s/1.0-beta//')
-		wget -q https://sourceforge.net/projects/yetanotheraprsc/files/YAACBuildLabel.txt -O /run/user/${UID}/latestyaac.txt
-		LATESTYAAC=$(cat /run/user/${UID}/latestyaac.txt | sed 's/1.0-beta//;s/(.*//')
-		if (($(echo "${LATESTYAAC} ${CURYAAC}" | awk '{print ($1 > $2)}'))); then
-			YAAC=NEEDS-UPDATE
-		else
-			YAAC="is_latest_version"
-		fi
-	fi
-
-	#----------------------------------------------------#
-	#		PYQSO
-	#----------------------------------------------------#
-	if ! hash pyqso 2>/dev/null; then
-		PYQSO="Not Installed"
-	else
-		PYQSO="Installed"
-	fi
-
-	#----------------------------------------------------#
-	#		QSSTV
-	#----------------------------------------------------#
-	if ! hash qsstv 2>/dev/null; then
-		QSSTV="Not Installed"
-	else
-		QSSTV="Installed"
-	fi
-
-	#----------------------------------------------------#
-	#		GRIDTRACKER
-	#----------------------------------------------------#
-	GT="${HOME}/GridTracker"
-	if [ ! -d "$GT" ]; then
-		GRIDTRACK="Not Installed"
-	else
-		GRIDTRACK="Installed"
-	fi
-
-	#----------------------------------------------------#
-	#		PROPAGATION
-	#----------------------------------------------------#
-	if ! hash voacapl 2>/dev/null; then
-		PROP="Not Installed"
-	else
-		PROP="Installed"
-	fi
-
-	#----------------------------------------------------#
-	#		CQRLOG
-	#----------------------------------------------------#
-	if ! hash cqrlog 2>/dev/null; then
-		CQRLOG="Not Installed"
-	else
-		CQRLOG="Installed"
-	fi
-
-	#----------------------------------------------------#
-	#		EES
-	#----------------------------------------------------#
-	if [ -f /var/www/html/email.php ]; then
-		EES="Installed"
-	else
-		EES="Not Installed"
-	fi
-
-	#----------------------------------------------------#
-	#		Pi-APRS
-	#----------------------------------------------------#
-	if [ -d ${HOME}/Pi-APRS ]; then
-		PIAPRS=Installed
-	else
-		PIAPRS="Not Installed"
-	fi
-
-	#----------------------------------------------------#
-	#		Temp Convert
-	#----------------------------------------------------#
-	if [ -f ${HOME}/bin/converttemp ]; then
-		TEMPCONVERT="Installed"
-	else
-		TEMPCONVERT="Not Installed"
-	fi
-
-	#----------------------------------------------------#
-	#		GPARTED
-	#----------------------------------------------------#
-	if ! hash gparted 2>/dev/null; then
-		GPARTED="Not Installed"
-	else
-		GPARTED="Installed"
-	fi
-
-	#----------------------------------------------------#
-	#		DIPOLE CALCULATOR
-	#----------------------------------------------------#
-	if [ -f ${HOME}/bin/dipole ]; then
-		DIPOLE="Installed"
-	else
-		DIPOLE="Not Installed"
-	fi
-
-	#----------------------------------------------------#
-	#		SHOWLOG | Log file viewer
-	#----------------------------------------------------#
-	if [ -f ${HOME}/bin/showlog ]; then
-		SHOWLOG="Installed"
-	else
-		SHOWLOG="Not Installed"
-	fi
-
-	#----------------------------------------------------#
-	#		Call Sign Lookup GETCALL
-	#----------------------------------------------------#
-	if [ -f ${HOME}/bin/getcall ]; then
-		CALLSIGN="Installed"
-	else
-		CALLSIGN="Not Installed"
-	fi
-
-	#----------------------------------------------------#
-	#		HamClock
-	#----------------------------------------------------#
-	HAMCLOCK=$(ls /usr/local/bin | grep hamclock)
-	if [ -n "$HAMCLOCK" ]; then
-		HAMCLOCK="Installed"
-	else
-		HAMCLOCK="Not Installed"
-	fi
-
-	#----------------------------------------------------#
-	#		Real Time Clock
-	#----------------------------------------------------#
-	RTC="Unknown"
-
-	#----------------------------------------------------#
-	#		Gpredict
-	#----------------------------------------------------#
-	if ! hash gpredict 2>/dev/null; then
-		GPREDICT="Not Installed"
-	else
-		GPREDICT="Installed"
-	fi
-
-	#----------------------------------------------------#
-	#		TQSL
-	#----------------------------------------------------#
-	if ! hash tqsl 2>/dev/null; then
-		TQSL="Not Installed"
-	else
-		TQSL="Installed"
-	fi
-
-	#----------------------------------------------------#
-	#		PISTATS
-	#----------------------------------------------------#
-	if ! hash pistats 2>/dev/null; then
-		PISTATS="Not Installed"
-	else
-		PISTATS="Installed"
-	fi
-
-	#----------------------------------------------------#
-	#		XLOG CHECK
-	#----------------------------------------------------#
-	if ! hash xlog 2>/dev/null; then
-		XLOG="Not_Installed"
-	else
-
-		XLOGCUR=$(xlog -version | sed 's/xlog\ version\ //')
-
-		XLOGLATEST=$(curl -s https://download.savannah.nongnu.org/releases/xlog/ |
-			grep "2.[0-9].[0-9][0-9].tar" | sort | tail -1 | sed 's/.*xlog/xlog/' | sed 's/.sig.*$//' |
-			sed 's/xlog-//' | sed 's/.tar.gz//')
-
-		if (($(echo "${XLOGLATEST} ${XLOGCUR}" | awk '{print ($1 > $2)}'))); then
-			XLOG="NEEDS-UPDATE"
-		else
-			XLOG=is_latest_version
-		fi
-	fi
-
-	#----------------------------------------------------#
-	#		JTDX
-	#----------------------------------------------------#
-	if ! hash jtdx 2>/dev/null; then
-		JTDX="Not_Installed"
-	else
-		JTDX=Installed
-	fi
-
-}
-
-#----------------------------------------------------#
-#		TELNET
-#----------------------------------------------------#
-if ! hash telnet 2>/dev/null; then
-	TEL="Not Installed"
-else
-	TEL="Installed"
-fi
-
-#----------------------------------------------------#
-#		piQtTermTCP
-#----------------------------------------------------#
-if [ -f /usr/local/bin/piQtTermTCP ]; then
-	PITERM="Installed"
-else
-	PITERM="Not Installed"
-fi
-
-#----------------------------------------------------#
-#		Security Tools
-#----------------------------------------------------#
-if [ -f /usr/local/bin/securefile ]; then
-	SECURITY="Installed"
-else
-	SECURITY="Not Installed"
-fi
-
-#----------------------------------------------------#
-#		YGATE
-#----------------------------------------------------#
-YGATE="${HOME}/bin/ygate.py"
-if [ ! -f "$YGATE" ]; then
-	YGATE="Not Installed"
-else
-	YGATE="Installed"
-fi
-
-#----------------------------------------------------#
-#		BPQ
-#----------------------------------------------------#
-BPQ="${HOME}/linbpq/linbpq"
-if [ ! -f "$BPQ" ]; then
-	BPQ="Not Installed"
-else
-	BPQ="Installed"
-fi
-
-#----------------------------------------------------#
-#		Battery Test Script :: BATT
-#----------------------------------------------------#
-BATT="${HOME}/bin/batt-test"
-if [ ! -f "$BATT" ]; then
-	BATT="Not Installed"
-else
-	BATT="Installed"
-fi
-
-#----------------------------------------------------#
-#		VNC Viewer
-#----------------------------------------------------#
-if ! hash vncviewer 2>/dev/null; then
-	VNC="Not Installed"
-else
-	VNC="Installed"
-fi
-
-#----------------------------------------------------#
-#		ZYGRIB Viewer
-#----------------------------------------------------#
-if [ -f /usr/bin/zyGrib ]; then
-	ZYGRIB=Installed
-else
-	ZYGRIB="Not Installed"
-fi
-
-#----------------------------------------------------#
-#		GPS UPDATE TOOL
-#----------------------------------------------------#
-echo "Checking GPS Update Tool"
-if [ ! -f ${HOME}/bin/gpsupdate ]; then
-	GPSUPDATE="Not_Installed"
-else
-	GPSUPDATE=$(grep VERSION= ${HOME}/bin/gpsupdate | sed 's/VERSION=//')
-	NEWGPSUPDATE=$(curl -s https://raw.githubusercontent.com/km4ack/pi-scripts/master/gpsupdate | grep VERSION= | sed 's/VERSION=//')
-	if (($(echo "${NEWGPSUPDATE} ${GPSUPDATE}" | awk '{print ($1 > $2)}'))); then
-		GPSUPDATE=NEEDS-UPDATE
-	else
-		GPSUPDATE="is_latest_version"
-	fi
-fi
-
-#----------------------------------------------------#
-#		Grid Calc
-#----------------------------------------------------#
-echo "Checking Grid Calc"
-if [ ! -f $HOME/bin/grid-calc ]; then
-	GRIDCALC="Not_Installed"
-else
-	CURRENT=$(grep VERSION $HOME/bin/grid-calc | head -1 | sed 's/VERSION=//')
-	LATEST=$(curl -s https://raw.githubusercontent.com/km4ack/pi-scripts/master/grid-calc | grep VERSION | head -1 | sed 's/VERSION=//')
-		if (($(echo "${LATEST} ${CURRENT}" | awk '{print ($1 > $2)}'))); then
-		GRIDCALC=NEEDS-UPDATE
-	else
-		GRIDCALC="is_latest_version"
-	fi
-fi
-
-#----------------------------------------------------#
-#		HAMRS
-#----------------------------------------------------#
-if [ ! -f /usr/local/bin/hamrs ]; then
-	HAMRS="Not_Installed"
-else
-HAMRS="Installed"
-fi
-
-#----------------------------------------------------#
-#			PacketSearch
-#----------------------------------------------------#
-echo "Checking Packet Search"
-	if [ ! -f $HOME/bin/packetsearch ]; then
-		PACKETSEARCH="Not_Installed"
-	else
-		PACKETSEARCH=$(grep VERSION $HOME/bin/packetsearch | sed 's/VERSION=//')
-		NEWPACKETSEARCH=$(curl -s https://raw.githubusercontent.com/km4ack/pi-scripts/master/packetsearch | grep VERSION | sed 's/VERSION=//')
-
-		if (($(echo "${NEWFLNET} ${FLNET}" | awk '{print ($1 > $2)}'))); then
-			PACKETSEARCH=NEEDS-UPDATE
-		else
-			PACKETSEARCH="is_latest_version"
-		fi
-	fi
-
-	#----------------------------------------------------#
-	#		piQtSoundModem
-	#----------------------------------------------------#
-	if [ -f /usr/local/bin/piQtSoundModem ]; then
-		QTSOUND="Installed"
-	else
-		QTSOUND="Not Installed"
-	fi
-
-CHECK
-####################################################################
-####################################################################
-####################################################################
-####################################################################
-####################################################################
-####################################################################
-####################################################################
-####################################################################
-####################################################################
+#Run the app check script
+bash $MYPATH/app-check
 
 #####################################
 #	Get User Call
@@ -929,6 +251,7 @@ fi
 #----------------------------------------------------#
 #			BASE APP MENU
 #----------------------------------------------------#
+source $UPDATEFILE
 yad --center --list --checklist --width=600 --height=600 --separator="" \
 	--image ${LOGO} --column=Check --column=App --column=status --column=description --print-column=2 \
 	--window-icon=${LOGO} --image-on-top --text-align=center \
@@ -1051,6 +374,7 @@ fi
 #----------------------------------------------------#
 #		FLSUITE APP MENU
 #----------------------------------------------------#
+source $UPDATEFILE
 yad --center --list --checklist --width=600 --height=600 --separator="" \
 	--image ${LOGO} --column=Check --column=App --column=status --column=description --print-column=2 \
 	--window-icon=${LOGO} --image-on-top --text-align=center \
@@ -1070,6 +394,7 @@ fi
 #----------------------------------------------------#
 #		HAM APP MENU
 #----------------------------------------------------#
+source $UPDATEFILE
 yad --center --list --checklist --width=600 --height=600 --separator="" \
 	--image ${LOGO} --column=Check --column=App --column=status --column=description --print-column=2 \
 	--window-icon=${LOGO} --image-on-top --text-align=center \
@@ -1138,6 +463,7 @@ fi
 #----------------------------------------------------#
 #		UTILITIES MENU
 #----------------------------------------------------#
+source $UPDATEFILE
 yad --center --list --checklist --width=600 --height=600 --separator="" \
 	--image ${LOGO} --column=Check --column=App --column=status --column=description --print-column=2 \
 	--window-icon=${LOGO} --image-on-top --text-align=center \
@@ -1192,6 +518,7 @@ sudo apt -y full-upgrade
 #	Install Base Apps
 #####################################
 touch ${HOME}/.config/KM4ACK
+echo "UPDATE=\"ran $DATE Version $VERSION\"" >> ${HOME}/.config/KM4ACK
 while read i; do
 	source ${FUNCTIONS}/base.function
 	$i
@@ -1247,6 +574,31 @@ rm ${BASE} ${ADDITIONAL} ${UTILITY} ${FLSUITE} >/dev/null 2>&1
 #restore crontab
 crontab ${TEMPCRON}
 rm ${TEMPCRON}
+
+#####################################
+#	Pat 12 Temp Workaround
+#####################################
+#This will move the user to the "version12" branch of the Pat Menu code 
+#until this can be implemented into the main branch of code. This will
+#allow Pat Menu to support both the new version of Pat as well as older
+#versions. This section of code needs to be removed once the "version12"
+#branch is merged with the master branch
+
+PAT_VERSION=$(pat version | awk '{print $2}' | sed 's/v0.//;s/.0//')
+
+if [ "$PAT_VERSION" -le 11 ]; then
+echo "pat version 11 detected"
+else
+echo "pat version 12 or greater detected"
+echo "moving pat menu to the version12 branch"
+cd $HOME/patmenu2
+git pull
+git checkout version12
+fi
+
+#####################################
+#	END Pat 12 Temp Workaround
+#####################################
 #reboot when done
 yad --width=400 --height=200 --title="Reboot" --image ${LOGO} \
 	--text-align=center --skip-taskbar --image-on-top \
