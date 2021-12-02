@@ -119,6 +119,24 @@ PAT-MENU() {
 #	JS8Call
 ##################################
 JS8CALL() {
+
+	#find how much memory we are working with
+	FREEMEM=$(free -m | grep Mem: | awk '{ print $2 }')
+	echo ${FREEMEM}
+
+	##################################
+	#	INCREASE SWAP
+	##################################
+	#increase swap file if less than 3G memory
+	if [ ${FREEMEM} -lt 3000 ]; then
+		echo "Increasing Swap size for build"
+		#increase swap size
+		sudo sed -i 's/#CONF_SWAPFILE=\/var\/swap/CONF_SWAPFILE=\/var\/swap/' /etc/dphys-swapfile
+		sudo sed -i 's/CONF_SWAPSIZE=100/CONF_SWAPSIZE=1024/' /etc/dphys-swapfile
+		sudo /etc/init.d/dphys-swapfile restart
+		sleep 10
+	fi
+
 #https://9a3gos.com/install-js8call-2-0-0-rc3-on-ubuntu-19-10-hamlib/
 
 #Verify HAMLIB installed or JS8 Won't Build.
@@ -151,6 +169,15 @@ sudo cp js8 js8call /usr/local/bin
 sudo cp js8call.desktop /usr/share/applications
 sudo cp ./artwork/icon_128.svg /usr/share/pixmaps/js8call_icon.svg
 
+	#reset swap size to default
+	if [ ${FREEMEM} -lt 3000 ]; then
+		echo "Resetting swap size to default"
+		#increase swap size
+		sudo sed -i 's/CONF_SWAPFILE=\/var\/swap/#CONF_SWAPFILE=\/var\/swap/' /etc/dphys-swapfile
+		sudo sed -i 's/CONF_SWAPSIZE=1024/CONF_SWAPSIZE=100/' /etc/dphys-swapfile
+		sudo /etc/init.d/dphys-swapfile restart
+		sleep 10
+	fi
 
 #Old Way left for reference
 	#cd ${DIR}
@@ -166,6 +193,23 @@ sudo cp ./artwork/icon_128.svg /usr/share/pixmaps/js8call_icon.svg
 #	WSJTX
 ##################################
 WSJTX() {
+	#find how much memory we are working with
+	FREEMEM=$(free -m | grep Mem: | awk '{ print $2 }')
+	echo ${FREEMEM}
+
+	##################################
+	#	INCREASE SWAP
+	##################################
+	#increase swap file if less than 3G memory
+	if [ ${FREEMEM} -lt 3000 ]; then
+		echo "Increasing Swap size for build"
+		#increase swap size
+		sudo sed -i 's/#CONF_SWAPFILE=\/var\/swap/CONF_SWAPFILE=\/var\/swap/' /etc/dphys-swapfile
+		sudo sed -i 's/CONF_SWAPSIZE=100/CONF_SWAPSIZE=1024/' /etc/dphys-swapfile
+		sudo /etc/init.d/dphys-swapfile restart
+		sleep 10
+	fi
+
 
 	sudo apt install -y build-essential git cmake gfortran fftw3-dev qtbase5-dev qttools5-dev libqt5serialport5-dev  qtmultimedia5-dev libqt5multimedia5-plugins libqt5sql5-sqlite autoconf automake libtool texinfo libusb-1.0-0-dev libudev-dev libboost-all-dev asciidoctor
 
@@ -182,6 +226,16 @@ WSJTX() {
 	sudo mv ${BUILDDIR}/${FT8DIR}/bin/* /usr/local/bin/
 	sudo cp ${BUILDDIR}/${FT8DIR}/share/applications/wsjtx.desktop /usr/share/applications/
 	sudo cp ${BUILDDIR}/${FT8DIR}/share/pixmaps/wsjtx_icon.png /usr/share/pixmaps/
+
+	#reset swap size to default
+	if [ ${FREEMEM} -lt 3000 ]; then
+		echo "Resetting swap size to default"
+		#increase swap size
+		sudo sed -i 's/CONF_SWAPFILE=\/var\/swap/#CONF_SWAPFILE=\/var\/swap/' /etc/dphys-swapfile
+		sudo sed -i 's/CONF_SWAPSIZE=1024/CONF_SWAPSIZE=100/' /etc/dphys-swapfile
+		sudo /etc/init.d/dphys-swapfile restart
+		sleep 10
+	fi
 
 #old way of installing. left for reference
 	#cd ${DIR}
