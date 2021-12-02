@@ -19,6 +19,7 @@ version=3.2.0
 		update ruby to 2.7
 		update EES to PHP7.4
 		fix EES sed statment (0.0.0.0:8080 to :5000)
+		increase swap file for JS8Call/WSJTX on Pi's with less RAM - https://github.com/km4ack/pi-build/issues/350
 		NOTE: This version will NOT support Buster
 
 3.1.4		last update for Build a Pi to support Buster
