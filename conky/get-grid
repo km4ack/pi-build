@@ -1,23 +1,61 @@
-#!/usr/bin/env ruby
+#!/usr/bin/env bash
+set -e
+[ -n "$DEBUG" ] && set -x
 
-require 'gpsd_client'
-require 'maidenhead'
-require 'socket'
-require 'json'
+LAT=$1
+LON=$2
+HOST=$3
+PORT=$4
 
-ft8call_port = 2237
+if [ "$HOST" = "" ]; then
+  HOST=localhost
+fi
+if [ "$PORT" = "" ]; then
+  PORT=2947
+fi
 
-gpsd = GpsdClient::Gpsd.new()
-gpsd.start()
-apicmd = {}
+compile_maidenhead() {
+  gcc $HOME/bin/conky/maidenhead.c -o $HOME/bin/conky/mh
+  chmod +x $HOME/bin/conky/mh
+}
 
-# get maidenhead if gps is ready
-if gpsd.started?
-  pos = gpsd.get_position
-  maid = Maidenhead.to_maidenhead(pos[:lat], pos[:lon], precision = 5)
-#  puts "lat = #{pos[:lat]}, lon = #{pos[:lon]}, grid = #{maid}"
-  apicmd = {:type => "STATION.SET_GRID", :value => maid}
-end
+get_maidenhead_with_ruby() {
+  grid=$(ruby get-grid.rb)
+}
 
-puts "#{maid}"
+get_maidenhead_with_gpspipe() {
+  if ! hash gpspipe 2>/dev/null; then
+    sudo apt install -y gpsd-clients jq
+  fi
+  if timeout 5 gpspipe -w -r $HOST:$PORT | grep -m 1 TPV &>/dev/null; then
+    nema=$(gpspipe -w -r $HOST:$PORT | grep -m 1 TPV)
+    # GPS Coordinate Set
+    lat=$(echo $nema | jq -r '"\(.lat)"')
+    [ -z "$lat" ] && echo "Latitude error?" && exit
+    lon=$(echo $nema | jq -r '"\(.lon)"')
+    [ -z "$lon" ] && echo "Longitude error?" && exit
+    grid=$($HOME/bin/conky/mh -a $lat -l $lon)
+  else
+    grid="NO GPS"
+  fi
+}
+
+get_maidenhead_with_args() {
+  grid=$($HOME/bin/conky/mh -a $LAT -l $LON)
+}
+
+if hash gcc 2>/dev/null; then
+  compile_maidenhead
+fi
+
+if [ -z "$LAT" ]; then
+  if hash ruby 2>/dev/null; then
+    get_maidenhead_with_ruby
+  else
+    get_maidenhead_with_gpspipe
+  fi
+else
+  get_maidenhead_with_args
+fi
+echo $grid
 

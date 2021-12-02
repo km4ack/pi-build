@@ -10,7 +10,14 @@ FILE=/run/user/$UID/gridinfo.txt
 
 if [ -z "$GRIDCH" ]
 then
-echo $GRID > $FILE
+  # + = Grid from GPS (GPS online)
+  # - = Grid from Cache (GPS offline)
+  if [ "$GRID" != "NO GPS" ]; then
+    echo "$GRID +" > $FILE
+  else
+    cache=$(cat $FILE | sed 's/ //g;s/+//g;s/-//g')
+    echo "$cache -" > $FILE
+  fi
 else
 echo "NO GPS" > $FILE
 fi

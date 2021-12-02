@@ -1,0 +1,2 @@
+#Update GPS maidenhead for conky
+*/1 * * * * /home/pi/bin/conky/grid

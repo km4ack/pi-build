@@ -134,60 +134,29 @@ WSJTX() {
 ##################################
 #	CONKY
 ##################################
-CONKY() {
-	if ! hash conky 2>/dev/null; then
-		sudo apt install -y conky
-	fi
-	touch ${HOME}/Documents/mylog.txt  #conky will fail to load if this file doesn't exist
-	touch /var/lib/misc/dnsmasq.leases #conky will fail to load if this file doesn't exist
-	sudo apt-get install -y ruby2.5
-	sudo gem install gpsd_client
-	sudo gem install maidenhead
-	cp ${MYPATH}/conky/.conkyrc ${HOME}/.conkyrc
-	mkdir -p ${HOME}/bin/conky
-	cp ${MYPATH}/conky/* ${HOME}/bin/conky/
-	chmod +x ${HOME}/bin/conky/get-grid ${HOME}/bin/conky/temp-conv ${HOME}/bin/conky/get-freq ${HOME}/bin/conky/grid
-	sed -i "s/N0CALL/${CALL}/" ${HOME}/.conkyrc
-	#Line below is for https://github.com/km4ack/pi-build/issues/198
-	echo "#Update GPS maidenhead for conky" >>${TEMPCRON}
-	echo "*/1 * * * * /home/pi/bin/conky/grid" >>${TEMPCRON}
+CONKY(){
+  if ! hash conky 2>/dev/null; then
+    sudo apt install -y conky
+  fi
 
-	#Create files needed for autostart at login
-	#Fix issue https://github.com/km4ack/pi-build/issues/83
+  touch $HOME/Documents/mylog.txt		#conky will fail to load if this file doesn't exist
+  touch /var/lib/misc/dnsmasq.leases	#conky will fail to load if this file doesn't exist
+ 
+  if ! hash gcc 2>/dev/null; then
+    sudo apt-get install -y ruby2.5
+    sudo gem install gpsd_client
+    sudo gem install maidenhead
+  fi
 
-	cat <<EOF >${HOME}/.local/share/applications/conky.desktop
-[Desktop Entry]
-Name=Conky
-Comment=Conky
-GenericName=Conky Screen Background Monitor
-Exec=conky --pause=5
-Icon=/home/pi/pi-build/conky/conky-logo.png
-Type=Application
-Encoding=UTF-8
-Terminal=false
-Categories=HamRadio
-Keywords=Radio
-EOF
+  cp $MYPATH/conky/.conkyrc $HOME/.conkyrc
+  sed -i "s/N0CALL/$CALL/" $HOME/.conkyrc
 
-	ln -sf ${HOME}/.local/share/applications/conky.desktop ${HOME}/.config/autostart/conky.desktop
+  #Line below is for https://github.com/km4ack/pi-build/issues/198
+  echo "#Update GPS maidenhead for conky" >> $TEMPCRON
+  echo "*/1 * * * * /home/pi/bin/conky/grid" >> $TEMPCRON
 
-	#####Add setconky to main menu
-	chmod +x ${HOME}/pi-build/conky/setconky
-
-	cat <<EOF >${HOME}/.local/share/applications/setconky.desktop
-[Desktop Entry]
-Name=Conky-Prefs
-Comment=Conky-Prefs
-GenericName=Change Conky Preferences
-Exec=/home/pi/pi-build/conky/setconky
-Icon=/home/pi/pi-build/conky/conky-logo.png
-Type=Application
-Encoding=UTF-8
-Terminal=false
-Categories=Settings;DesktopSettings;GTK;X-LXDE-Settings;
-Keywords=Radio,Conky
-EOF
-
+  # Add the rest of the code here so that it can be use for installation and locally
+  bash $MYPATH/conky/update
 }
 
 ##################################
