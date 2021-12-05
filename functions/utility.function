@@ -193,13 +193,13 @@ PISTATS() {
     wget http://www.w1hkj.com/PI/${CUR}
     tar -xzvf ${CUR}
     rm ${CUR}
-    PISTATDIR=$(ls ${HOME} | grep pistats)
+    PISTATDIR=$(ls ${BUILDDIR} | grep pistats)
     cd ${PISTATDIR} || return
     sudo apt-get install -y libfltk1.3-dev
     make
-    make clean
     sudo mv pistats /usr/local/bin
     sudo mv ${BUILDDIR}/${PISTATDIR}/data/pistats.desktop /usr/share/applications/
+    make clean
     cd ${HOME} || return
     
 }
@@ -417,11 +417,11 @@ VNC() {
 }
 
 ##################################
-#	ZYGRIB Viewer
+#	XYGRIB Viewer
 ##################################
-ZYGRIB() {
-    sudo apt install -y zygrib
-    sudo apt install -y zygrib-maps
+XYGRIB() {
+    sudo apt install -y xygrib
+
 }
 
 ##################################
@@ -512,7 +512,7 @@ sudo mv /run/user/$UID/packetsearch.desktop /usr/share/applications/
 #Documentation - https://www.cantab.net/users/john.wiseman/Documents/QtSoundModem.html
 
 QTSOUND(){
-sudo apt install libqt5serialbus5
+sudo apt install -y libqt5serialport5
 cd ${HOME}/Downloads || return
 wget --tries 2 --connect-timeout=60 https://www.cantab.net/users/john.wiseman/Downloads/Beta/piQtSoundModem
 chmod +x piQtSoundModem

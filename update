@@ -45,6 +45,49 @@ FINISH() {
 
 trap FINISH EXIT
 
+#####################################
+#	Old OS Check
+#####################################
+V_ID=$(grep VERSION_ID /etc/os-release | sed 's/VERSION_ID="//;s/"//')
+
+if [ "$V_ID" -le 10 ]; then
+NOTICEPATH=/run/user/$UID
+
+cat <<EOF >${NOTICEPATH}/intro.txt
+Build a Pi 3.2.0 and later does not support
+RaspiOS Buster or earlier versions of RaspiOS.
+You should consider upgrading to RaspiOS 11
+(Bullseye). By clicking ok you will be moved
+to the last version of Build a Pi (3.1.4) that 
+supports Pi OS Buster. Please note there are 
+no plans to update Build a Pi for Buster going 
+forward.  In other words, you are on your own 
+if it is broke and you are still running Pi OS
+10 (Buster).
+
+EOF
+
+INTRO=$(yad --width=600 --height=300 --text-align=center --center --title="Out of Date OS Detected!" --show-uri \
+	--image ${LOGO} --window-icon=${LOGO} --image-on-top --separator="|" --item-separator="|" \
+	--text-info \
+	--button="OK":1 <${NOTICEPATH}/intro.txt \
+	--button="Exit":2 \
+	>/dev/null 2>&1)
+	BUT=$?
+	echo $BUT
+	if [ $BUT = 2 ] || [ $BUT = 252 ]; then
+	exit
+	fi
+	rm ${NOTICEPATH}/intro.txt
+	cd $HOME/pi-build
+	git checkout buster 
+	bash build-a-pi & exit
+fi
+
+#####################################
+#	end Old OS Check
+#####################################
+
 #remove temp dir if exist
 #fix issue 108 https://github.com/km4ack/pi-build/issues/108
 #Thanks to N5RKS for finding the bug
@@ -411,7 +454,6 @@ yad --center --list --checklist --width=600 --height=600 --separator="" \
 	false "YAAC" "$YAAC" "Yet Another APRS Client" \
 	false "PI-APRS" "$PIAPRS" "APRS Messaging Client" \
 	false "PYQSO" "$PYQSO" "Logging Software" \
-	false "CQRLOG" "$CQRLOG" "Logging Software" \
 	false "HAMRS" "$HAMRS" "Logging Software" \
 	false "QSSTV" "$QSSTV" "Slow scan TV" \
 	false "GRIDTRACKER" "$GRIDTRACK" "Track grids in WSJTX" \
@@ -484,7 +526,7 @@ yad --center --list --checklist --width=600 --height=600 --separator="" \
 	false "BPQ" "$BPQ" "LinBPQ Software" \
 	false "BATT" "$BATT" "Battery Test Script" \
 	false "VNC" "$VNC" "VNC Viewer Application" \
-	false "ZYGRIB" "$ZYGRIB" "Grib File Viewer" \
+	false "XYGRIB" "$XYGRIB" "Grib file viewer" \
 	--button="Exit":1 \
 	--button="Install/Update Selected":2 >${UTILITY}
 BUT=$?
@@ -571,34 +613,14 @@ bash ${HOME}/pi-build/menu-update
 #Remove temp files
 rm ${BASE} ${ADDITIONAL} ${UTILITY} ${FLSUITE} >/dev/null 2>&1
 
+#remove libham (rigctl) installed from apt
+#since it conflicts with hamlib installed from source
+sudo apt purge -y libhamlib4
+
 #restore crontab
 crontab ${TEMPCRON}
 rm ${TEMPCRON}
 
-#####################################
-#	Pat 12 Temp Workaround
-#####################################
-#This will move the user to the "version12" branch of the Pat Menu code 
-#until this can be implemented into the main branch of code. This will
-#allow Pat Menu to support both the new version of Pat as well as older
-#versions. This section of code needs to be removed once the "version12"
-#branch is merged with the master branch
-
-PAT_VERSION=$(pat version | awk '{print $2}' | sed 's/v0.//;s/.0//')
-
-if [ "$PAT_VERSION" -le 11 ]; then
-echo "pat version 11 detected"
-else
-echo "pat version 12 or greater detected"
-echo "moving pat menu to the version12 branch"
-cd $HOME/patmenu2
-git pull
-git checkout version12
-fi
-
-#####################################
-#	END Pat 12 Temp Workaround
-#####################################
 #reboot when done
 yad --width=400 --height=200 --title="Reboot" --image ${LOGO} \
 	--text-align=center --skip-taskbar --image-on-top \
