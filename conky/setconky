@@ -39,7 +39,7 @@ echo
 sed -i '/vcgencmd/d' $TEMPFILE
 #add cel line
 sed -i '/#TEMP/a \
-${font Arial:bold:size=14}${color White}Temp: $alignr ${exec /opt/vc/bin/vcgencmd measure_temp | cut -c6-9} C' $TEMPFILE
+${font Arial:bold:size=14}${color White}Temp: $alignr ${exec /usr/bin/vcgencmd measure_temp | cut -c6-9} C' $TEMPFILE
 
 elif [ "$TEMP" = 'C' ] && [ "$CS" = 'conky-medium' ]; then
 #delete F line
@@ -47,14 +47,14 @@ echo
 sed -i '/vcgencmd/d' $TEMPFILE
 #add cel line
 sed -i '/#TEMP/a \
-${font Arial:bold:size=10}${color White}Temp: $alignr ${exec /opt/vc/bin/vcgencmd measure_temp | cut -c6-9} C' $TEMPFILE
+${font Arial:bold:size=10}${color White}Temp: $alignr ${exec /usr/bin/vcgencmd measure_temp | cut -c6-9} C' $TEMPFILE
 
 elif [ "$TEMP" = 'C' ] && [ "$CS" = 'conky-small' ]; then
 #delete F line
 sed -i '/vcgencmd/d' $TEMPFILE
 #add cel line
 sed -i '/#TEMP/a \
-${font Arial:bold:size=08}${color White}Temp: $alignr ${exec /opt/vc/bin/vcgencmd measure_temp | cut -c6-9} C' $TEMPFILE
+${font Arial:bold:size=08}${color White}Temp: $alignr ${exec /usr/bin/vcgencmd measure_temp | cut -c6-9} C' $TEMPFILE
 
 elif [ "$TEMP" = 'C' ] && [ "$CS" = 'conky-7inch' ]; then
 #delete F line
@@ -62,7 +62,7 @@ echo
 sed -i '/vcgencmd/d' $TEMPFILE
 #add cel line
 sed -i '/#TEMP/a \
-${font Arial:bold:size=08}${color White}Temp: $alignr ${exec /opt/vc/bin/vcgencmd measure_temp | cut -c6-9} C' $TEMPFILE
+${font Arial:bold:size=08}${color White}Temp: $alignr ${exec /usr/bin/vcgencmd measure_temp | cut -c6-9} C' $TEMPFILE
 fi
 
 cp $TEMPFILE $HOME/.conkyrc
