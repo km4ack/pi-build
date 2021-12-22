@@ -60,7 +60,7 @@ ${font}
 ${font Arial:bold:size=14}${color Yellow}SYSTEM ${color DarkSlateGray} ${hr 2}
 ${font Arial:bold:size=14}${color White}Frequency $alignr${freq_g cpu0}Ghz
 ${font Arial:bold:size=14}${color White}Uptime $alignr${uptime}
-${font Arial:bold:size=14}${color White}Temp: $alignr ${exec /opt/vc/bin/vcgencmd measure_temp | cut -c6-9} C
+${font Arial:bold:size=14}${color White}Temp: $alignr ${exec /usr/bin/vcgencmd measure_temp | cut -c6-9} C
 ${voffset -15}
 ${font Arial:bold:size=10}${color White}CPU${alignr}${cpu}%
 ${cpubar cpu}
