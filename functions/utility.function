@@ -216,6 +216,7 @@ TELNET() {
 ##################################
 PITERM() {
     cd ${DIR} || return
+    sudo apt install libqt5serialport5
     wget https://www.cantab.net/users/john.wiseman/Downloads/Beta/piQtTermTCP
     sudo chmod +x piQtTermTCP
     sudo mv piQtTermTCP /usr/local/bin/
