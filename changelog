@@ -1,5 +1,11 @@
 version=3.2.0
 
+3.2.1		Fix wsjtx install - https://github.com/km4ack/pi-build/issues/365
+		Fix gridtracker install - https://github.com/km4ack/pi-build/issues/362
+		Fix PiQtTermTCP install - https://github.com/km4ack/pi-build/issues/360
+		Add root check - https://github.com/km4ack/pi-build/issues/366
+		Fix YAAC update indication - https://github.com/km4ack/pi-build/issues/363
+
 3.2.0		fix hamlib - https://github.com/km4ack/pi-build/issues/338
 		fix YAAC install - https://github.com/km4ack/pi-build/issues/339
 		fix variable - https://github.com/km4ack/pi-build/issues/340
