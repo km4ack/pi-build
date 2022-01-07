@@ -130,6 +130,9 @@ fi
 if ! hash bc >/dev/null; then
 	sudo apt install -y bc
 fi
+#an issue pops up every now and again concerning xterm.
+#link lxterminal to xterm. see https://github.com/km4ack/pi-build/issues/34
+sudo ln -s /usr/bin/lxterminal /usr/bin/xterm
 
 #####################################
 #	Check if run before
