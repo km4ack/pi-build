@@ -556,6 +556,30 @@ sudo apt-get -y update
 sudo apt-get -y upgrade
 sudo apt -y full-upgrade
 
+#create bap repair tool if it doesn't exist
+if [ ! -f /usr/local/bin/repair-bap ]; then
+
+cat <<EOF > /run/user/$UID/repair-bap
+#!/bin/bash
+
+if [ ! -f $HOME/pi-build/update ]; then
+echo "################################"
+echo "#  BAP update tool not found.  #"
+echo "#  Repairing, please stand by  #"
+echo "################################"
+cd $HOME
+git clone https://github.com/km4ack/pi-build.git || echo "Could not connect to Github. Check your internet and try again"
+echo "Repair complete. Run the Build a Pi update tool using the shortcut in the Pi menu"
+else
+clear;echo;echo
+echo "Update tool is present on the system."
+fi
+EOF
+chmod +x /run/user/$UID/repair-bap
+sudo mv /run/user/$UID/repair-bap /usr/local/bin/
+
+fi
+
 #####################################
 #	Install Base Apps
 #####################################
