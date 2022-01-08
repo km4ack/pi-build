@@ -1,4 +1,4 @@
-version=3.2.0
+version=3.2.1
 
 3.2.1		Fix wsjtx install - https://github.com/km4ack/pi-build/issues/365
 		Fix gridtracker install - https://github.com/km4ack/pi-build/issues/362
@@ -6,6 +6,7 @@ version=3.2.0
 		Add root check - https://github.com/km4ack/pi-build/issues/366
 		Fix YAAC update indication - https://github.com/km4ack/pi-build/issues/363
 		Create symlink lxterminal/xterm - https://github.com/km4ack/pi-build/issues/34
+		Add build a pi repair tool
 
 3.2.0		fix hamlib - https://github.com/km4ack/pi-build/issues/338
 		fix YAAC install - https://github.com/km4ack/pi-build/issues/339
