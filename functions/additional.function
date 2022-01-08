@@ -213,7 +213,7 @@ WSJTX() {
 
 	sudo apt install -y build-essential git cmake gfortran fftw3-dev qtbase5-dev qttools5-dev libqt5serialport5-dev  qtmultimedia5-dev libqt5multimedia5-plugins libqt5sql5-sqlite autoconf automake libtool texinfo libusb-1.0-0-dev libudev-dev libboost-all-dev asciidoctor
 
-	FT8PKG=$(curl -s https://physics.princeton.edu/pulsar/k1jt/wsjtx.html | grep .tgz | sed 's/.*="//;s/">.*$//')
+	FT8PKG=$(curl -s https://physics.princeton.edu/pulsar/k1jt/wsjtx.html | grep .tgz | sed 's/.*="//;s/">.*$//' | head -1)
 	FT8DIR=$(echo $FT8PKG | sed 's/.tgz//')
 	cd ${BUILDDIR}
 	wget https://physics.princeton.edu/pulsar/k1jt/$FT8PKG
@@ -486,13 +486,11 @@ EOF
 GRIDTRACKER() {
 	cd ${HOME} || return
 	sudo apt-get install -y libgconf-2-4
-	GRIDDLL=$(curl -s https://tagloomis.com/downloads/ | grep linux-arm32 | sed 's/^.*href="//;s/".*//')
-	#Line below changed 05JULY2021 to correct https://github.com/km4ack/pi-build/issues/253
-	#GRIDDLL=$(curl -s https://tagloomis.com/downloads/ | grep linux-arm | sed 's/^.*href="//;s/".*//')
+	GRIDDLL=$(curl -s https://download.gridtracker.org/latest_release.html | grep arm32 | sed 's/.*href="//;s/">.*//')
 	wget --tries 2 --connect-timeout=60 $GRIDDLL
 	GRIDTAR=$(echo $GRIDDLL | sed 's/.*\///g')
 	tar -xzvf $GRIDTAR
-	rm ./*.gz
+	rm GridTracker*.gz
 	OLDFOLDER=$(ls | grep GridTracker*-linux-arm32)
 	mv "$OLDFOLDER" $HOME/GridTracker
 	cat >gridtracker.desktop <<EOF

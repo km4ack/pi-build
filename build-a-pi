@@ -58,6 +58,18 @@ EOF
 fi
 
 #####################################
+#	Verify not run as root
+#####################################
+if [ "$WHO" = 'root' ]; then
+	yad --form --width=500 --text-align=center --center --title="Build-a-Pi" --text-align=center \
+		--image ${LOGO} --window-icon=${LOGO} --image-on-top --separator="|" --item-separator="|" \
+		--text="<b>ROOT DETECTED</b>\rDon't run this script as root. \
+Restart the script without sudo" \
+		--button=gtk-close
+	exit 1
+fi
+
+#####################################
 #	Old OS Check
 #####################################
 V_ID=$(grep VERSION_ID /etc/os-release | sed 's/VERSION_ID="//;s/"//')
@@ -118,6 +130,9 @@ fi
 if ! hash bc >/dev/null; then
 	sudo apt install -y bc
 fi
+#an issue pops up every now and again concerning xterm.
+#link lxterminal to xterm. see https://github.com/km4ack/pi-build/issues/34
+sudo ln -s /usr/bin/lxterminal /usr/bin/xterm
 
 #####################################
 #	Check if run before
@@ -544,6 +559,26 @@ Categories=Settings;DesktopSettings;GTK;X-LXDE-Settings;
 EOF
 
 sudo mv build-a-pi.desktop /usr/share/applications/
+
+#create repair-bap tool
+cat <<EOF > /run/user/$UID/repair-bap
+#!/bin/bash
+
+if [ ! -f $HOME/pi-build/update ]; then
+echo "################################"
+echo "#  BAP update tool not found.  #"
+echo "#  Repairing, please stand by  #"
+echo "################################"
+cd $HOME
+git clone https://github.com/km4ack/pi-build.git || echo "Could not connect to Github. Check your internet and try again"
+echo "Repair complete. Run the Build a Pi update tool using the shortcut in the Pi menu"
+else
+clear;echo;echo
+echo "Update tool is present on the system."
+fi
+EOF
+chmod +x /run/user/$UID/repair-bap
+sudo mv /run/user/$UID/repair-bap /usr/local/bin/
 
 #####################################
 #	Install Base Apps
