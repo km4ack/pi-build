@@ -796,13 +796,18 @@ HAMRS=$(ls | grep hamrs-)
 mv ${HAMRS} hamrs
 chmod +x hamrs
 sudo mv hamrs /usr/local/bin/
+#following four lines added to resolve issue #345
+sudo apt install -y fuse
+sudo modprobe fuse
+sudo groupadd fuse
+sudo usermod -a -G fuse pi
 
 	#create menu item and download icon	
 	cat >${HOME}/Downloads/hamrs.desktop <<EOF
 	[Desktop Entry]
 	Name=HAMRS
 	Comment=POTA Logging Software
-	Exec=/usr/local/bin/hamrs
+	Exec=/usr/local/bin/hamrs --no-sanbox
 	Icon=/usr/share/pixmaps/hamrs-logo.png
 	Terminal=false
 	Type=Application
