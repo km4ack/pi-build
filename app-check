@@ -245,6 +245,13 @@ CHECK() {
 	if ! hash chirpw 2>/dev/null; then
 		echo "CHIRP=Not_Installed" >> $UPDATEFILE
 	else
+		echo "CHIRP=Installed" >> $UPDATEFILE
+	fi
+	OLDCODE(){
+	#old code left for reference
+	if ! hash chirpw 2>/dev/null; then
+		echo "CHIRP=Not_Installed" >> $UPDATEFILE
+	else
 		CP=$(chirpw --version)
 		CHIRP=$(echo ${CP} | awk '{ print $2 }' | sed 's/daily-//')
 		NEWCHIRP=$(curl -s https://trac.chirp.danplanet.com/chirp_daily/LATEST/ |
@@ -256,6 +263,7 @@ CHECK() {
 			echo "CHIRP=is_latest_version" >> $UPDATEFILE
 		fi
 	fi
+	}
 	#----------------------------------------------------#
 	#		DIREWOLF
 	#----------------------------------------------------#
