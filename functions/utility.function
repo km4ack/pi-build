@@ -108,8 +108,9 @@ EOF
 ##################################
 #	Real Time Clock
 ##################################
-#Based on directions from the following web site
+#Based on directions from the following web sites
 #https://thepihut.com/blogs/raspberry-pi-tutorials/17209332-adding-a-real-time-clock-to-your-raspberry-pi
+#https://pi3g.com/2021/05/20/enabling-and-checking-i2c-on-the-raspberry-pi-using-the-command-line-for-your-own-scripts/
 RTC() {
     DOUBLE=$(sudo i2cdetect -y 1 | grep UU)
 
@@ -123,16 +124,11 @@ RTC() {
 
     else
 
-        IC2ACTIVE=$(ls /dev/*i2c*)
+        IC2ACTIVE=$(sudo raspi-config nonint get_i2c)
 
-        if [ ${IC2ACTIVE} = '/dev/i2c-1' ]; then
-            echo "I2C is active"
-        else
-            yad --form --width=500 --text-align=center --center --title="Build-a-Pi" --text-align=center \
-                --image ${LOGO} --window-icon=${LOGO} --image-on-top --separator="|" --item-separator="|" \
-                --text="Please enable I2C interface in the Raspberry Pi Configuration and try again" \
-                --button=gtk-close
-            exit 1
+        if [ ${IC2ACTIVE} = 1 ]; then
+            #enable i2c
+	    sudo raspi-config nonint do_i2c 0
         fi
 
         NOW=$(date)
