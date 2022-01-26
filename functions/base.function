@@ -64,7 +64,10 @@ echo "##########################"
 sudo apt install -y python3-gps gpsd-tools gpsd-clients gpsd chrony python3-gi-cairo
 sudo mv /etc/default/gpsd /etc/default/gpsd.org
 sudo wget https://raw.githubusercontent.com/km4ack/pi-scripts/master/gpsd -P /etc/default/
-sudo echo "refclock SHM 0 offset 0.5 delay 0.2 refid NMEA" | tee -a /etc/chrony/chrony.conf
+CHRONYCHK=$(grep "refclock SHM 0 offset 0.5 delay 0.2 refid NMEA" /etc/chrony/chrony.conf)
+if [ -z "$CHRONYCHK" ]; then
+echo "refclock SHM 0 offset 0.5 delay 0.2 refid NMEA" | sudo tee -a /etc/chrony/chrony.conf
+fi
 #line below added per this issue - https://github.com/km4ack/pi-build/issues/146 24SEPT2020
 ln -s /lib/systemd/system/gpsd.service /etc/systemd/system/multi-user.target.wants/
 
