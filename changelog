@@ -1,4 +1,11 @@
-version=3.2.1
+version=3.2.2
+
+3.2.2		Add cqrlog built from source - https://github.com/km4ack/pi-build/issues/349
+		Fix HAMRS install (Thanks WF5W)- https://github.com/km4ack/pi-build/issues/345
+		Fix Pat Menu Update status - https://github.com/km4ack/pi-build/issues/371
+		Fix RTC install - https://github.com/km4ack/pi-build/issues/358
+		Fix Chirp update status - https://github.com/km4ack/pi-build/issues/373
+		Fix NMEA statement in chrony.conf (Thanks DC2JR) - https://github.com/km4ack/pi-build/issues/374
 
 3.2.1		Fix wsjtx install - https://github.com/km4ack/pi-build/issues/365
 		Fix gridtracker install - https://github.com/km4ack/pi-build/issues/362
