@@ -188,7 +188,8 @@ DIREWOLF() {
     cd ${BUILDDIR} || return
     git clone https://www.github.com/wb2osz/direwolf
     cd ${BUILDDIR}/direwolf || return
-    mkdir build && cd build
+    mkdir build
+    cd build
     sudo apt-get install -y libasound2-dev cmake libudev-dev
     cmake ..
     make -j 4
