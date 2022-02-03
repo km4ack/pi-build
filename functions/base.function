@@ -61,7 +61,7 @@ GPS() {
 echo "##########################"
 echo "#     Installing GPS     #"
 echo "##########################"
-sudo apt install -y python3-gps gpsd-tools gpsd-clients gpsd chrony python3-gi-cairo
+sudo apt install -y python3-gps gpsd-tools gpsd-clients gpsd chrony python3-gi-cairo libgps-dev
 sudo mv /etc/default/gpsd /etc/default/gpsd.org
 sudo wget https://raw.githubusercontent.com/km4ack/pi-scripts/master/gpsd -P /etc/default/
 CHRONYCHK=$(grep "refclock SHM 0 offset 0.5 delay 0.2 refid NMEA" /etc/chrony/chrony.conf)
