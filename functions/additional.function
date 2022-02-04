@@ -506,6 +506,10 @@ YAAC() {
 	sudo apt-get install -y librxtx-java openjdk-10-dbg
 	mkdir -p ${HOME}/YAAC
 	cd ${HOME}/YAAC || return
+		#Fix issue 375 to prevent YAAC from reopening
+		if [ -f ${HOME}/YAAC/YAAC ]; then
+		rm ${HOME}/YAAC/YAAC
+		fi
 	touch YAAC
 	echo "#!/bin/bash" >>YAAC
 	echo "java -jar ${HOME}/YAAC/YAAC.jar" >>YAAC
