@@ -473,7 +473,12 @@ EOF
 GRIDTRACKER() {
 	cd ${HOME} || return
 	sudo apt-get install -y libgconf-2-4
+	#determine if 32/64 bit and set download link accordingly. issue #382
+	if [ `getconf LONG_BIT` = '32' ]; then
 	GRIDDLL=$(curl -s https://download.gridtracker.org/latest_release.html | grep arm32 | sed 's/.*href="//;s/">.*//')
+	else
+	GRIDDLL=$(curl -s https://download.gridtracker.org/latest_release.html | grep arm64 | sed 's/.*href="//;s/">.*//')
+	fi
 	wget --tries 2 --connect-timeout=60 $GRIDDLL
 	GRIDTAR=$(echo $GRIDDLL | sed 's/.*\///g')
 	tar -xzvf $GRIDTAR
