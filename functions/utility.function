@@ -411,6 +411,9 @@ VNC() {
     wget https://realvnc.com/download/file/viewer.files/${PACKAGE}
     sudo dpkg -i ${PACKAGE}
     rm ${PACKAGE}
+    if [ `getconf LONG_BIT` = '64' ]; then
+    sudo apt --fix-broken install -y
+    fi
 }
 
 ##################################
