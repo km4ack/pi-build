@@ -483,7 +483,12 @@ GRIDTRACKER() {
 	GRIDTAR=$(echo $GRIDDLL | sed 's/.*\///g')
 	tar -xzvf $GRIDTAR
 	rm GridTracker*.gz
+	#determine if 32/64 bit and get correct directory name.
+	if [ `getconf LONG_BIT` = '32' ]; then
 	OLDFOLDER=$(ls | grep GridTracker*-linux-arm32)
+	else
+	OLDFOLDER=$(ls | grep GridTracker*-linux-arm64)
+	fi
 	mv "$OLDFOLDER" $HOME/GridTracker
 	cat >gridtracker.desktop <<EOF
 [Desktop Entry]
