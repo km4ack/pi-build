@@ -26,6 +26,12 @@ PAT() {
 	fi
 
 	if [ `getconf LONG_BIT` = '64' ]; then
+
+	#reference:
+	#https://www.jeremymorgan.com/tutorials/raspberry-pi/install-go-raspberry-pi/
+	#https://github.com/la5nta/pat/wiki/Building-from-source
+	#https://cqdeks4td.blogspot.com/2021/11/installing-pat-open-source-winlink.html
+
 	#install golang needed for pat build
 	cd
 	wget https://go.dev/dl/go1.17.7.linux-arm64.tar.gz
