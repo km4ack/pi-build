@@ -840,7 +840,7 @@ sudo usermod -a -G fuse pi
 	[Desktop Entry]
 	Name=HAMRS
 	Comment=POTA Logging Software
-	Exec=/usr/local/bin/hamrs --no-sanbox
+	Exec=/usr/local/bin/hamrs --no-sandbox
 	Icon=/usr/share/pixmaps/hamrs-logo.png
 	Terminal=false
 	Type=Application
