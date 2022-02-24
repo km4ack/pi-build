@@ -213,7 +213,7 @@ TELNET() {
 PITERM() {
     cd ${DIR} || return
     #determine if 32 or 64 bit and install correct dependencies. Thanks Ben,KU0HN! Reference: https://groups.io/g/bpq32/message/34486
-    if [ `getconf LONG_BIT = '32' ]; then
+    if [ `getconf LONG_BIT` = '32' ]; then
     sudo apt install libqt5serialport5
     else
     sudo dpkg --add-architecture armhf
@@ -520,7 +520,7 @@ sudo mv /run/user/$UID/packetsearch.desktop /usr/share/applications/
 
 QTSOUND(){
     #determine if 32 or 64 bit and install correct dependencies. Thanks Ben,KU0HN! Reference: https://groups.io/g/bpq32/message/34486
-    if [ `getconf LONG_BIT = '32' ]; then
+    if [ `getconf LONG_BIT` = '32' ]; then
     sudo apt install libqt5serialport5
     else
     sudo dpkg --add-architecture armhf
