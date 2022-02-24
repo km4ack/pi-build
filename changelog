@@ -5,8 +5,8 @@ version=3.2.3
 		Add support for gridtracker 64 bit - https://github.com/km4ack/pi-build/issues/382
 		Fix broken VNC viewer package for 64 bit
 		Fix HAMRS not starting - https://github.com/km4ack/pi-build/issues/379
-		Fix PiQtSoundModem for 64 bit install
-		Fix PiQtTermTCP for 64 bit install
+		Fix PiQtSoundModem for 64 bit install - Thanks Ben,KU0HN
+		Fix PiQtTermTCP for 64 bit install - Thanks Ben,KU0HN
 
 3.2.2		Add cqrlog built from source - https://github.com/km4ack/pi-build/issues/349
 		Fix HAMRS install (Thanks WF5W)- https://github.com/km4ack/pi-build/issues/345
