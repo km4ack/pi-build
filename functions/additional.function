@@ -822,14 +822,6 @@ mkdir -p $HOME/Downloads/old-hamrs
 mv $HOME/Downloads/hamrs* $HOME/Downloads/old-hamrs
 fi
 
-#as of Feb 2022 there is no 64 bit version of HAMRS. The following will allow it to run
-if [ `getconf LONG_BIT` = '64' ]; then
-sudo dpkg --add-architecture armhf 
-sudo apt-get update
-sudo apt install -y libasound2:armhf zlib1g-dev:armhf fuse:armhf libglib2.0-0:armhf libnss3:armhf libatk1.0-0:armhf \
-libatk-bridge2.0-0:armhf libx11-xcb1:armhf libgdk-pixbuf-2.0-0:armhf libgtk-3-0:armhf libdrm2:armhf libgbm1:armhf
-fi
-
 cd ${HOME}/Downloads
 DL=$(curl https://www.hamrs.app | grep armv7 | sed 's/^.*href="//;s/">//')
 wget ${DL}
@@ -842,6 +834,15 @@ sudo apt install -y fuse
 sudo modprobe fuse
 sudo groupadd fuse
 sudo usermod -a -G fuse pi
+
+
+#as of Feb 2022 there is no 64 bit version of HAMRS. The following will allow it to run
+if [ `getconf LONG_BIT` = '64' ]; then
+sudo dpkg --add-architecture armhf 
+sudo apt-get update
+sudo apt install -y libasound2:armhf zlib1g-dev:armhf fuse:armhf libglib2.0-0:armhf libnss3:armhf libatk1.0-0:armhf \
+libatk-bridge2.0-0:armhf libx11-xcb1:armhf libgdk-pixbuf-2.0-0:armhf libgtk-3-0:armhf libdrm2:armhf libgbm1:armhf
+fi
 
 	#create menu item and download icon	
 	cat >${HOME}/Downloads/hamrs.desktop <<EOF
