@@ -412,10 +412,9 @@ EOF
 ##################################
 VNC() {
     cd ${HOME} || return
-    PACKAGE=$(curl -s https://www.realvnc.com/en/connect/download/viewer/raspberrypi/ | grep ARM.deb | awk '{print $2}' |
-        sed 's/href="\/download\/file\/viewer.files\///' | sed 's/"//')
+    PACKAGE=$(curl -s https://www.realvnc.com/en/connect/download/viewer/raspberrypi/ | grep ARM.deb | head -1 | sed s'/.*href="//;s/".*//;s/.*files\///')
 
-    wget https://realvnc.com/download/file/viewer.files/${PACKAGE}
+    wget https://downloads.realvnc.com/download/file/viewer.files/${PACKAGE}
     sudo dpkg -i ${PACKAGE}
     rm ${PACKAGE}
     if [ `getconf LONG_BIT` = '64' ]; then
