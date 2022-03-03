@@ -31,6 +31,7 @@ Additional help can be found in the video below.
 # Video
 
 [![IMAGE ALT TEXT](https://img.youtube.com/vi/GkGcu6WaWsc/0.jpg)](https://youtu.be/GkGcu6WaWsc "Build a Pi")
+[![IMAGE ALT TEXT](https://img.youtube.com/vi/AjzLp6OMyVk/0.jpg)](https://youtu.be/AjzLp6OMyVk "Build a Pi")
 [![IMAGE ALT TEXT](https://img.youtube.com/vi/l4M9VVqGxoc/0.jpg)](https://youtu.be/l4M9VVqGxoc "Build a Pi")
 
 
