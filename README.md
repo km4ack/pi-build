@@ -5,8 +5,7 @@ Rather than downloading a pre-built image where you have no choices in the build
 Pi gives you complete control over the build. It allows you to choose the applications you 
 want to install and skip the ones you don’t need. This keeps your pi as lean and mean as
 possible. A list of applications available using Build-a-Pi can be found below on this 
-page. Use it as your base and add additional applications as needed down the road. Videos 
-coming soon.
+page. Use it as your base and add additional applications as needed down the road. 
 
 # Needed info for pi build
 
