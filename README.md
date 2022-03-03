@@ -19,16 +19,18 @@ For Pat Winlink:
 Winlink Password & Grid Square
 
 # Install
-Download Raspberry Pi OS (previously called Rasbian) 32-bit from https://downloads.raspberrypi.org/raspios_armhf_latest
+Use [Raspberry Pi Imager](https://www.raspberrypi.com/software/) to download and flash your micro SD card. Once complete, put the SD card into the pi.
 
-Use a USB flash application such as Balena Etcher to copy the iso file to a USB key, get it at https://www.balena.io/etcher/
-
-Power up your Raspberry Pi, login, and in your home directory, run the following command
+Power up your Raspberry Pi, login, open the terminal, and run the following command.
 
      git clone https://github.com/km4ack/pi-build.git \
       $HOME/pi-build && bash $HOME/pi-build/build-a-pi
+
+Additional help can be found in the video below.
      
 # Video
+
+[![IMAGE ALT TEXT](https://img.youtube.com/vi/GkGcu6WaWsc/0.jpg)](https://youtu.be/GkGcu6WaWsc "Build a Pi")
 [![IMAGE ALT TEXT](https://img.youtube.com/vi/l4M9VVqGxoc/0.jpg)](https://youtu.be/l4M9VVqGxoc "Build a Pi")
 
 
