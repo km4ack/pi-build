@@ -24,12 +24,46 @@ PAT() {
 	elif [ -f ${XDG_CONFIG_HOME}/pat/config.json ]; then
 		cp $XDG_CONFIG_HOME/pat/config.json ${DIR}/config.json
 	fi
+
+	if [ `getconf LONG_BIT` = '64' ]; then
+
+	#reference:
+	#https://www.jeremymorgan.com/tutorials/raspberry-pi/install-go-raspberry-pi/
+	#https://github.com/la5nta/pat/wiki/Building-from-source
+	#https://cqdeks4td.blogspot.com/2021/11/installing-pat-open-source-winlink.html
+
+	#install golang needed for pat build
+	cd
+	wget https://go.dev/dl/go1.17.7.linux-arm64.tar.gz
+	sudo tar -C /usr/local -xzf go1.17.7.linux-arm64.tar.gz
+	rm go1.17.7.linux-arm64.tar.gz
+
+	echo "PATH=$PATH:/usr/local/go/bin" >> $HOME/.profile
+	echo "GOPATH=$HOME/go" >> $HOME/.profile
+
+	source $HOME/.profile
+
+	#download/build latest pat
+	cd
+	git clone https://github.com/la5nta/pat
+	cd pat
+	./make.bash libax25
+	./make.bash
+
+	sudo cp $HOME/pat/debian/pat@.service /lib/systemd/system/
+	sudo cp $HOME/pat/pat /usr/bin/
+	rm -rf $HOME/pat
+	else
+	#install deb file for 32 bit systems
 	NEWPATV=$(curl -s https://github.com/la5nta/pat/releases | grep armhf | head -1 | sed 's/.*pat_/pat_/' | sed 's/<\/a>.*$//')
 	NEWPAT=$(echo ${NEWPATV} | sed 's/pat_//' | sed 's/_linux_armhf.deb//' | sed 's/0\.//')
 	echo "new pat v ${NEWPATV}"
 	echo "new pat ${NEWPAT}"
 	wget --tries 2 --connect-timeout=60 https://github.com/la5nta/pat/releases/download/v0.${NEWPAT}/${NEWPATV}
 	sudo dpkg -i ${DIR}/${NEWPATV}
+	fi
+
+	#lines below configure pat with user info
 	pat http &
 	sudo killall pat
 	sudo systemctl start pat@${WHO}
@@ -445,12 +479,22 @@ EOF
 GRIDTRACKER() {
 	cd ${HOME} || return
 	sudo apt-get install -y libgconf-2-4
+	#determine if 32/64 bit and set download link accordingly. issue #382
+	if [ `getconf LONG_BIT` = '32' ]; then
 	GRIDDLL=$(curl -s https://download.gridtracker.org/latest_release.html | grep arm32 | sed 's/.*href="//;s/">.*//')
+	else
+	GRIDDLL=$(curl -s https://download.gridtracker.org/latest_release.html | grep arm64 | sed 's/.*href="//;s/">.*//')
+	fi
 	wget --tries 2 --connect-timeout=60 $GRIDDLL
 	GRIDTAR=$(echo $GRIDDLL | sed 's/.*\///g')
 	tar -xzvf $GRIDTAR
 	rm GridTracker*.gz
+	#determine if 32/64 bit and get correct directory name.
+	if [ `getconf LONG_BIT` = '32' ]; then
 	OLDFOLDER=$(ls | grep GridTracker*-linux-arm32)
+	else
+	OLDFOLDER=$(ls | grep GridTracker*-linux-arm64)
+	fi
 	mv "$OLDFOLDER" $HOME/GridTracker
 	cat >gridtracker.desktop <<EOF
 [Desktop Entry]
@@ -791,12 +835,21 @@ sudo modprobe fuse
 sudo groupadd fuse
 sudo usermod -a -G fuse pi
 
+
+#as of Feb 2022 there is no 64 bit version of HAMRS. The following will allow it to run
+if [ `getconf LONG_BIT` = '64' ]; then
+sudo dpkg --add-architecture armhf 
+sudo apt-get update
+sudo apt install -y libasound2:armhf zlib1g-dev:armhf fuse:armhf libglib2.0-0:armhf libnss3:armhf libatk1.0-0:armhf \
+libatk-bridge2.0-0:armhf libx11-xcb1:armhf libgdk-pixbuf-2.0-0:armhf libgtk-3-0:armhf libdrm2:armhf libgbm1:armhf
+fi
+
 	#create menu item and download icon	
 	cat >${HOME}/Downloads/hamrs.desktop <<EOF
 	[Desktop Entry]
 	Name=HAMRS
 	Comment=POTA Logging Software
-	Exec=/usr/local/bin/hamrs --no-sanbox
+	Exec=/usr/local/bin/hamrs --no-sandbox
 	Icon=/usr/share/pixmaps/hamrs-logo.png
 	Terminal=false
 	Type=Application
