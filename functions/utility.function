@@ -212,8 +212,15 @@ TELNET() {
 ##################################
 PITERM() {
     cd ${DIR} || return
+    #determine if 32 or 64 bit and install correct dependencies. Thanks Ben,KU0HN! Reference: https://groups.io/g/bpq32/message/34486
+    if [ `getconf LONG_BIT` = '32' ]; then
     sudo apt install libqt5serialport5
-    wget https://www.cantab.net/users/john.wiseman/Downloads/Beta/piQtTermTCP
+    else
+    sudo dpkg --add-architecture armhf
+    sudo apt update
+    sudo apt install -y libqt5widgets5:armhf libqt5serialport5:armhf libasound2:armhf libasound2-plugins:armhf
+    fi
+    wget --tries 2 --connect-timeout=60 https://www.cantab.net/users/john.wiseman/Downloads/Beta/piQtTermTCP
     sudo chmod +x piQtTermTCP
     sudo mv piQtTermTCP /usr/local/bin/
 
@@ -405,12 +412,14 @@ EOF
 ##################################
 VNC() {
     cd ${HOME} || return
-    PACKAGE=$(curl -s https://www.realvnc.com/en/connect/download/viewer/raspberrypi/ | grep ARM.deb | awk '{print $2}' |
-        sed 's/href="\/download\/file\/viewer.files\///' | sed 's/"//')
+    PACKAGE=$(curl -s https://www.realvnc.com/en/connect/download/viewer/raspberrypi/ | grep ARM.deb | head -1 | sed s'/.*href="//;s/".*//;s/.*files\///')
 
-    wget https://realvnc.com/download/file/viewer.files/${PACKAGE}
+    wget https://downloads.realvnc.com/download/file/viewer.files/${PACKAGE}
     sudo dpkg -i ${PACKAGE}
     rm ${PACKAGE}
+    if [ `getconf LONG_BIT` = '64' ]; then
+    sudo apt --fix-broken install -y
+    fi
 }
 
 ##################################
@@ -509,7 +518,14 @@ sudo mv /run/user/$UID/packetsearch.desktop /usr/share/applications/
 #Documentation - https://www.cantab.net/users/john.wiseman/Documents/QtSoundModem.html
 
 QTSOUND(){
-sudo apt install -y libqt5serialport5
+    #determine if 32 or 64 bit and install correct dependencies. Thanks Ben,KU0HN! Reference: https://groups.io/g/bpq32/message/34486
+    if [ `getconf LONG_BIT` = '32' ]; then
+    sudo apt install libqt5serialport5
+    else
+    sudo dpkg --add-architecture armhf
+    sudo apt update
+    sudo apt install -y libqt5widgets5:armhf libqt5serialport5:armhf libasound2:armhf libasound2-plugins:armhf
+    fi
 cd ${HOME}/Downloads || return
 wget --tries 2 --connect-timeout=60 https://www.cantab.net/users/john.wiseman/Downloads/Beta/piQtSoundModem
 chmod +x piQtSoundModem

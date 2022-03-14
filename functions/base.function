@@ -122,6 +122,12 @@ EOF
 ARDOP() {
     mkdir -p ${HOME}/ardop
     cd ${HOME}/ardop || return
+    #determine if 64 bit and install correct dependencies.
+    if [ `getconf LONG_BIT` = '64' ]; then
+    sudo dpkg --add-architecture armhf
+    sudo apt update
+    sudo apt install -y libqt5widgets5:armhf libqt5serialport5:armhf libasound2:armhf libasound2-plugins:armhf
+    fi
     wget --tries 2 --connect-timeout=60 https://www.cantab.net/users/john.wiseman/Downloads/Beta/piardopc
     sudo chmod +x ${HOME}/ardop/piardopc
 }
