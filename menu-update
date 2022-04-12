@@ -156,7 +156,7 @@ cat >bap.directory <<EOF
 Type=Directory
 Encoding=UTF-8
 Name=Build-a-Pi
-Icon=/home/pi/pi-build/logo.png
+Icon=/home/`whoami`/pi-build/logo.png
 EOF
 
 sudo mv bap.directory /usr/share/desktop-directories/
