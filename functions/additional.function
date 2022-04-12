@@ -688,8 +688,8 @@ cat <<EOF > /run/user/$UID/piaprs.desktop
 Name=Pi-APRS
 GenericName=Pi-ARPS by KM4ACK
 Comment=Pi-APRS by KM4ACK
-Exec=/home/pi/Pi-APRS/pi-aprs
-Icon=/home/pi/Pi-APRS/ISS.png
+Exec=/home/`whoami`/Pi-APRS/pi-aprs
+Icon=/home/`whoami`/Pi-APRS/ISS.png
 Terminal=true
 Type=Application
 Categories=HamRadio;
