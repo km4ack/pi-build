@@ -23,7 +23,7 @@ LOGO=${MYPATH}/logo.png
 TEMPCRON=${MYPATH}/cron.tmp
 VERSION=$(grep "version=" ${MYPATH}/changelog | sed 's/version=//')
 DATE=$(date)
-UPDATEFILE=/run/user/1000/bapupdate.txt
+UPDATEFILE=/run/user/$UID/bapupdate.txt
 
 FINISH() {
 	if [ -f "${BASE}" ]; then
