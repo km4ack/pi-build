@@ -683,7 +683,18 @@ EES() {
 PI-APRS() {
 	cd ${HOME} || return
 	git clone https://github.com/km4ack/Pi-APRS.git
-	sudo cp ~/Pi-APRS/piaprs.desktop /usr/share/applications
+cat <<EOF > /run/user/$UID/piaprs.desktop
+[Desktop Entry]
+Name=Pi-APRS
+GenericName=Pi-ARPS by KM4ACK
+Comment=Pi-APRS by KM4ACK
+Exec=/home/pi/Pi-APRS/pi-aprs
+Icon=/home/pi/Pi-APRS/ISS.png
+Terminal=true
+Type=Application
+Categories=HamRadio;
+EOF
+	sudo cp /run/user/$UID/piaprs.desktop /usr/share/applications/
 
 }
 
