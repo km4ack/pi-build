@@ -235,7 +235,7 @@ WSJTX() {
 	FT8PKG=$(curl -s https://physics.princeton.edu/pulsar/k1jt/wsjtx.html | grep .tgz | sed 's/.*="//;s/">.*$//' | head -1)
 	FT8DIR=$(echo $FT8PKG | sed 's/.tgz//')
 	cd ${BUILDDIR}
-	wget https://physics.princeton.edu/pulsar/k1jt/$FT8PKG
+	wget --tries 2 --connect-timeout=60 https://physics.princeton.edu/pulsar/k1jt/$FT8PKG
 	tar -xvf $FT8PKG
 	rm $FT8PKG
 	cd $FT8DIR
