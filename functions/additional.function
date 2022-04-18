@@ -301,7 +301,7 @@ CONKY() {
 	sed -i "s/N0CALL/${CALL}/" ${HOME}/.conkyrc
 	#Line below is for https://github.com/km4ack/pi-build/issues/198
 	echo "#Update GPS maidenhead for conky" >>${TEMPCRON}
-	echo "*/1 * * * * /home/pi/bin/conky/grid" >>${TEMPCRON}
+	echo "*/1 * * * * /home/`whoami`/bin/conky/grid" >>${TEMPCRON}
 
 	#Create files needed for autostart at login
 	#Fix issue https://github.com/km4ack/pi-build/issues/83
