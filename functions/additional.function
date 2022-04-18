@@ -312,7 +312,7 @@ Name=Conky
 Comment=Conky
 GenericName=Conky Screen Background Monitor
 Exec=conky --pause=5
-Icon=/home/pi/pi-build/conky/conky-logo.png
+Icon=/home/`whoami`/pi-build/conky/conky-logo.png
 Type=Application
 Encoding=UTF-8
 Terminal=false
@@ -330,8 +330,8 @@ EOF
 Name=Conky-Prefs
 Comment=Conky-Prefs
 GenericName=Change Conky Preferences
-Exec=/home/pi/pi-build/conky/setconky
-Icon=/home/pi/pi-build/conky/conky-logo.png
+Exec=/home/`whoami`/pi-build/conky/setconky
+Icon=/home/`whoami`/pi-build/conky/conky-logo.png
 Type=Application
 Encoding=UTF-8
 Terminal=false
