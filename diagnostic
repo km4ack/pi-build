@@ -211,7 +211,14 @@ uname -a >>${DIR}/systeminfo.txt
 cat ${HOME}/direwolf.conf >${DIR}/direwolf.conf
 
 #get pat config file
-cat ${HOME}/.wl2k/config.json >${DIR}/patconfig.txt
+PAT_VERSION=$(pat version | awk '{print $2}' | sed 's/v0.//;s/.0//')
+
+if [ "$PAT_VERSION" -le 11 ]; then
+PAT_CONFIG=${HOME}/.wl2k/config.json
+else
+PAT_CONFIG=$XDG_CONFIG_HOME/pat/config.json
+fi
+cat $PAT_CONFIG >${DIR}/patconfig.txt
 #remove winlink password
 sed -i 's/"secure_login_password":.*$/PASSWORD-REMOVED-FOR-YOUR-SECURITY/' ${DIR}/patconfig.txt
 

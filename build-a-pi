@@ -57,6 +57,61 @@ EOF
 	exit 0
 fi
 
+#####################################
+#	Verify not run as root
+#####################################
+if [ "$WHO" = 'root' ]; then
+	yad --form --width=500 --text-align=center --center --title="Build-a-Pi" --text-align=center \
+		--image ${LOGO} --window-icon=${LOGO} --image-on-top --separator="|" --item-separator="|" \
+		--text="<b>ROOT DETECTED</b>\rDon't run this script as root. \
+Restart the script without sudo" \
+		--button=gtk-close
+	exit 1
+fi
+
+#####################################
+#	Old OS Check
+#####################################
+V_ID=$(grep VERSION_ID /etc/os-release | sed 's/VERSION_ID="//;s/"//')
+
+if [ "$V_ID" -le 10 ]; then
+NOTICEPATH=/run/user/$UID
+
+cat <<EOF >${NOTICEPATH}/intro.txt
+Build a Pi 3.2.0 and later does not support
+RaspiOS Buster or earlier versions of RaspiOS.
+You should consider upgrading to RaspiOS 11
+(Bullseye). By clicking ok you will be moved
+to the last version of Build a Pi (3.1.4) that 
+supports Pi OS Buster. Please note there are 
+no plans to update Build a Pi for Buster going 
+forward.  In other words, you are on your own 
+if it is broke and you are still running Pi OS
+10 (Buster).
+
+EOF
+
+INTRO=$(yad --width=600 --height=300 --text-align=center --center --title="Out of Date OS Detected!" --show-uri \
+	--image ${LOGO} --window-icon=${LOGO} --image-on-top --separator="|" --item-separator="|" \
+	--text-info \
+	--button="OK":1 <${NOTICEPATH}/intro.txt \
+	--button="Exit":2 \
+	>/dev/null 2>&1)
+	BUT=$?
+	echo $BUT
+	if [ $BUT = 2 ] || [ $BUT = 252 ]; then
+	exit
+	fi
+	rm ${NOTICEPATH}/intro.txt
+	cd $HOME/pi-build
+	git checkout buster 
+	bash build-a-pi & exit
+fi
+
+#####################################
+#	end Old OS Check
+#####################################
+
 #install YAD & jq as needed
 clear
 echo
@@ -75,6 +130,9 @@ fi
 if ! hash bc >/dev/null; then
 	sudo apt install -y bc
 fi
+#an issue pops up every now and again concerning xterm.
+#link lxterminal to xterm. see https://github.com/km4ack/pi-build/issues/34
+sudo ln -s /usr/bin/lxterminal /usr/bin/xterm
 
 #####################################
 #	Check if run before
@@ -86,15 +144,16 @@ fi
 #####################################
 #	Check user is pi
 #####################################
-if [ "$WHO" != 'pi' ]; then
-	yad --form --width=500 --text-align=center --center --title="Build-a-Pi" --text-align=center \
-		--image ${LOGO} --window-icon=${LOGO} --image-on-top --separator="|" --item-separator="|" \
-		--text="<b>USER NAME IS NOT PI</b>\rThis script is designed to be run as the pi user. Please set the user name to pi \
-and try again. You can change the user name after the build is complete but some configuration may not work \
-as expected" \
-		--button=gtk-close
-	exit 1
-fi
+#This section commented out 12APRIL2022 for testing. Should be removed once testing is complete.
+#if [ "$WHO" != 'pi' ]; then
+#	yad --form --width=500 --text-align=center --center --title="Build-a-Pi" --text-align=center \
+#		--image ${LOGO} --window-icon=${LOGO} --image-on-top --separator="|" --item-separator="|" \
+#		--text="<b>USER NAME IS NOT PI</b>\rThis script is designed to be run as the pi user. Please set the user name to pi \
+#and try again. You can change the user name after the build is complete but some configuration may not work \
+#as expected" \
+#		--button=gtk-close
+#	exit 1
+#fi
 #####################################
 #	notice to user
 #####################################
@@ -334,7 +393,6 @@ yad --center --list --checklist --width=600 --height=600 --separator="" \
 	false "M0IAX" "Tools for JS8Call Messages" \
 	false "WSJTX" "Weak Signal Digital Mode Software" \
 	false "PYQSO" "Logging Software" \
-	false "CQRLOG" "Logging Software" \
 	false "HAMRS" "Logging Software" \
 	false "EES" "KM4ACK Emergency Email Server" \
 	false "QSSTV" "Slow Scan TV" \
@@ -356,7 +414,7 @@ fi
 
 if [ ${BUT} = 3 ]; then
 	ADDAPPS=(CONKY PI-APRS CHIRP GARIM PAT PAT-MENU JS8CALL M0IAX WSJTX PYQSO
-		CQRLOG HAMRS EES QSSTV GRIDTRACKER HAMCLOCK PROPAGATION YAAC XASTIR GPREDICT TQSL
+		HAMRS EES QSSTV GRIDTRACKER HAMCLOCK PROPAGATION YAAC XASTIR GPREDICT TQSL
 		GRIDCALC)
 
 	for i in "${ADDAPPS[@]}"; do
@@ -417,7 +475,7 @@ yad --center --list --checklist --width=600 --height=600 --separator="" \
 	false "BPQ" "LinBPQ Software" \
 	false "BATT" "Battery Test Script" \
 	false "VNC" "VNC Client Application" \
-	false "ZYGRIB" "Grib File Viewer" \
+	false "XYGRIB" "Grib File Viewer" \
 	--button="Exit":1 \
 	--button="Check All and Continue":3 \
 	--button="Install Selected":2 >${UTILITY}
@@ -427,7 +485,7 @@ if [ ${BUT} = 252 ] || [ ${BUT} = 1 ]; then
 fi
 
 if [ ${BUT} = 3 ]; then
-	UTILAPPS=(DIPOLE PACKETSEARCH CALLSIGN TEMPCONVERT GPARTED SHOWLOG PISTATS TELNET PITERM QTSOUND SECURITY YGATE BPQ BATT VNC ZYGRIB)
+	UTILAPPS=(DIPOLE PACKETSEARCH CALLSIGN TEMPCONVERT GPARTED SHOWLOG PISTATS TELNET PITERM QTSOUND SECURITY YGATE BPQ BATT VNC XYGRIB)
 	for i in "${UTILAPPS[@]}"; do
 		echo "$i" >>${UTILITY}
 	done
@@ -472,7 +530,7 @@ cat >tempsound <<EOF
 options snd-bcm2835 index=0
 
 #USB soundcard
-options snd-usb-audio index=2
+options snd-usb-audio index=3
 EOF
 sudo chown root:root tempsound
 sudo mv tempsound /etc/modprobe.d/alsa.conf
@@ -502,6 +560,26 @@ Categories=Settings;DesktopSettings;GTK;X-LXDE-Settings;
 EOF
 
 sudo mv build-a-pi.desktop /usr/share/applications/
+
+#create repair-bap tool
+cat <<EOF > /run/user/$UID/repair-bap
+#!/bin/bash
+
+if [ ! -f $HOME/pi-build/update ]; then
+echo "################################"
+echo "#  BAP update tool not found.  #"
+echo "#  Repairing, please stand by  #"
+echo "################################"
+cd $HOME
+git clone https://github.com/km4ack/pi-build.git || echo "Could not connect to Github. Check your internet and try again"
+echo "Repair complete. Run the Build a Pi update tool using the shortcut in the Pi menu"
+else
+clear;echo;echo
+echo "Update tool is present on the system."
+fi
+EOF
+chmod +x /run/user/$UID/repair-bap
+sudo mv /run/user/$UID/repair-bap /usr/local/bin/
 
 #####################################
 #	Install Base Apps
@@ -560,34 +638,13 @@ rm ${BASE} ${ADDITIONAL} ${UTILITY} ${FLSUITE} >/dev/null 2>&1
 rm -rf ${DIR} >/dev/null 2>&1
 sudo apt -y autoremove > /dev/null 2>&1
 
+#remove libham (rigctl) installed from apt
+#since it conflicts with hamlib installed from source
+sudo apt purge -y libhamlib4
+
 #restore crontab
 crontab ${TEMPCRON}
 rm ${TEMPCRON}
-
-#####################################
-#	Pat 12 Temp Workaround
-#####################################
-#This will move the user to the "version12" branch of the Pat Menu code 
-#until this can be implemented into the main branch of code. This will
-#allow Pat Menu to support both the new version of Pat as well as older
-#versions. This section of code needs to be removed once the "version12"
-#branch is merged with the master branch
-
-PAT_VERSION=$(pat version | awk '{print $2}' | sed 's/v0.//;s/.0//')
-
-if [ "$PAT_VERSION" -le 11 ]; then
-echo "pat version 11 detected"
-else
-echo "pat version 12 or greater detected"
-echo "moving pat menu to the version12 branch"
-cd $HOME/patmenu2
-git pull
-git checkout version12
-fi
-
-#####################################
-#	END Pat 12 Temp Workaround
-#####################################
 
 echo "WE ARE ALL DONE HERE.  If you close this window, you will have to reboot manually."
 

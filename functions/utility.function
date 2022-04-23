@@ -108,8 +108,9 @@ EOF
 ##################################
 #	Real Time Clock
 ##################################
-#Based on directions from the following web site
+#Based on directions from the following web sites
 #https://thepihut.com/blogs/raspberry-pi-tutorials/17209332-adding-a-real-time-clock-to-your-raspberry-pi
+#https://pi3g.com/2021/05/20/enabling-and-checking-i2c-on-the-raspberry-pi-using-the-command-line-for-your-own-scripts/
 RTC() {
     DOUBLE=$(sudo i2cdetect -y 1 | grep UU)
 
@@ -123,16 +124,11 @@ RTC() {
 
     else
 
-        IC2ACTIVE=$(ls /dev/*i2c*)
+        IC2ACTIVE=$(sudo raspi-config nonint get_i2c)
 
-        if [ ${IC2ACTIVE} = '/dev/i2c-1' ]; then
-            echo "I2C is active"
-        else
-            yad --form --width=500 --text-align=center --center --title="Build-a-Pi" --text-align=center \
-                --image ${LOGO} --window-icon=${LOGO} --image-on-top --separator="|" --item-separator="|" \
-                --text="Please enable I2C interface in the Raspberry Pi Configuration and try again" \
-                --button=gtk-close
-            exit 1
+        if [ ${IC2ACTIVE} = 1 ]; then
+            #enable i2c
+	    sudo raspi-config nonint do_i2c 0
         fi
 
         NOW=$(date)
@@ -193,13 +189,13 @@ PISTATS() {
     wget http://www.w1hkj.com/PI/${CUR}
     tar -xzvf ${CUR}
     rm ${CUR}
-    PISTATDIR=$(ls ${HOME} | grep pistats)
+    PISTATDIR=$(ls ${BUILDDIR} | grep pistats)
     cd ${PISTATDIR} || return
     sudo apt-get install -y libfltk1.3-dev
     make
-    make clean
     sudo mv pistats /usr/local/bin
     sudo mv ${BUILDDIR}/${PISTATDIR}/data/pistats.desktop /usr/share/applications/
+    make clean
     cd ${HOME} || return
     
 }
@@ -216,7 +212,15 @@ TELNET() {
 ##################################
 PITERM() {
     cd ${DIR} || return
-    wget https://www.cantab.net/users/john.wiseman/Downloads/Beta/piQtTermTCP
+    #determine if 32 or 64 bit and install correct dependencies. Thanks Ben,KU0HN! Reference: https://groups.io/g/bpq32/message/34486
+    if [ `getconf LONG_BIT` = '32' ]; then
+    sudo apt install libqt5serialport5
+    else
+    sudo dpkg --add-architecture armhf
+    sudo apt update
+    sudo apt install -y libqt5widgets5:armhf libqt5serialport5:armhf libasound2:armhf libasound2-plugins:armhf
+    fi
+    wget --tries 2 --connect-timeout=60 https://www.cantab.net/users/john.wiseman/Downloads/Beta/piQtTermTCP
     sudo chmod +x piQtTermTCP
     sudo mv piQtTermTCP /usr/local/bin/
 
@@ -408,20 +412,22 @@ EOF
 ##################################
 VNC() {
     cd ${HOME} || return
-    PACKAGE=$(curl -s https://www.realvnc.com/en/connect/download/viewer/raspberrypi/ | grep ARM.deb | awk '{print $2}' |
-        sed 's/href="\/download\/file\/viewer.files\///' | sed 's/"//')
+    PACKAGE=$(curl -s https://www.realvnc.com/en/connect/download/viewer/raspberrypi/ | grep ARM.deb | head -1 | sed s'/.*href="//;s/".*//;s/.*files\///')
 
-    wget https://realvnc.com/download/file/viewer.files/${PACKAGE}
+    wget https://downloads.realvnc.com/download/file/viewer.files/${PACKAGE}
     sudo dpkg -i ${PACKAGE}
     rm ${PACKAGE}
+    if [ `getconf LONG_BIT` = '64' ]; then
+    sudo apt --fix-broken install -y
+    fi
 }
 
 ##################################
-#	ZYGRIB Viewer
+#	XYGRIB Viewer
 ##################################
-ZYGRIB() {
-    sudo apt install -y zygrib
-    sudo apt install -y zygrib-maps
+XYGRIB() {
+    sudo apt install -y xygrib
+
 }
 
 ##################################
@@ -512,7 +518,14 @@ sudo mv /run/user/$UID/packetsearch.desktop /usr/share/applications/
 #Documentation - https://www.cantab.net/users/john.wiseman/Documents/QtSoundModem.html
 
 QTSOUND(){
-sudo apt install libqt5serialbus5
+    #determine if 32 or 64 bit and install correct dependencies. Thanks Ben,KU0HN! Reference: https://groups.io/g/bpq32/message/34486
+    if [ `getconf LONG_BIT` = '32' ]; then
+    sudo apt install libqt5serialport5
+    else
+    sudo dpkg --add-architecture armhf
+    sudo apt update
+    sudo apt install -y libqt5widgets5:armhf libqt5serialport5:armhf libasound2:armhf libasound2-plugins:armhf
+    fi
 cd ${HOME}/Downloads || return
 wget --tries 2 --connect-timeout=60 https://www.cantab.net/users/john.wiseman/Downloads/Beta/piQtSoundModem
 chmod +x piQtSoundModem

@@ -26,7 +26,13 @@ FLSTART() {
 	#	DEPENDS
 	##################################
 	#install needed depends
-	sudo apt-get install -y libfltk1.3-dev libjpeg9-dev libxft-dev libxinerama-dev libxcursor-dev libsndfile1-dev libsamplerate0-dev portaudio19-dev libpulse-dev libusb-1.0-0-dev texinfo libudev-dev
+	#check to see if 32 or 64 bit to detemine correct dependency
+	if [ `getconf LONG_BIT` = '64' ]; then
+	LIBJPG=libjpeg62-turbo-dev
+	else
+	LIBJPG=libjpeg9-dev
+	fi
+	sudo apt-get install -y libfltk1.3-dev $LIBJPG libxft-dev libxinerama-dev libxcursor-dev libsndfile1-dev libsamplerate0-dev portaudio19-dev libpulse-dev libusb-1.0-0-dev texinfo libudev-dev
 
 	##################################
 	#	FLXMLRPC

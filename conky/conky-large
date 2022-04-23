@@ -61,7 +61,7 @@ ${font Arial:bold:size=14}${color Yellow}SYSTEM ${color DarkSlateGray} ${hr 2}
 ${font Arial:bold:size=14}${color White}Frequency $alignr${freq_g cpu0}Ghz
 ${font Arial:bold:size=14}${color White}Uptime $alignr${uptime}
 #TEMP
-${font Arial:bold:size=14}${color White}Temp: $alignr ${exec /opt/vc/bin/vcgencmd measure_temp | awk -F "[=']" '{print($2 * 1.8)+32}'} F
+${font Arial:bold:size=14}${color White}Temp: $alignr ${exec /usr/bin/vcgencmd measure_temp | awk -F "[=']" '{print($2 * 1.8)+32}'} F
 ${voffset -15}
 ${font Arial:bold:size=10}${color White}CPU${alignr}${cpu}%
 ${cpubar cpu}

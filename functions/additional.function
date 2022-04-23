@@ -24,12 +24,46 @@ PAT() {
 	elif [ -f ${XDG_CONFIG_HOME}/pat/config.json ]; then
 		cp $XDG_CONFIG_HOME/pat/config.json ${DIR}/config.json
 	fi
+
+	if [ `getconf LONG_BIT` = '64' ]; then
+
+	#reference:
+	#https://www.jeremymorgan.com/tutorials/raspberry-pi/install-go-raspberry-pi/
+	#https://github.com/la5nta/pat/wiki/Building-from-source
+	#https://cqdeks4td.blogspot.com/2021/11/installing-pat-open-source-winlink.html
+
+	#install golang needed for pat build
+	cd
+	wget https://go.dev/dl/go1.17.7.linux-arm64.tar.gz
+	sudo tar -C /usr/local -xzf go1.17.7.linux-arm64.tar.gz
+	rm go1.17.7.linux-arm64.tar.gz
+
+	echo "PATH=$PATH:/usr/local/go/bin" >> $HOME/.profile
+	echo "GOPATH=$HOME/go" >> $HOME/.profile
+
+	source $HOME/.profile
+
+	#download/build latest pat
+	cd
+	git clone https://github.com/la5nta/pat
+	cd pat
+	./make.bash libax25
+	./make.bash
+
+	sudo cp $HOME/pat/debian/pat@.service /lib/systemd/system/
+	sudo cp $HOME/pat/pat /usr/bin/
+	rm -rf $HOME/pat
+	else
+	#install deb file for 32 bit systems
 	NEWPATV=$(curl -s https://github.com/la5nta/pat/releases | grep armhf | head -1 | sed 's/.*pat_/pat_/' | sed 's/<\/a>.*$//')
 	NEWPAT=$(echo ${NEWPATV} | sed 's/pat_//' | sed 's/_linux_armhf.deb//' | sed 's/0\.//')
 	echo "new pat v ${NEWPATV}"
 	echo "new pat ${NEWPAT}"
 	wget --tries 2 --connect-timeout=60 https://github.com/la5nta/pat/releases/download/v0.${NEWPAT}/${NEWPATV}
 	sudo dpkg -i ${DIR}/${NEWPATV}
+	fi
+
+	#lines below configure pat with user info
 	pat http &
 	sudo killall pat
 	sudo systemctl start pat@${WHO}
@@ -81,9 +115,20 @@ PAT-MENU() {
 		rm -rf "${HOME}/patmenu2"
 	fi
 	cd ${HOME}
-	git clone https://github.com/km4ack/patmenu2.git ${HOME}/patmenu2 && bash ${HOME}/patmenu2/setup
+	git clone https://github.com/km4ack/patmenu2.git ${HOME}/patmenu2
+
+	#Verify that pat is on master branch. Pat can remain on an old branch
+	#due to a workaround when moving to Pat version 12. This caused Pat Menu
+	#to constantly report that it needed an update with the BAP update tool.
+	PAT_VER=$(grep release $HOME/patmenu2/changelog | head -1 | sed 's/release=//;s/\.//g')
+	if [ "$PAT_VER" -lt 260 ]; then
+	cd $HOME/patmenu2
+	git checkout master
+	fi
+
+	bash ${HOME}/patmenu2/setup
 	sed -i "s/N0CALL/${CALL}/" ${HOME}/patmenu2/config
-	sed -i 's/1,0/2,0/g' ${HOME}/patmenu2/config
+	sed -i 's/1,0/3,0/g' ${HOME}/patmenu2/config
 	#restore config files
 	if [ -d ${DIR}/patconfig/ ]; then
 		mv ${DIR}/patconfig/* ${HOME}/patmenu2/
@@ -93,41 +138,147 @@ PAT-MENU() {
 #	JS8Call
 ##################################
 JS8CALL() {
-	cd ${DIR}
-	JS8LATE=$(curl -s http://files.js8call.com/latest.html | grep armhf | awk '{ print $2 }' | sed 's/href=//' | sed 's/"//g')
-	JS8PKG=$(curl -s http://files.js8call.com/latest.html | grep armhf | awk '{ print $2 }' | sed 's/\///g' | sed 's/href="http:files.js8call.com[0-9].[0-9].[0-9]//' | sed 's/"//')
-	wget --tries 2 --connect-timeout=60 ${JS8LATE} || echo "Can't Download JS8Call" >>${BUILDLOG}
-	sudo dpkg -i ${JS8PKG}
-	sudo apt-get --fix-broken -y install
-	sudo dpkg -i ${JS8PKG}
+
+	#find how much memory we are working with
+	FREEMEM=$(free -m | grep Mem: | awk '{ print $2 }')
+	echo ${FREEMEM}
+
+	##################################
+	#	INCREASE SWAP
+	##################################
+	#increase swap file if less than 3G memory
+	if [ ${FREEMEM} -lt 3000 ]; then
+		echo "Increasing Swap size for build"
+		#increase swap size
+		sudo sed -i 's/#CONF_SWAPFILE=\/var\/swap/CONF_SWAPFILE=\/var\/swap/' /etc/dphys-swapfile
+		sudo sed -i 's/CONF_SWAPSIZE=100/CONF_SWAPSIZE=1024/' /etc/dphys-swapfile
+		sudo /etc/init.d/dphys-swapfile restart
+		sleep 10
+	fi
+
+#https://9a3gos.com/install-js8call-2-0-0-rc3-on-ubuntu-19-10-hamlib/
+
+#Verify HAMLIB installed or JS8 Won't Build.
+if ! hash rigctl 2>/dev/null; then
+	source ${MYPATH}/functions/base.function && HAMLIB
+	source ${MYPATH}/config
+fi
+
+echo "###############################"
+echo "Installing JS8Call Dependancies"
+echo "###############################"
+sudo apt-get install -y build-essential gfortran autoconf automake libtool cmake git asciidoctor libfftw3-dev qtdeclarative5-dev texinfo libqt5multimedia5 libqt5multimedia5-plugins qtmultimedia5-dev libusb-1.0.0-dev libqt5serialport5-dev asciidoc libudev-dev
+
+JS8PKG=$(curl -s http://files.js8call.com/latest.html | grep .tgz | sed 's/.*js8call-/js8call-/;s/<.*$//')
+JS8VERSION=$(echo $JS8PKG | sed 's/js8call-//;s/.tgz.*$//')
+cd ${BUILDDIR}
+echo "###################"
+echo "Downloading JS8Call"
+echo "###################"
+wget http://files.js8call.com/$JS8VERSION/$JS8PKG
+tar -xvf $JS8PKG
+rm $JS8PKG
+cd ${BUILDDIR}/js8call
+echo "#################"
+echo "Compiling JS8Call"
+echo "#################"
+cmake -D CMAKE_INSTALL_PREFIX=$HOME/Downloads/js8call
+cmake --build . -- -j4
+sudo cp js8 js8call /usr/local/bin
+sudo cp js8call.desktop /usr/share/applications
+sudo cp ./artwork/icon_128.svg /usr/share/pixmaps/js8call_icon.svg
+
+	#reset swap size to default
+	if [ ${FREEMEM} -lt 3000 ]; then
+		echo "Resetting swap size to default"
+		#increase swap size
+		sudo sed -i 's/CONF_SWAPFILE=\/var\/swap/#CONF_SWAPFILE=\/var\/swap/' /etc/dphys-swapfile
+		sudo sed -i 's/CONF_SWAPSIZE=1024/CONF_SWAPSIZE=100/' /etc/dphys-swapfile
+		sudo /etc/init.d/dphys-swapfile restart
+		sleep 10
+	fi
+
+#Old Way left for reference
+	#cd ${DIR}
+	#JS8LATE=$(curl -s http://files.js8call.com/latest.html | grep armhf | awk '{ print $2 }' | sed 's/href=//' | sed 's/"//g')
+	#JS8PKG=$(curl -s http://files.js8call.com/latest.html | grep armhf | awk '{ print $2 }' | sed 's/\///g' | sed 's/href="http:files.js8call.com[0-9].[0-9].[0-9]//' | sed 's/"//')
+	#wget --tries 2 --connect-timeout=60 ${JS8LATE} || echo "Can't Download JS8Call" >>${BUILDLOG}
+	#sudo dpkg -i ${JS8PKG}
+	#sudo apt-get --fix-broken -y install
+	#sudo dpkg -i ${JS8PKG}
 }
 
 ##################################
 #	WSJTX
 ##################################
 WSJTX() {
-	cd ${DIR}
-	WSPKG=$(curl -s https://physics.princeton.edu/pulsar/k1jt/wsjtx.html | grep armhf.deb | sed 's/^.*wsjtx/wsjtx/' | sed 's/deb.*$/deb/' | head -1)
-	wget --tries 2 --connect-timeout=60 --no-check-certificate https://physics.princeton.edu/pulsar/k1jt/$WSPKG
-	WSJTXSUCCESS=$?
-	sudo dpkg -i $WSPKG
-	sudo apt-get --fix-broken -y install
-	sudo dpkg -i $WSPKG
+	#find how much memory we are working with
+	FREEMEM=$(free -m | grep Mem: | awk '{ print $2 }')
+	echo ${FREEMEM}
+
+	##################################
+	#	INCREASE SWAP
+	##################################
+	#increase swap file if less than 3G memory
+	if [ ${FREEMEM} -lt 3000 ]; then
+		echo "Increasing Swap size for build"
+		#increase swap size
+		sudo sed -i 's/#CONF_SWAPFILE=\/var\/swap/CONF_SWAPFILE=\/var\/swap/' /etc/dphys-swapfile
+		sudo sed -i 's/CONF_SWAPSIZE=100/CONF_SWAPSIZE=1024/' /etc/dphys-swapfile
+		sudo /etc/init.d/dphys-swapfile restart
+		sleep 10
+	fi
+
+
+	sudo apt install -y build-essential git cmake gfortran fftw3-dev qtbase5-dev qttools5-dev libqt5serialport5-dev  qtmultimedia5-dev libqt5multimedia5-plugins libqt5sql5-sqlite autoconf automake libtool texinfo libusb-1.0-0-dev libudev-dev libboost-all-dev asciidoctor
+
+	FT8PKG=$(curl -s https://physics.princeton.edu/pulsar/k1jt/wsjtx.html | grep .tgz | sed 's/.*="//;s/">.*$//' | head -1)
+	FT8DIR=$(echo $FT8PKG | sed 's/.tgz//')
+	cd ${BUILDDIR}
+	wget --tries 2 --connect-timeout=60 https://physics.princeton.edu/pulsar/k1jt/$FT8PKG
+	tar -xvf $FT8PKG
+	rm $FT8PKG
+	cd $FT8DIR
+	cmake -D CMAKE_INSTALL_PREFIX=${BUILDDIR}/$FT8DIR
+	cmake -DWSJT_SKIP_MANPAGES=ON -DWSJT_GENERATE_DOCS=OFF
+	sudo cmake --build . --target install -j4
+	sudo mv ${BUILDDIR}/${FT8DIR}/bin/* /usr/local/bin/
+	sudo cp ${BUILDDIR}/${FT8DIR}/share/applications/wsjtx.desktop /usr/share/applications/
+	sudo cp ${BUILDDIR}/${FT8DIR}/share/pixmaps/wsjtx_icon.png /usr/share/pixmaps/
+
+	#reset swap size to default
+	if [ ${FREEMEM} -lt 3000 ]; then
+		echo "Resetting swap size to default"
+		#increase swap size
+		sudo sed -i 's/CONF_SWAPFILE=\/var\/swap/#CONF_SWAPFILE=\/var\/swap/' /etc/dphys-swapfile
+		sudo sed -i 's/CONF_SWAPSIZE=1024/CONF_SWAPSIZE=100/' /etc/dphys-swapfile
+		sudo /etc/init.d/dphys-swapfile restart
+		sleep 10
+	fi
+
+#old way of installing. left for reference
+	#cd ${DIR}
+	#WSPKG=$(curl -s https://physics.princeton.edu/pulsar/k1jt/wsjtx.html | grep armhf.deb | sed 's/^.*wsjtx/wsjtx/' | sed 's/deb.*$/deb/' | head -1)
+	#wget --tries 2 --connect-timeout=60 --no-check-certificate https://physics.princeton.edu/pulsar/k1jt/$WSPKG
+	#WSJTXSUCCESS=$?
+	#sudo dpkg -i $WSPKG
+	#sudo apt-get --fix-broken -y install
+	#sudo dpkg -i $WSPKG
 	#added to fix WSJTX 2.3.0
-	sudo sed -i "s/# en_US.UTF-8/en_US.UTF-8/g" /etc/locale.gen
-	sudo locale-gen
+	#sudo sed -i "s/# en_US.UTF-8/en_US.UTF-8/g" /etc/locale.gen
+	#sudo locale-gen
 	#end edit for WSJTX 2.3.0
 	#try sourcegorge if princeton.edu fails
-	WSJTX2() {
-		if [ "$WSJTXSUCCESS" ! = 0 ]; then
-			cd ${DIR}
-			wget --tries 2 --connect-timeout=60 https://sourceforge.net/projects/wsjt/files/wsjtx-2.2.2/wsjtx_2.2.2_armhf.deb
-			sudo dpkg -i wsjtx_2.2.2_armhf.deb
-			sudo apt-get --fix-broken -y install
-			sudo dpkg -i wsjtx_2.2.2_armhf.deb
-		fi
-	}
-	WSJTX2
+	#WSJTX2() {
+	#	if [ "$WSJTXSUCCESS" ! = 0 ]; then
+	#		cd ${DIR}
+	#		wget --tries 2 --connect-timeout=60 https://sourceforge.net/projects/wsjt/files/wsjtx-2.2.2/wsjtx_2.2.2_armhf.deb
+	#		sudo dpkg -i wsjtx_2.2.2_armhf.deb
+	#		sudo apt-get --fix-broken -y install
+	#		sudo dpkg -i wsjtx_2.2.2_armhf.deb
+	#	fi
+	#}
+	#WSJTX2
 
 }
 
@@ -140,7 +291,7 @@ CONKY() {
 	fi
 	touch ${HOME}/Documents/mylog.txt  #conky will fail to load if this file doesn't exist
 	touch /var/lib/misc/dnsmasq.leases #conky will fail to load if this file doesn't exist
-	sudo apt-get install -y ruby2.5
+	sudo apt-get install -y ruby2.7
 	sudo gem install gpsd_client
 	sudo gem install maidenhead
 	cp ${MYPATH}/conky/.conkyrc ${HOME}/.conkyrc
@@ -150,7 +301,7 @@ CONKY() {
 	sed -i "s/N0CALL/${CALL}/" ${HOME}/.conkyrc
 	#Line below is for https://github.com/km4ack/pi-build/issues/198
 	echo "#Update GPS maidenhead for conky" >>${TEMPCRON}
-	echo "*/1 * * * * /home/pi/bin/conky/grid" >>${TEMPCRON}
+	echo "*/1 * * * * /home/`whoami`/bin/conky/grid" >>${TEMPCRON}
 
 	#Create files needed for autostart at login
 	#Fix issue https://github.com/km4ack/pi-build/issues/83
@@ -161,7 +312,7 @@ Name=Conky
 Comment=Conky
 GenericName=Conky Screen Background Monitor
 Exec=conky --pause=5
-Icon=/home/pi/pi-build/conky/conky-logo.png
+Icon=/home/`whoami`/pi-build/conky/conky-logo.png
 Type=Application
 Encoding=UTF-8
 Terminal=false
@@ -179,8 +330,8 @@ EOF
 Name=Conky-Prefs
 Comment=Conky-Prefs
 GenericName=Change Conky Preferences
-Exec=/home/pi/pi-build/conky/setconky
-Icon=/home/pi/pi-build/conky/conky-logo.png
+Exec=/home/`whoami`/pi-build/conky/setconky
+Icon=/home/`whoami`/pi-build/conky/conky-logo.png
 Type=Application
 Encoding=UTF-8
 Terminal=false
@@ -220,53 +371,38 @@ EOF
 ##################################
 PYQSO() {
 	sudo apt-get install -y pyqso
+
 }
 
 ##################################
 #	CQRLOG
 ##################################
 CQRLOG() {
-	#sudo apt-get install -y cqrlog
-	sudo apt-get install -y lcl-2.0 lazarus-2.0 fp-compiler-3.0.4 fpc-3.0.4 libssl-dev git build-essential \
-		libmariadbclient-dev lazarus-ide lcl lcl-gtk2 lcl-nogui lcl-units lcl-utils lazarus lazarus-doc lazarus-src \
+
+sudo apt-get install -y lcl-2.0 lazarus-2.0 fp-compiler-3.2.0 fpc-3.2.0 libssl-dev git build-essential \
+		libmariadb-dev-compat lazarus-ide lcl lcl-gtk2 lcl-nogui lcl-units lcl-utils lazarus lazarus-doc lazarus-src \
 		fp-units-misc fp-units-rtl fp-utils fpc fpc-source libssl-dev default-mysql-client-core default-mysql-server \
-		default-mysql-server-core galera-3 gawk libcgi-fast-perl libcgi-pm-perl libconfig-inifiles-perl libdbd-mysql-perl \
-		libdbi-perl libencode-locale-perl libfcgi-perl libhamlib-utils libhamlib2 libhtml-parser-perl libhtml-tagset-perl \
+		default-mysql-server-core gawk libcgi-fast-perl libcgi-pm-perl libconfig-inifiles-perl libdbd-mysql-perl \
+		libdbi-perl libencode-locale-perl libfcgi-perl libhtml-parser-perl libhtml-tagset-perl \
 		libhtml-template-perl libhttp-date-perl libhttp-message-perl libio-html-perl liblwp-mediatypes-perl \
 		libmariadb-dev-compat libnetpbm10 libreadline5 libterm-readkey-perl libtimedate-perl liburi-perl \
-		mariadb-client-10.3 mariadb-client-core-10.3 mariadb-server-10.3 mariadb-server-core-10.3 socat xplanet xplanet-images
 
-	sudo ln -s /usr/lib/arm-linux-gnueabihf/libmariadbclient.so /usr/lib/libmysqlclient.so
-
-	cd ${BUILDDIR}
-	git clone https://github.com/ok2cqr/cqrlog.git
-	cd cqrlog
-	make
-	sudo make install
-	sudo make clean
-	cd ..
-	#rm -rf cqrlog
-
-	cat >cqrlog.desktop <<EOF
-[Desktop Entry]
-Name=CQRLOG
-Comment=Amateur Radio Logging Software
-GenericName=CQRLOG
-Exec=cqrlog
-Icon=cqrlog
-Type=Application
-Terminal=false
-Categories=HamRadio;Utility
-EOF
-
-	sudo mv cqrlog.desktop /usr/share/applications/
-
+cd $HOME
+git clone https://github.com/ok2cqr/cqrlog.git
+cd $HOME/cqrlog
+make
+sudo make install
 }
 
 ##################################
 #	CHIRP
 ##################################
 CHIRP() {
+
+sudo apt install -y chirp
+
+OLDCODE(){
+	#left for reference
 	cd ${DIR} || return
 	wget --tries 2 --connect-timeout=60 https://trac.chirp.danplanet.com/chirp_daily/LATEST/
 	CHIRPBUILD=$(cat index.html | grep .tar.gz | grep chirp-daily- | awk '{ print $6 }' | sed 's/.*"//' | sed 's/>//' | sed 's/[<].*$//')
@@ -279,6 +415,7 @@ CHIRP() {
 	cd $CHIRPDIR || return
 	sudo python setup.py install
 	pip install future
+}
 }
 
 ##################################
@@ -303,7 +440,7 @@ GARIM() {
 #	QSSTV
 ##################################
 QSSTV() {
-	sudo apt-get install -y g++ libfftw3-dev qt5-default libpulse-dev libhamlib-dev libasound2-dev libv4l-dev libopenjp2-7 libopenjp2-7-dev
+	sudo apt-get install -y g++ libfftw3-dev qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools libpulse-dev libhamlib-dev libasound2-dev libv4l-dev libopenjp2-7 libopenjp2-7-dev
 
 	cd ${BUILDDIR} || return
 
@@ -318,6 +455,8 @@ QSSTV() {
 	sudo make clean
 	cd ${BUILDDIR} || return
 	rm *.gz
+	mkdir -p /usr/local/share/pixmaps/
+	sudo cp ${BUILDDIR}/${SSTVTAR}/icons/qsstv.png /usr/local/share/pixmaps/
 
 cat >qsstv.desktop <<EOF
 [Desktop Entry]
@@ -325,7 +464,7 @@ Name=QSSTV
 Comment=Slow Scan TV
 GenericName=QSSTV
 Exec=/usr/local/bin/qsstv
-Icon=${HOME}/GridTracker/gridtracker.png
+Icon=qsstv.png
 Type=Application
 Terminal=false
 Categories=HamRadio;
@@ -340,14 +479,22 @@ EOF
 GRIDTRACKER() {
 	cd ${HOME} || return
 	sudo apt-get install -y libgconf-2-4
-	GRIDDLL=$(curl -s https://tagloomis.com/downloads/ | grep linux-arm32 | sed 's/^.*href="//;s/".*//')
-	#Line below changed 05JULY2021 to correct https://github.com/km4ack/pi-build/issues/253
-	#GRIDDLL=$(curl -s https://tagloomis.com/downloads/ | grep linux-arm | sed 's/^.*href="//;s/".*//')
+	#determine if 32/64 bit and set download link accordingly. issue #382
+	if [ `getconf LONG_BIT` = '32' ]; then
+	GRIDDLL=$(curl -s https://download.gridtracker.org/latest_release.html | grep arm32 | sed 's/.*href="//;s/">.*//')
+	else
+	GRIDDLL=$(curl -s https://download.gridtracker.org/latest_release.html | grep arm64 | sed 's/.*href="//;s/">.*//')
+	fi
 	wget --tries 2 --connect-timeout=60 $GRIDDLL
 	GRIDTAR=$(echo $GRIDDLL | sed 's/.*\///g')
 	tar -xzvf $GRIDTAR
-	rm ./*.gz
+	rm GridTracker*.gz
+	#determine if 32/64 bit and get correct directory name.
+	if [ `getconf LONG_BIT` = '32' ]; then
 	OLDFOLDER=$(ls | grep GridTracker*-linux-arm32)
+	else
+	OLDFOLDER=$(ls | grep GridTracker*-linux-arm64)
+	fi
 	mv "$OLDFOLDER" $HOME/GridTracker
 	cat >gridtracker.desktop <<EOF
 [Desktop Entry]
@@ -400,9 +547,13 @@ YAAC() {
 	cd ${DIR} || return
 	#wget --tries 2 --connect-timeout=60 https://sourceforge.net/projects/yetanotheraprsc/files/YAAC.zip/
 	wget --tries 2 --connect-timeout=60 https://www.ka2ddo.org/ka2ddo/YAAC.zip
-	sudo apt-get install -y openjdk-8-jre librxtx-java
+	sudo apt-get install -y librxtx-java openjdk-10-dbg
 	mkdir -p ${HOME}/YAAC
 	cd ${HOME}/YAAC || return
+		#Fix issue 375 to prevent YAAC from reopening
+		if [ -f ${HOME}/YAAC/YAAC ]; then
+		rm ${HOME}/YAAC/YAAC
+		fi
 	touch YAAC
 	echo "#!/bin/bash" >>YAAC
 	echo "java -jar ${HOME}/YAAC/YAAC.jar" >>YAAC
@@ -469,10 +620,10 @@ EOF
 
 EES() {
 
-	#install PHP7.3 if not installed
+	#install PHP7.4 if not installed
 	#this will also install apache2
-	if ! hash php7.3 2>/dev/null; then
-		sudo apt install -y php7.3
+	if ! hash php7.4 2>/dev/null; then
+		sudo apt install -y php7.4
 	fi
 	#install ghostwriter if needed
 	#this is used to mod the new index.html
@@ -495,7 +646,7 @@ EES() {
 	sudo sed -i 's/REMINDER\ FOR\ OPERATOR\ TO\ DO\ SOMETHING/ENABLE\ AUTO\ POST\ REPLY\ IN\ CRON/' /var/www/html/config.php
 	cd ${DIR} || return
 	#Change Pat Winlink port so it won't interfer with the EES
-	sed -i 's/0.0.0.0:8080/0.0.0.0:5000/' ${HOME}/.wl2k/config.json
+	sed -i 's/:8080/:5000/' ${XDG_CONFIG_HOME}/pat/config.json
 	sed -i 's/PORT=8080/PORT=5000/' ${HOME}/patmenu2/config
 
 	sudo killall pat
@@ -532,7 +683,18 @@ EES() {
 PI-APRS() {
 	cd ${HOME} || return
 	git clone https://github.com/km4ack/Pi-APRS.git
-	sudo cp ~/Pi-APRS/piaprs.desktop /usr/share/applications
+cat <<EOF > /run/user/$UID/piaprs.desktop
+[Desktop Entry]
+Name=Pi-APRS
+GenericName=Pi-ARPS by KM4ACK
+Comment=Pi-APRS by KM4ACK
+Exec=/home/`whoami`/Pi-APRS/pi-aprs
+Icon=/home/`whoami`/Pi-APRS/ISS.png
+Terminal=true
+Type=Application
+Categories=HamRadio;
+EOF
+	sudo cp /run/user/$UID/piaprs.desktop /usr/share/applications/
 
 }
 
@@ -608,7 +770,7 @@ GPREDICT() {
 #	TQSL
 ##################################
 TQSL() {
-	sudo apt install -y cmake g++ libexpat1-dev libssl-dev libdb++-dev libcurl4-openssl-dev libwxgtk3.0-dev
+	sudo apt install -y cmake g++ libexpat1-dev libssl-dev libdb++-dev libcurl4-openssl-dev libwxgtk3.0-gtk3-dev
 	cd ${BUILDDIR} || return
 	CUR=$(curl -s http://www.arrl.org/tqsl-download | grep "for Linux" | sed 's/.*TQSL //' | awk '{print $1}')
 	wget http://www.arrl.org/tqsl/tqsl-${CUR}.tar.gz
@@ -678,13 +840,27 @@ HAMRS=$(ls | grep hamrs-)
 mv ${HAMRS} hamrs
 chmod +x hamrs
 sudo mv hamrs /usr/local/bin/
+#following four lines added to resolve issue #345
+sudo apt install -y fuse
+sudo modprobe fuse
+sudo groupadd fuse
+sudo usermod -a -G fuse pi
+
+
+#as of Feb 2022 there is no 64 bit version of HAMRS. The following will allow it to run
+if [ `getconf LONG_BIT` = '64' ]; then
+sudo dpkg --add-architecture armhf 
+sudo apt-get update
+sudo apt install -y libasound2:armhf zlib1g-dev:armhf fuse:armhf libglib2.0-0:armhf libnss3:armhf libatk1.0-0:armhf \
+libatk-bridge2.0-0:armhf libx11-xcb1:armhf libgdk-pixbuf-2.0-0:armhf libgtk-3-0:armhf libdrm2:armhf libgbm1:armhf
+fi
 
 	#create menu item and download icon	
 	cat >${HOME}/Downloads/hamrs.desktop <<EOF
 	[Desktop Entry]
 	Name=HAMRS
 	Comment=POTA Logging Software
-	Exec=/usr/local/bin/hamrs
+	Exec=/usr/local/bin/hamrs --no-sandbox
 	Icon=/usr/share/pixmaps/hamrs-logo.png
 	Terminal=false
 	Type=Application

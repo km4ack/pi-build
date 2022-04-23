@@ -74,7 +74,7 @@ if [ ! -f /usr/local/share/applications/donate.desktop ]; then
 Name=Donate
 Comment=Donate to Build a Pi
 Exec=xdg-open https://www.paypal.com/paypalme/km4ack
-Icon=/home/pi/pi-build/logo.png
+Icon=/home/`whoami`/pi-build/logo.png
 Terminal=false
 Type=Application
 Categories=bap
@@ -91,7 +91,7 @@ if [ ! -f /usr/local/share/applications/faq.desktop ]; then
 Name=FAQ
 Comment=Build a Pi FAQ
 Exec=xdg-open https://app.simplenote.com/publish/C3bBxN
-Icon=/home/pi/pi-build/logo.png
+Icon=/home/`whoami`/pi-build/logo.png
 Terminal=false
 Type=Application
 Categories=bap
@@ -109,7 +109,7 @@ if [ ! -f /usr/local/share/applications/support.desktop ]; then
 Name=Tech Support
 Comment=Build a Pi Tech Support
 Exec=xdg-open https://groups.io/g/KM4ACK-Pi/topics
-Icon=/home/pi/pi-build/logo.png
+Icon=/home/`whoami`/pi-build/logo.png
 Terminal=false
 Type=Application
 Categories=bap
@@ -156,7 +156,7 @@ cat >bap.directory <<EOF
 Type=Directory
 Encoding=UTF-8
 Name=Build-a-Pi
-Icon=/home/pi/pi-build/logo.png
+Icon=/home/`whoami`/pi-build/logo.png
 EOF
 
 sudo mv bap.directory /usr/share/desktop-directories/

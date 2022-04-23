@@ -2,7 +2,7 @@
 
 #this script used to check for apps that need updates
 
-UPDATEFILE=/run/user/1000/bapupdate.txt
+UPDATEFILE=/run/user/$UID/bapupdate.txt
 
 #Delete file if exist
 if [ -f $UPDATEFILE ]; then
@@ -245,6 +245,13 @@ CHECK() {
 	if ! hash chirpw 2>/dev/null; then
 		echo "CHIRP=Not_Installed" >> $UPDATEFILE
 	else
+		echo "CHIRP=Installed" >> $UPDATEFILE
+	fi
+	OLDCODE(){
+	#old code left for reference
+	if ! hash chirpw 2>/dev/null; then
+		echo "CHIRP=Not_Installed" >> $UPDATEFILE
+	else
 		CP=$(chirpw --version)
 		CHIRP=$(echo ${CP} | awk '{ print $2 }' | sed 's/daily-//')
 		NEWCHIRP=$(curl -s https://trac.chirp.danplanet.com/chirp_daily/LATEST/ |
@@ -256,6 +263,7 @@ CHECK() {
 			echo "CHIRP=is_latest_version" >> $UPDATEFILE
 		fi
 	fi
+	}
 	#----------------------------------------------------#
 	#		DIREWOLF
 	#----------------------------------------------------#
@@ -350,7 +358,7 @@ CHECK() {
 		echo "YAAC=Not_Installed" >> $UPDATEFILE
 	else
 
-		CURYAAC=$(java -jar ${HOME}/YAAC/YAAC.jar -version | grep core | awk '{print $7}' | sed 's/(.*//;s/1.0-beta//')
+		CURYAAC=$(java -jar ${HOME}/YAAC/YAAC.jar -version | grep beta | sed 's/.*beta//;s/(.*//')
 		wget -q https://sourceforge.net/projects/yetanotheraprsc/files/YAACBuildLabel.txt -O /run/user/${UID}/latestyaac.txt
 		LATESTYAAC=$(cat /run/user/${UID}/latestyaac.txt | sed 's/1.0-beta//;s/(.*//')
 		if (($(echo "${LATESTYAAC} ${CURYAAC}" | awk '{print ($1 > $2)}'))); then
@@ -609,12 +617,12 @@ else
 fi
 
 #----------------------------------------------------#
-#		ZYGRIB Viewer
+#		XYGRIB Viewer
 #----------------------------------------------------#
-if [ -f /usr/bin/zyGrib ]; then
-	echo "ZYGRIB=Installed" >> $UPDATEFILE
+if [ -f /usr/bin/XyGrib ]; then
+	echo "XYGRIB=Installed" >> $UPDATEFILE
 else
-	echo "ZYGRIB=Not_Installed" >> $UPDATEFILE
+	echo "XYGRIB=Not_Installed" >> $UPDATEFILE
 fi
 
 #----------------------------------------------------#

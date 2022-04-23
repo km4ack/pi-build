@@ -49,7 +49,20 @@ HSTOOLS() {
         rm -rf ${HOME}/hotspot-tools2
     fi
     git clone https://github.com/km4ack/hotspot-tools2.git ${HOME}/hotspot-tools2
-    sudo cp ${HOME}/hotspot-tools2/hstools.desktop /usr/share/applications/hotspot-tools.desktop
+    
+cat <<EOF > /run/user/$UID/hotspot-tools.desktop
+[Desktop Entry]
+Name=Hotspot Tools
+GenericName=Tools to Manage AutoHotSpot
+Comment=Tools to Manage AutoHotSpot
+Exec=/home/`whoami`/hotspot-tools2/hstools
+Icon=/home/`whoami`/hotspot-tools2/logo.png
+Terminal=false
+Type=Application
+Categories=HamRadio;
+EOF
+
+    sudo cp /run/user/$UID/hotspot-tools.desktop /usr/share/applications/hotspot-tools.desktop
 }
 
 ################################
@@ -58,14 +71,24 @@ HSTOOLS() {
 GPS() {
     cd ${BUILDDIR} || return
 
-    #old gpsd install left for reference
-    #wget --tries 2 --connect-timeout=60 https://raw.githubusercontent.com/km4ack/pi-scripts/master/gpsinstall
-    #chmod +x ${DIR}/gpsinstall
-    #sudo ${DIR}/gpsinstall
-    #rm ${DIR}/gpsinstall
+echo "##########################"
+echo "#     Installing GPS     #"
+echo "##########################"
+sudo apt install -y python3-gps gpsd-tools gpsd-clients gpsd chrony python3-gi-cairo libgps-dev
+sudo mv /etc/default/gpsd /etc/default/gpsd.org
+sudo wget https://raw.githubusercontent.com/km4ack/pi-scripts/master/gpsd -P /etc/default/
+CHRONYCHK=$(grep "refclock SHM 0 offset 0.5 delay 0.2 refid NMEA" /etc/chrony/chrony.conf)
+if [ -z "$CHRONYCHK" ]; then
+echo "refclock SHM 0 offset 0.5 delay 0.2 refid NMEA" | sudo tee -a /etc/chrony/chrony.conf
+fi
+#line below added per this issue - https://github.com/km4ack/pi-build/issues/146 24SEPT2020
+ln -s /lib/systemd/system/gpsd.service /etc/systemd/system/multi-user.target.wants/
 
+OLDCODE(){
+#code below built gpsd from source. This is no longer needed with the release of 
+#bullseye in late 2021. We can now isntall gpsd with apt.
 #begin gpsd change 11OCT2021 - see https://github.com/km4ack/pi-build/issues/316  
-    sudo apt-get -y install scons libncurses5-dev python-dev pps-tools chrony
+    sudo apt-get -y install scons libncurses5-dev python-dev pps-tools chrony python-gi-cairo
     sudo ldconfig
     cd ${BUILDDIR}
     wget http://download.savannah.gnu.org/releases/gpsd/gpsd-3.23.1.tar.gz
@@ -82,6 +105,7 @@ GPS() {
     echo "refclock SHM 0 offset 0.5 delay 0.2 refid NMEA" | sudo tee -a /etc/chrony/chrony.conf
     fi
 #end gpsd change 11OCT2021
+}
 
     #Set GPS by serial ID
     #GPS Variable set by main script or update script and placed in config file
@@ -111,6 +135,12 @@ EOF
 ARDOP() {
     mkdir -p ${HOME}/ardop
     cd ${HOME}/ardop || return
+    #determine if 64 bit and install correct dependencies.
+    if [ `getconf LONG_BIT` = '64' ]; then
+    sudo dpkg --add-architecture armhf
+    sudo apt update
+    sudo apt install -y libqt5widgets5:armhf libqt5serialport5:armhf libasound2:armhf libasound2-plugins:armhf
+    fi
     wget --tries 2 --connect-timeout=60 https://www.cantab.net/users/john.wiseman/Downloads/Beta/piardopc
     sudo chmod +x ${HOME}/ardop/piardopc
 }
@@ -149,7 +179,7 @@ EOF
 HAMLIB() {
     PACKAGE=hamlib
     CLEANSOURCE
-    sudo apt install -y libusb-1.0 libusb-dev
+    sudo apt install libusb-1.0-0 libusb-1.0-0-dev
     cd ${BUILDDIR} || return
     NEWRIG=$(curl -s https://sourceforge.net/projects/hamlib/files/latest/download |
         grep -o https://downloads.sourceforge.net/project/hamlib/hamlib/[0-9].[0-9] |
@@ -177,7 +207,8 @@ DIREWOLF() {
     cd ${BUILDDIR} || return
     git clone https://www.github.com/wb2osz/direwolf
     cd ${BUILDDIR}/direwolf || return
-    mkdir build && cd build
+    mkdir build
+    cd build
     sudo apt-get install -y libasound2-dev cmake libudev-dev
     cmake ..
     make -j 4
@@ -185,8 +216,8 @@ DIREWOLF() {
     make install-conf
     sudo make clean
     sed -i "s/N0CALL/${CALL}/" "${HOME}/direwolf.conf"
-    sed -i 's/# ADEVICE  plughw:1,0/ADEVICE  plughw:2,0/' ${HOME}/direwolf.conf
-    sed -i '/#PTT\ \/dev\/ttyUSB0\ RTS/a #Uncomment line below for PTT with sabrent sound card\n#PTT RIG 2 localhost:4532' ${HOME}/direwolf.conf
+    sed -i 's/# ADEVICE  plughw:1,0/ADEVICE  plughw:3,0/' ${HOME}/direwolf.conf
+    sed -i '/#PTT\ \/dev\/ttyUSB0\ RTS/a #Uncomment line below for PTT with CAT through FLRIG\n#PTT RIG 2 localhost:4532' ${HOME}/direwolf.conf
 
 }
 
