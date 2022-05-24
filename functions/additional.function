@@ -481,11 +481,17 @@ GRIDTRACKER() {
 	sudo apt-get install -y libgconf-2-4
 	#determine if 32/64 bit and set download link accordingly. issue #382
 	if [ `getconf LONG_BIT` = '32' ]; then
-	GRIDDLL=$(curl -s https://download.gridtracker.org/latest_release.html | grep arm32 | sed 's/.*href="//;s/">.*//')
+	#GRIDDLL=$(curl -s https://download.gridtracker.org/latest_release.html | grep arm32 | sed 's/.*href="//;s/">.*//')
+	GRIDDLL=$(curl -s https://storage.googleapis.com/gt_download/ | awk 'BEGIN{FS="<Key>"; OFS="\n<Key>"} {$1=$1} 1' | grep arm32 | sed '/<Key>nwjs/d;/<Key>test/d' | head -1 | sed 's/<Key>//;s/<\/Key>.*//')	
+	GT_DIR=$(echo $GRIDDLL | sed 's|/.*||')
+	GRIDDLL=$(echo $GRIDDLL | sed 's/.*GridTracker/GridTracker/')
 	else
-	GRIDDLL=$(curl -s https://download.gridtracker.org/latest_release.html | grep arm64 | sed 's/.*href="//;s/">.*//')
+	#GRIDDLL=$(curl -s https://download.gridtracker.org/latest_release.html | grep arm64 | sed 's/.*href="//;s/">.*//')
+	GRIDDLL=$(curl -s https://storage.googleapis.com/gt_download/ | awk 'BEGIN{FS="<Key>"; OFS="\n<Key>"} {$1=$1} 1' | grep arm32 | sed '/<Key>nwjs/d;/<Key>test/d' | head -1 | sed 's/<Key>//;s/<\/Key>.*//')
+	GT_DIR=$(echo $GRIDDLL | sed 's|/.*||')
+	GRIDDLL=$(echo $GRIDDLL | sed 's/.*GridTracker/GridTracker/')
 	fi
-	wget --tries 2 --connect-timeout=60 $GRIDDLL
+	wget --tries 2 --connect-timeout=60 https://storage.googleapis.com/gt_download/$GT_DIR/$GRIDDLL
 	GRIDTAR=$(echo $GRIDDLL | sed 's/.*\///g')
 	tar -xzvf $GRIDTAR
 	rm GridTracker*.gz
@@ -511,6 +517,8 @@ Categories=HamRadio;
 EOF
 
 	sudo mv gridtracker.desktop /usr/share/applications/
+
+
 }
 
 ##################################
