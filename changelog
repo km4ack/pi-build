@@ -1,4 +1,15 @@
-version=3.2.3
+version=3.2.4
+
+3.2.4		Update HotSpot Tools shortcut
+		Change 1000 to UID in update script
+		Remove Pi username check
+		add ability to work with custom user names
+		fix shortcut for Pi-APRS
+		fix issue #391 https://github.com/km4ack/pi-build/issues/391
+		fix issue #390 https://github.com/km4ack/pi-build/issues/390
+		fix issue #380 https://github.com/km4ack/pi-build/issues/380
+		fix issue #401 Gridtracker not downloading https://github.com/km4ack/pi-build/issues/401
+		fix hamrs not installing/updating - https://github.com/km4ack/pi-build/issues/404
 
 3.2.3		Add support for Pat Winlink in 64 bit OS
 		Fix FLDIGI on 64 bit - https://github.com/km4ack/pi-build/issues/378
