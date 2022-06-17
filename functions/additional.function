@@ -235,7 +235,7 @@ WSJTX() {
 	FT8PKG=$(curl -s https://physics.princeton.edu/pulsar/k1jt/wsjtx.html | grep .tgz | sed 's/.*="//;s/">.*$//' | head -1)
 	FT8DIR=$(echo $FT8PKG | sed 's/.tgz//')
 	cd ${BUILDDIR}
-	wget https://physics.princeton.edu/pulsar/k1jt/$FT8PKG
+	wget --tries 2 --connect-timeout=60 https://physics.princeton.edu/pulsar/k1jt/$FT8PKG
 	tar -xvf $FT8PKG
 	rm $FT8PKG
 	cd $FT8DIR
@@ -301,7 +301,7 @@ CONKY() {
 	sed -i "s/N0CALL/${CALL}/" ${HOME}/.conkyrc
 	#Line below is for https://github.com/km4ack/pi-build/issues/198
 	echo "#Update GPS maidenhead for conky" >>${TEMPCRON}
-	echo "*/1 * * * * /home/pi/bin/conky/grid" >>${TEMPCRON}
+	echo "*/1 * * * * /home/`whoami`/bin/conky/grid" >>${TEMPCRON}
 
 	#Create files needed for autostart at login
 	#Fix issue https://github.com/km4ack/pi-build/issues/83
@@ -312,7 +312,7 @@ Name=Conky
 Comment=Conky
 GenericName=Conky Screen Background Monitor
 Exec=conky --pause=5
-Icon=/home/pi/pi-build/conky/conky-logo.png
+Icon=/home/`whoami`/pi-build/conky/conky-logo.png
 Type=Application
 Encoding=UTF-8
 Terminal=false
@@ -330,8 +330,8 @@ EOF
 Name=Conky-Prefs
 Comment=Conky-Prefs
 GenericName=Change Conky Preferences
-Exec=/home/pi/pi-build/conky/setconky
-Icon=/home/pi/pi-build/conky/conky-logo.png
+Exec=/home/`whoami`/pi-build/conky/setconky
+Icon=/home/`whoami`/pi-build/conky/conky-logo.png
 Type=Application
 Encoding=UTF-8
 Terminal=false
@@ -481,11 +481,17 @@ GRIDTRACKER() {
 	sudo apt-get install -y libgconf-2-4
 	#determine if 32/64 bit and set download link accordingly. issue #382
 	if [ `getconf LONG_BIT` = '32' ]; then
-	GRIDDLL=$(curl -s https://download.gridtracker.org/latest_release.html | grep arm32 | sed 's/.*href="//;s/">.*//')
+	#GRIDDLL=$(curl -s https://download.gridtracker.org/latest_release.html | grep arm32 | sed 's/.*href="//;s/">.*//')
+	GRIDDLL=$(curl -s https://storage.googleapis.com/gt_download/ | awk 'BEGIN{FS="<Key>"; OFS="\n<Key>"} {$1=$1} 1' | grep arm32 | sed '/<Key>nwjs/d;/<Key>test/d' | head -1 | sed 's/<Key>//;s/<\/Key>.*//')	
+	GT_DIR=$(echo $GRIDDLL | sed 's|/.*||')
+	GRIDDLL=$(echo $GRIDDLL | sed 's/.*GridTracker/GridTracker/')
 	else
-	GRIDDLL=$(curl -s https://download.gridtracker.org/latest_release.html | grep arm64 | sed 's/.*href="//;s/">.*//')
+	#GRIDDLL=$(curl -s https://download.gridtracker.org/latest_release.html | grep arm64 | sed 's/.*href="//;s/">.*//')
+	GRIDDLL=$(curl -s https://storage.googleapis.com/gt_download/ | awk 'BEGIN{FS="<Key>"; OFS="\n<Key>"} {$1=$1} 1' | grep arm32 | sed '/<Key>nwjs/d;/<Key>test/d' | head -1 | sed 's/<Key>//;s/<\/Key>.*//')
+	GT_DIR=$(echo $GRIDDLL | sed 's|/.*||')
+	GRIDDLL=$(echo $GRIDDLL | sed 's/.*GridTracker/GridTracker/')
 	fi
-	wget --tries 2 --connect-timeout=60 $GRIDDLL
+	wget --tries 2 --connect-timeout=60 https://storage.googleapis.com/gt_download/$GT_DIR/$GRIDDLL
 	GRIDTAR=$(echo $GRIDDLL | sed 's/.*\///g')
 	tar -xzvf $GRIDTAR
 	rm GridTracker*.gz
@@ -511,6 +517,8 @@ Categories=HamRadio;
 EOF
 
 	sudo mv gridtracker.desktop /usr/share/applications/
+
+
 }
 
 ##################################
@@ -683,7 +691,18 @@ EES() {
 PI-APRS() {
 	cd ${HOME} || return
 	git clone https://github.com/km4ack/Pi-APRS.git
-	sudo cp ~/Pi-APRS/piaprs.desktop /usr/share/applications
+cat <<EOF > /run/user/$UID/piaprs.desktop
+[Desktop Entry]
+Name=Pi-APRS
+GenericName=Pi-ARPS by KM4ACK
+Comment=Pi-APRS by KM4ACK
+Exec=/home/`whoami`/Pi-APRS/pi-aprs
+Icon=/home/`whoami`/Pi-APRS/ISS.png
+Terminal=true
+Type=Application
+Categories=HamRadio;
+EOF
+	sudo cp /run/user/$UID/piaprs.desktop /usr/share/applications/
 
 }
 
@@ -823,7 +842,7 @@ mv $HOME/Downloads/hamrs* $HOME/Downloads/old-hamrs
 fi
 
 cd ${HOME}/Downloads
-DL=$(curl https://www.hamrs.app | grep armv7 | sed 's/^.*href="//;s/">//')
+DL=$(curl https://www.hamrs.app | grep armv7 | sed 's/.*href="//;s/".*//')
 wget ${DL}
 HAMRS=$(ls | grep hamrs-)
 mv ${HAMRS} hamrs

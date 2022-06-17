@@ -49,7 +49,20 @@ HSTOOLS() {
         rm -rf ${HOME}/hotspot-tools2
     fi
     git clone https://github.com/km4ack/hotspot-tools2.git ${HOME}/hotspot-tools2
-    sudo cp ${HOME}/hotspot-tools2/hstools.desktop /usr/share/applications/hotspot-tools.desktop
+    
+cat <<EOF > /run/user/$UID/hotspot-tools.desktop
+[Desktop Entry]
+Name=Hotspot Tools
+GenericName=Tools to Manage AutoHotSpot
+Comment=Tools to Manage AutoHotSpot
+Exec=/home/`whoami`/hotspot-tools2/hstools
+Icon=/home/`whoami`/hotspot-tools2/logo.png
+Terminal=false
+Type=Application
+Categories=HamRadio;
+EOF
+
+    sudo cp /run/user/$UID/hotspot-tools.desktop /usr/share/applications/hotspot-tools.desktop
 }
 
 ################################
@@ -204,7 +217,7 @@ DIREWOLF() {
     sudo make clean
     sed -i "s/N0CALL/${CALL}/" "${HOME}/direwolf.conf"
     sed -i 's/# ADEVICE  plughw:1,0/ADEVICE  plughw:3,0/' ${HOME}/direwolf.conf
-    sed -i '/#PTT\ \/dev\/ttyUSB0\ RTS/a #Uncomment line below for PTT with sabrent sound card\n#PTT RIG 2 localhost:4532' ${HOME}/direwolf.conf
+    sed -i '/#PTT\ \/dev\/ttyUSB0\ RTS/a #Uncomment line below for PTT with CAT through FLRIG\n#PTT RIG 2 localhost:4532' ${HOME}/direwolf.conf
 
 }
 

@@ -144,15 +144,16 @@ fi
 #####################################
 #	Check user is pi
 #####################################
-if [ "$WHO" != 'pi' ]; then
-	yad --form --width=500 --text-align=center --center --title="Build-a-Pi" --text-align=center \
-		--image ${LOGO} --window-icon=${LOGO} --image-on-top --separator="|" --item-separator="|" \
-		--text="<b>USER NAME IS NOT PI</b>\rThis script is designed to be run as the pi user. Please set the user name to pi \
-and try again. You can change the user name after the build is complete but some configuration may not work \
-as expected" \
-		--button=gtk-close
-	exit 1
-fi
+#This section commented out 12APRIL2022 for testing. Should be removed once testing is complete.
+#if [ "$WHO" != 'pi' ]; then
+#	yad --form --width=500 --text-align=center --center --title="Build-a-Pi" --text-align=center \
+#		--image ${LOGO} --window-icon=${LOGO} --image-on-top --separator="|" --item-separator="|" \
+#		--text="<b>USER NAME IS NOT PI</b>\rThis script is designed to be run as the pi user. Please set the user name to pi \
+#and try again. You can change the user name after the build is complete but some configuration may not work \
+#as expected" \
+#		--button=gtk-close
+#	exit 1
+#fi
 #####################################
 #	notice to user
 #####################################
@@ -393,6 +394,7 @@ yad --center --list --checklist --width=600 --height=600 --separator="" \
 	false "WSJTX" "Weak Signal Digital Mode Software" \
 	false "PYQSO" "Logging Software" \
 	false "HAMRS" "Logging Software" \
+	false "CQRLOG" "Logging Software" \
 	false "EES" "KM4ACK Emergency Email Server" \
 	false "QSSTV" "Slow Scan TV" \
 	false "GRIDTRACKER" "Track Grids in WSJTX" \
@@ -414,7 +416,7 @@ fi
 if [ ${BUT} = 3 ]; then
 	ADDAPPS=(CONKY PI-APRS CHIRP GARIM PAT PAT-MENU JS8CALL M0IAX WSJTX PYQSO
 		HAMRS EES QSSTV GRIDTRACKER HAMCLOCK PROPAGATION YAAC XASTIR GPREDICT TQSL
-		GRIDCALC)
+		GRIDCALC CQRLOG)
 
 	for i in "${ADDAPPS[@]}"; do
 		echo "$i" >>${ADDITIONAL}

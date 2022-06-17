@@ -23,7 +23,7 @@ LOGO=${MYPATH}/logo.png
 TEMPCRON=${MYPATH}/cron.tmp
 VERSION=$(grep "version=" ${MYPATH}/changelog | sed 's/version=//')
 DATE=$(date)
-UPDATEFILE=/run/user/1000/bapupdate.txt
+UPDATEFILE=/run/user/$UID/bapupdate.txt
 
 FINISH() {
 	if [ -f "${BASE}" ]; then
@@ -455,6 +455,7 @@ yad --center --list --checklist --width=600 --height=600 --separator="" \
 	false "PI-APRS" "$PIAPRS" "APRS Messaging Client" \
 	false "PYQSO" "$PYQSO" "Logging Software" \
 	false "HAMRS" "$HAMRS" "Logging Software" \
+	false "CQRLOG" "$CQRLOG" "Logging Software" \
 	false "QSSTV" "$QSSTV" "Slow scan TV" \
 	false "GRIDTRACKER" "$GRIDTRACK" "Track grids in WSJTX" \
 	false "HAMCLOCK" "$HAMCLOCK" "Clock for Ham Radio Ops" \
