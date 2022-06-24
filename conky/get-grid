@@ -7,7 +7,18 @@ require 'json'
 
 ft8call_port = 2237
 
-gpsd = GpsdClient::Gpsd.new()
+# GPSD can be configured to use 1 GPS puck for multiple RPi's
+# Change "localhost" to remote IP address (ex. "192.168.1.5") to pull from remote GPSD source
+# Requires:
+# 1) Edit /lib/systemd/system/gpsd.socket file on GPSD source
+#    (ex. ListenStream=0.0.0.0:2947)
+# 2) Edit /etc/default/gpsd file on GPSD source
+#    (ex. GPSD_OPTIONS="-G")
+# 3) Edit /lib/systemd/system/gpsd.socket file on each GPSD destination
+#    (ex. ListenStream=192.168.1.5:2947)
+# Note: This configuration works, but you may see each RPi occasionally flip-flop between the proper gridsquare and "NO GPS"
+#
+gpsd = GpsdClient::Gpsd.new({:host => "localhost", :port => 2947})
 gpsd.start()
 apicmd = {}
 
