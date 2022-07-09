@@ -1,3 +1,7 @@
+# Support this Project
+
+[![Patreon](https://www.dropbox.com/s/gr6k9j359b744tl/patreon-logo1.png?dl=1)](https://patreon.com/km4ack) [![Tip Jar](https://www.dropbox.com/s/tk4w0tery1ugrqz/tip-jar-1024x900.png?dl=1)](https://paypal.me/km4ack)
+
 # Description
 
 Build-a-Pi will allow you to get up and running fast with a Raspberry Pi for ham radio.
