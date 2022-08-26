@@ -451,6 +451,7 @@ yad --center --list --checklist --width=600 --height=600 --separator="" \
 	false "CONKY" "$CONKY" "System Information Display" \
 	false "WSJTX" "$FT8" "Weak signal digital mode software" \
 	false "JS8CALL" "$JS8" "Weak signal digital mode software" \
+	false "REPEATL" "$REPEAT" "Repeater Directory" \
 	false "XASTIR" "$XASTIR" "APRS Client" \
 	false "YAAC" "$YAAC" "Yet Another APRS Client" \
 	false "PI-APRS" "$PIAPRS" "APRS Messaging Client" \
