@@ -65,6 +65,15 @@ CHECK() {
 		echo "ARDOPGUI=Not_Installed" >> $UPDATEFILE
 	fi
 	#----------------------------------------------------#
+	#		VARA
+	#----------------------------------------------------#
+	echo "Checking VARA"
+	if [ -f /home/pi/.wine/drive_c/VARA/VARA.exe ]; then
+		echo "VARA=Installed" >> $UPDATEFILE
+	else
+		echo "VARA=Not_Installed" >> $UPDATEFILE
+	fi
+	#----------------------------------------------------#
 	#		JS8Call
 	#----------------------------------------------------#
 	if ! hash js8call 2>/dev/null; then
