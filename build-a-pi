@@ -239,6 +239,7 @@ yad --center --list --checklist --width=600 --height=600 --separator="" \
 	false "GPSUPDATE" "Tool to Manage GPS Devices" \
 	false "ARDOP" "Modem for HF" \
 	false "ARDOPGUI" "GUI for ARDOP" \
+	false "VARA" "VARA Modem" \
 	false "HAMLIB" "Needed for Rig Control" \
 	false "DIREWOLF" "Software TNC" \
 	false "AX25" "Data Link Layer Protocol" \
@@ -252,7 +253,7 @@ if [ ${BUT} = 252 ] || [ ${BUT} = 1 ]; then
 fi
 
 if [ ${BUT} = 3 ]; then
-	BASEAPPS=(HOTSPOT HSTOOLS GPS ARDOP ARDOPGUI HAMLIB DIREWOLF AX25 PULSE GPSUPDATE)
+	BASEAPPS=(HOTSPOT HSTOOLS GPS ARDOP ARDOPGUI VARA HAMLIB DIREWOLF AX25 PULSE GPSUPDATE)
 	for i in "${BASEAPPS[@]}"; do
 		echo "$i" >>${BASE}
 	done
