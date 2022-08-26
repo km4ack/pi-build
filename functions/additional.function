@@ -406,6 +406,7 @@ CHIRP() {
 	wget $LINK
 	CHIRP=$(ls | grep -i chirp)
 	sudo mv $CHIRP /usr/local/bin/chirp
+	sudo chmod +x /usr/local/bin/chirp
 
 cat >chirp.desktop <<EOF
 [Desktop Entry]
