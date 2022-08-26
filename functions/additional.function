@@ -892,6 +892,17 @@ GRIDCALC(){
 }
 
 ##################################
+#	Repeater-Start
+##################################
+REPEAT(){
+REPEAT_LATEST=$(curl -s https://sourceforge.net/projects/repeater-start/files/ | grep all.deb | head -1 | sed 's/.*repeater/repeater/;s/".*//')
+cd ${HOME}/Downloads
+wget https://sourceforge.net/projects/repeater-start/files/$REPEAT_LATEST
+sudo dpkg -i $REPEAT_LATEST
+}
+
+
+##################################
 #	JTDX
 ##################################
 #This code is left in place but no option is given during inital
@@ -912,4 +923,6 @@ JTDX() {
 	sudo apt-get --fix-broken -y install
 	sudo dpkg -i ${VER}
 	rm ${VER}
+
+
 }
