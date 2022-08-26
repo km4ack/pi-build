@@ -133,6 +133,9 @@ EOF
 #	ARDOP
 ################################
 ARDOP() {
+    if [ -f ${HOME}/ardop/piardopc; then
+    rm ${HOME}/ardop/piardopc
+    fi
     mkdir -p ${HOME}/ardop
     cd ${HOME}/ardop || return
     #determine if 64 bit and install correct dependencies.
