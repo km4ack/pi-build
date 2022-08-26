@@ -399,7 +399,27 @@ sudo make install
 ##################################
 CHIRP() {
 
-sudo apt install -y chirp
+	#sudo apt install -y chirp
+	cd ${DIR} || return
+	CHIRP_FILE=$(curl -s https://github.com/goldstar611/chirp-appimage/releases | grep armhf | head -1 | sed 's/.*"\///;s/".*//')
+	LINK="https://github.com/$CHIRP_FILE"
+	wget $LINK
+	CHIRP=$(ls | grep -i chirp)
+	sudo mv $CHIRP /usr/local/bin/chirp
+
+cat >chirp.desktop <<EOF
+[Desktop Entry]
+Name=Chirp
+Comment=Radio Programming Software
+GenericName=Chirp
+Exec=/usr/local/bin/chirp
+Icon=qsstv.png
+Type=Application
+Terminal=false
+Categories=HamRadio;
+EOF
+
+	sudo mv chirp.desktop /usr/share/applications/
 
 OLDCODE(){
 	#left for reference
