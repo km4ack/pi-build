@@ -1,4 +1,6 @@
-version=3.2.4
+version=3.3.0
+
+3.3.0		Add VARA modem - https://github.com/km4ack/pi-build/issues/394
 
 3.2.4		Update HotSpot Tools shortcut
 		Change 1000 to UID in update script
