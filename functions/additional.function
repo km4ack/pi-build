@@ -916,6 +916,7 @@ GRIDCALC(){
 #	Repeater-Start
 ##################################
 REPEAT(){
+sudo apt install -y gir1.2-osmgpsmap-1.0 gir1.2-geoclue-2.0 libosmgpsmap-1.0-1
 REPEAT_LATEST=$(curl -s https://sourceforge.net/projects/repeater-start/files/ | grep all.deb | head -1 | sed 's/.*repeater/repeater/;s/".*//')
 cd ${HOME}/Downloads
 wget https://sourceforge.net/projects/repeater-start/files/$REPEAT_LATEST
