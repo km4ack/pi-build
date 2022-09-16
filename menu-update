@@ -85,7 +85,7 @@ if [ -f /usr/share/applications/vara-soundcardsetup.desktop ]; then
 sudo sed -i 's/Categories.*/Categories=vara/' /usr/share/applications/vara-soundcardsetup.desktop
 fi
 
-if [ -f /usr/share/applications/vara-update.desktopp ]; then
+if [ -f /usr/share/applications/vara-update.desktop ]; then
 sudo sed -i 's/Categories.*/Categories=vara/' /usr/share/applications/vara-update.desktop
 fi
 
