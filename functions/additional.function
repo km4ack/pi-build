@@ -26,34 +26,16 @@ PAT() {
 	fi
 
 	if [ `getconf LONG_BIT` = '64' ]; then
-
-	#reference:
-	#https://www.jeremymorgan.com/tutorials/raspberry-pi/install-go-raspberry-pi/
-	#https://github.com/la5nta/pat/wiki/Building-from-source
-	#https://cqdeks4td.blogspot.com/2021/11/installing-pat-open-source-winlink.html
-
-	#install golang needed for pat build
-	cd
-	wget https://go.dev/dl/go1.17.7.linux-arm64.tar.gz
-	sudo tar -C /usr/local -xzf go1.17.7.linux-arm64.tar.gz
-	rm go1.17.7.linux-arm64.tar.gz
-
-	echo "PATH=$PATH:/usr/local/go/bin" >> $HOME/.profile
-	echo "GOPATH=$HOME/go" >> $HOME/.profile
-
-	source $HOME/.profile
-
-	#download/build latest pat
-	cd
-	git clone https://github.com/la5nta/pat
-	cd pat
-	./make.bash libax25
-	./make.bash
-
-	sudo cp $HOME/pat/debian/pat@.service /lib/systemd/system/
-	sudo cp $HOME/pat/pat /usr/bin/
-	rm -rf $HOME/pat
+	#install deb file for 64 bit systems
+	NEWPATV=$(curl -s https://github.com/la5nta/pat/releases | grep arm64 | head -1 | sed 's/.*pat_/pat_/' | sed 's/<\/a>.*$//')
+	NEWPAT=$(echo ${NEWPATV} | sed 's/pat_//' | sed 's/_linux_arm64.deb//' | sed 's/0\.//')
+	echo "new pat v ${NEWPATV}"
+	echo "new pat ${NEWPAT}"
+	wget --tries 2 --connect-timeout=60 https://github.com/la5nta/pat/releases/download/v0.${NEWPAT}/${NEWPATV}
+	sudo dpkg -i ${DIR}/${NEWPATV}
+	
 	else
+
 	#install deb file for 32 bit systems
 	NEWPATV=$(curl -s https://github.com/la5nta/pat/releases | grep armhf | head -1 | sed 's/.*pat_/pat_/' | sed 's/<\/a>.*$//')
 	NEWPAT=$(echo ${NEWPATV} | sed 's/pat_//' | sed 's/_linux_armhf.deb//' | sed 's/0\.//')
@@ -99,6 +81,36 @@ PAT() {
 	if [ -f ${DIR}/config.json ]; then
 		mv ${DIR}/config.json ${HOME}/.wl2k/
 	fi
+
+	PAT_OLD_SOURCE_INSTALL() {
+	#This code is left for reference. This was used ot build pat from source when 64bit Pi OS was first released. 20220922
+	#reference:
+	#https://www.jeremymorgan.com/tutorials/raspberry-pi/install-go-raspberry-pi/
+	#https://github.com/la5nta/pat/wiki/Building-from-source
+	#https://cqdeks4td.blogspot.com/2021/11/installing-pat-open-source-winlink.html
+
+	#install golang needed for pat build
+	cd
+	wget https://go.dev/dl/go1.17.7.linux-arm64.tar.gz
+	sudo tar -C /usr/local -xzf go1.17.7.linux-arm64.tar.gz
+	rm go1.17.7.linux-arm64.tar.gz
+
+	echo "PATH=$PATH:/usr/local/go/bin" >> $HOME/.profile
+	echo "GOPATH=$HOME/go" >> $HOME/.profile
+
+	source $HOME/.profile
+
+	#download/build latest pat
+	cd
+	git clone https://github.com/la5nta/pat
+	cd pat
+	./make.bash libax25
+	./make.bash
+
+	sudo cp $HOME/pat/debian/pat@.service /lib/systemd/system/
+	sudo cp $HOME/pat/pat /usr/bin/
+	rm -rf $HOME/pat
+	}
 
 }
 ##################################
