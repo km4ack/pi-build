@@ -259,6 +259,21 @@ if [ ${BUT} = 3 ]; then
 	done
 fi
 
+#If vARA is chosen, make sure we have a Pi 4 to work with. 
+#As of 02OCT2022 the VARA installer only works with the Pi 4.
+VARA_CHK=$(grep VARA ${BASE})
+if [ -n $VARA_CHK ]; then
+	FREEMEM=$(free -m | grep Mem: | awk '{ print $2 }')
+	if [ $FREEMEM -lt 1900 ]; then
+	echo "Not enough memory available"
+	yad --form --width=500 --text-align=center --center --title="Build-a-Pi" --text-align=center \
+	--image ${LOGO} --window-icon=${LOGO} --image-on-top --separator="|" --item-separator="|" \
+	--text="<b>Not enough memory</b>\rVARA requires a Pi 4.\r\rVARA will not be installed during the build." \
+	--button=gtk-ok
+	sed -i 's/VARA//;/^$/d' ${BASE}
+	fi
+fi
+
 #check if hotspot is chosen for install & get info if needed
 HS=$(grep "HOTSPOT" ${BASE})
 if [ -n "$HS" ]; then
