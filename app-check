@@ -65,6 +65,15 @@ CHECK() {
 		echo "ARDOPGUI=Not_Installed" >> $UPDATEFILE
 	fi
 	#----------------------------------------------------#
+	#		VARA
+	#----------------------------------------------------#
+	echo "Checking VARA"
+	if [ -f /home/pi/.wine/drive_c/VARA/VARA.exe ]; then
+		echo "VARA=Installed" >> $UPDATEFILE
+	else
+		echo "VARA=Not_Installed" >> $UPDATEFILE
+	fi
+	#----------------------------------------------------#
 	#		JS8Call
 	#----------------------------------------------------#
 	if ! hash js8call 2>/dev/null; then
@@ -683,13 +692,27 @@ echo "Checking Packet Search"
 		fi
 	fi
 
-	#----------------------------------------------------#
-	#		piQtSoundModem
-	#----------------------------------------------------#
-	if [ -f /usr/local/bin/piQtSoundModem ]; then
-		echo "QTSOUND=Installed" >> $UPDATEFILE
-	else
-		echo "QTSOUND=Not_Installed" >> $UPDATEFILE
-	fi
+#----------------------------------------------------#
+#		piQtSoundModem
+#----------------------------------------------------#
+if [ -f /usr/local/bin/piQtSoundModem ]; then
+	echo "QTSOUND=Installed" >> $UPDATEFILE
+else
+	echo "QTSOUND=Not_Installed" >> $UPDATEFILE
+fi
+
+#----------------------------------------------------#
+#		Repeater-Start
+#----------------------------------------------------#
+echo "Checking Repeater-Start"
+REPEAT_CURRENT_VER=$(dpkg --list | grep repeater-start | awk '{print $3}')
+REPEAT_LATEST=$(curl -s https://sourceforge.net/projects/repeater-start/files/ | grep all.deb | head -1 | sed 's/.*repeater/repeater/;s/".*//')
+REPEAT_LATEST_VER=$(echo $REPEAT_LATEST | sed 's/repeater-start_//;s/_.*//')
+
+		if (($(echo "${REPEAT_LATEST_VER} ${REPEAT_CURRENT_VER}" | awk '{print ($1 > $2)}'))); then
+			echo "REPEAT=NEEDS-UPDATE" >> $UPDATEFILE
+		else
+			echo "REPEAT=is_latest_version" >> $UPDATEFILE
+		fi
 
 CHECK

@@ -9,7 +9,7 @@
 #km4ack - km4ack subcategory
 
 
-REV=20210411
+REV=20220829
 
 source $HOME/.config/KM4ACK
 
@@ -60,11 +60,42 @@ sudo sed -i "s/Categories.*/Categories=$CATEGORY/" $FLPATH/flrig.desktop
 fi
 }
 
+VARA(){
+##########################
+#	VARA
+##########################
+echo "updating VARA shortcuts"
+if [ -f /usr/share/applications/vara-chat.desktop ]; then
+sudo sed -i 's/Categories.*/Categories=vara/' /usr/share/applications/vara-chat.desktop
+fi
+
+if [ -f /usr/share/applications/vara.desktop ]; then
+sudo sed -i 's/Categories.*/Categories=vara/' /usr/share/applications/vara.desktop
+fi
+
+if [ -f /usr/share/applications/vara-fm.desktop ]; then
+sudo sed -i 's/Categories.*/Categories=vara/' /usr/share/applications/vara-fm.desktop
+fi
+
+if [ -f /usr/share/applications/vara-sat.desktop ]; then
+sudo sed -i 's/Categories.*/Categories=vara/' /usr/share/applications/vara-sat.desktop
+fi
+
+if [ -f /usr/share/applications/vara-soundcardsetup.desktop ]; then
+sudo sed -i 's/Categories.*/Categories=vara/' /usr/share/applications/vara-soundcardsetup.desktop
+fi
+
+if [ -f /usr/share/applications/vara-update.desktop ]; then
+sudo sed -i 's/Categories.*/Categories=vara/' /usr/share/applications/vara-update.desktop
+fi
+
+}
+
 BAP(){
 ##########################
 #	BAP 
 ##########################
-
+echo "Updating Build a Pi Shortcuts"
 cd /run/user/$UID
 
 #DONATE
@@ -141,15 +172,15 @@ EOF
 
 sudo mv FLsuite.directory /usr/share/desktop-directories/
 
-cat >km4ack.directory <<EOF
+cat >vara.directory <<EOF
 [Desktop Entry]
 Type=Directory
 Encoding=UTF-8
-Name=KM4ACK-Tools
+Name=VARA
 Icon=CQ.png
 EOF
 
-sudo mv km4ack.directory /usr/share/desktop-directories/
+sudo mv vara.directory /usr/share/desktop-directories/
 
 cat >bap.directory <<EOF
 [Desktop Entry]
@@ -181,10 +212,10 @@ cat >hamradio.menu <<EOF
     </Include>
     </Menu>
         <Menu>
-            <Name>KM4ACK</Name>
-            <Directory>km4ack.directory</Directory>
+            <Name>VARA</Name>
+            <Directory>vara.directory</Directory>
             <Include>
-                <Category>km4ack</Category>
+                <Category>vara</Category>
             </Include>
 
         </Menu>
@@ -220,6 +251,7 @@ else
 echo "MENU=$REV" >> $HOME/.config/KM4ACK
 CREATEMENU
 FLSUITE
+VARA
 fi
 
 

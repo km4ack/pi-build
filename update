@@ -306,6 +306,7 @@ yad --center --list --checklist --width=600 --height=600 --separator="" \
 	false "GPSUPDATE" "${GPSUPDATE}" "Tool to Manage GPS Devices" \
 	false "ARDOP" "$ARDOP" "Mode for HF" \
 	false "ARDOPGUI" "$ARDOPGUI" "GUI for ARDOP" \
+	false "VARA" "$VARA" "VARA Modem" \
 	false "DIREWOLF" "$DIRE" "Software TNC" \
 	false "AX25" "$AX25" "Data Link Layer Protocol" \
 	false "PULSE" "$PULSE" "Sound server" \
@@ -314,6 +315,21 @@ yad --center --list --checklist --width=600 --height=600 --separator="" \
 BUT=$?
 if [ ${BUT} = 1 ] || [ ${BUT} = 252 ]; then
 	exit
+fi
+
+#If vARA is chosen, make sure we have a Pi 4 to work with. 
+#As of 02OCT2022 the VARA installer only works with the Pi 4.
+VARA_CHK=$(grep VARA ${BASE})
+if [ -n $VARA_CHK ]; then
+	FREEMEM=$(free -m | grep Mem: | awk '{ print $2 }')
+	if [ $FREEMEM -lt 1900 ]; then
+	echo "Not enough memory available"
+	yad --form --width=500 --text-align=center --center --title="Build-a-Pi" --text-align=center \
+	--image ${LOGO} --window-icon=${LOGO} --image-on-top --separator="|" --item-separator="|" \
+	--text="<b>Not enough memory</b>\rVARA requires a Pi 4.\r\rVARA will not be installed during the build." \
+	--button=gtk-ok
+	sed -i 's/VARA//;/^$/d' ${BASE}
+	fi
 fi
 
 #############################################################
@@ -450,6 +466,7 @@ yad --center --list --checklist --width=600 --height=600 --separator="" \
 	false "CONKY" "$CONKY" "System Information Display" \
 	false "WSJTX" "$FT8" "Weak signal digital mode software" \
 	false "JS8CALL" "$JS8" "Weak signal digital mode software" \
+	false "REPEAT" "$REPEAT" "Repeater Directory" \
 	false "XASTIR" "$XASTIR" "APRS Client" \
 	false "YAAC" "$YAAC" "Yet Another APRS Client" \
 	false "PI-APRS" "$PIAPRS" "APRS Messaging Client" \

@@ -1,5 +1,12 @@
-version=3.2.4
+version=3.3.0
 
+3.3.0		Add VARA modem - https://github.com/km4ack/pi-build/issues/394
+		fix conky 7 inch config - https://github.com/km4ack/pi-build/issues/414
+		fix old ardop modem not removed - https://github.com/km4ack/pi-build/issues/413
+		create VARA sub category - https://github.com/km4ack/pi-build/issues/393
+		update chirp install - https://github.com/km4ack/pi-build/issues/337
+		use 64bit package to install pat on 64bit OS - https://github.com/km4ack/pi-build/issues/424
+		Add RepeaterStart - https://github.com/km4ack/pi-build/issues/400
 3.2.4		Update HotSpot Tools shortcut
 		Change 1000 to UID in update script
 		Remove Pi username check
@@ -10,6 +17,7 @@ version=3.2.4
 		fix issue #380 https://github.com/km4ack/pi-build/issues/380
 		fix issue #401 Gridtracker not downloading https://github.com/km4ack/pi-build/issues/401
 		fix hamrs not installing/updating - https://github.com/km4ack/pi-build/issues/404
+		fix issue #408 https://github.com/km4ack/pi-build/issues/408
 
 3.2.3		Add support for Pat Winlink in 64 bit OS
 		Fix FLDIGI on 64 bit - https://github.com/km4ack/pi-build/issues/378

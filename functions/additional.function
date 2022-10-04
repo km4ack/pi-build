@@ -26,34 +26,16 @@ PAT() {
 	fi
 
 	if [ `getconf LONG_BIT` = '64' ]; then
-
-	#reference:
-	#https://www.jeremymorgan.com/tutorials/raspberry-pi/install-go-raspberry-pi/
-	#https://github.com/la5nta/pat/wiki/Building-from-source
-	#https://cqdeks4td.blogspot.com/2021/11/installing-pat-open-source-winlink.html
-
-	#install golang needed for pat build
-	cd
-	wget https://go.dev/dl/go1.17.7.linux-arm64.tar.gz
-	sudo tar -C /usr/local -xzf go1.17.7.linux-arm64.tar.gz
-	rm go1.17.7.linux-arm64.tar.gz
-
-	echo "PATH=$PATH:/usr/local/go/bin" >> $HOME/.profile
-	echo "GOPATH=$HOME/go" >> $HOME/.profile
-
-	source $HOME/.profile
-
-	#download/build latest pat
-	cd
-	git clone https://github.com/la5nta/pat
-	cd pat
-	./make.bash libax25
-	./make.bash
-
-	sudo cp $HOME/pat/debian/pat@.service /lib/systemd/system/
-	sudo cp $HOME/pat/pat /usr/bin/
-	rm -rf $HOME/pat
+	#install deb file for 64 bit systems
+	NEWPATV=$(curl -s https://github.com/la5nta/pat/releases | grep arm64 | head -1 | sed 's/.*pat_/pat_/' | sed 's/<\/a>.*$//')
+	NEWPAT=$(echo ${NEWPATV} | sed 's/pat_//' | sed 's/_linux_arm64.deb//' | sed 's/0\.//')
+	echo "new pat v ${NEWPATV}"
+	echo "new pat ${NEWPAT}"
+	wget --tries 2 --connect-timeout=60 https://github.com/la5nta/pat/releases/download/v0.${NEWPAT}/${NEWPATV}
+	sudo dpkg -i ${DIR}/${NEWPATV}
+	
 	else
+
 	#install deb file for 32 bit systems
 	NEWPATV=$(curl -s https://github.com/la5nta/pat/releases | grep armhf | head -1 | sed 's/.*pat_/pat_/' | sed 's/<\/a>.*$//')
 	NEWPAT=$(echo ${NEWPATV} | sed 's/pat_//' | sed 's/_linux_armhf.deb//' | sed 's/0\.//')
@@ -99,6 +81,36 @@ PAT() {
 	if [ -f ${DIR}/config.json ]; then
 		mv ${DIR}/config.json ${HOME}/.wl2k/
 	fi
+
+	PAT_OLD_SOURCE_INSTALL() {
+	#This code is left for reference. This was used ot build pat from source when 64bit Pi OS was first released. 20220922
+	#reference:
+	#https://www.jeremymorgan.com/tutorials/raspberry-pi/install-go-raspberry-pi/
+	#https://github.com/la5nta/pat/wiki/Building-from-source
+	#https://cqdeks4td.blogspot.com/2021/11/installing-pat-open-source-winlink.html
+
+	#install golang needed for pat build
+	cd
+	wget https://go.dev/dl/go1.17.7.linux-arm64.tar.gz
+	sudo tar -C /usr/local -xzf go1.17.7.linux-arm64.tar.gz
+	rm go1.17.7.linux-arm64.tar.gz
+
+	echo "PATH=$PATH:/usr/local/go/bin" >> $HOME/.profile
+	echo "GOPATH=$HOME/go" >> $HOME/.profile
+
+	source $HOME/.profile
+
+	#download/build latest pat
+	cd
+	git clone https://github.com/la5nta/pat
+	cd pat
+	./make.bash libax25
+	./make.bash
+
+	sudo cp $HOME/pat/debian/pat@.service /lib/systemd/system/
+	sudo cp $HOME/pat/pat /usr/bin/
+	rm -rf $HOME/pat
+	}
 
 }
 ##################################
@@ -399,7 +411,29 @@ sudo make install
 ##################################
 CHIRP() {
 
-sudo apt install -y chirp
+	#sudo apt install -y chirp
+	cd ${DIR} || return
+	sudo apt install libfuse2
+	CHIRPDATE=$(curl -s https://github.com/goldstar611/chirp-appimage | grep "releases/tag/" | sed 's|.*releases/tag/||;s|">||')
+	LINK="https://github.com/goldstar611/chirp-appimage/releases/download/$CHIRPDATE/Chirp-daily-$CHIRPDATE-armhf.AppImage"
+	wget $LINK
+	CHIRP=$(ls | grep Chirp-daily)
+	sudo mv $CHIRP /usr/local/bin/chirp
+	sudo chmod +x /usr/local/bin/chirp
+
+cat >chirp.desktop <<EOF
+[Desktop Entry]
+Name=Chirp
+Comment=Radio Programming Software
+GenericName=Chirp
+Exec=/usr/local/bin/chirp
+Icon=qsstv.png
+Type=Application
+Terminal=false
+Categories=HamRadio;
+EOF
+
+	sudo mv chirp.desktop /usr/share/applications/
 
 OLDCODE(){
 	#left for reference
@@ -892,6 +926,18 @@ GRIDCALC(){
 }
 
 ##################################
+#	Repeater-Start
+##################################
+REPEAT(){
+sudo apt install -y gir1.2-osmgpsmap-1.0 gir1.2-geoclue-2.0 libosmgpsmap-1.0-1
+REPEAT_LATEST=$(curl -s https://sourceforge.net/projects/repeater-start/files/ | grep all.deb | head -1 | sed 's/.*repeater/repeater/;s/".*//')
+cd ${HOME}/Downloads
+wget https://sourceforge.net/projects/repeater-start/files/$REPEAT_LATEST
+sudo dpkg -i $REPEAT_LATEST
+}
+
+
+##################################
 #	JTDX
 ##################################
 #This code is left in place but no option is given during inital
@@ -912,4 +958,6 @@ JTDX() {
 	sudo apt-get --fix-broken -y install
 	sudo dpkg -i ${VER}
 	rm ${VER}
+
+
 }

@@ -133,6 +133,9 @@ EOF
 #	ARDOP
 ################################
 ARDOP() {
+    if [ -f ${HOME}/ardop/piardopc; then
+    rm ${HOME}/ardop/piardopc
+    fi
     mkdir -p ${HOME}/ardop
     cd ${HOME}/ardop || return
     #determine if 64 bit and install correct dependencies.
@@ -172,6 +175,16 @@ EOF
     echo "Host=local" >>${FILE}
     echo "Port=8515" >>${FILE}
 }
+
+################################
+#	VARA
+################################
+VARA() {
+    cd ${HOME}/Downloads || return
+    curl -O https://raw.githubusercontent.com/WheezyE/Winelink/main/install_winelink.sh && bash install_winelink.sh bap
+    rm ${HOME}/Downloads/install_winelink.sh
+}
+
 
 ################################
 #	HAMLIB
