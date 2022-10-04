@@ -413,10 +413,10 @@ CHIRP() {
 
 	#sudo apt install -y chirp
 	cd ${DIR} || return
-	CHIRP_FILE=$(curl -s https://github.com/goldstar611/chirp-appimage/releases | grep armhf | head -1 | sed 's/.*"\///;s/".*//')
-	LINK="https://github.com/$CHIRP_FILE"
+	CHIRPDATE=$(curl -s https://github.com/goldstar611/chirp-appimage | grep "releases/tag/" | sed 's|.*releases/tag/||;s|">||')
+	LINK="https://github.com/goldstar611/chirp-appimage/releases/download/$CHIRPDATE/Chirp-daily-$CHIRPDATE-armhf.AppImage"
 	wget $LINK
-	CHIRP=$(ls | grep -i chirp)
+	CHIRP=$(ls | grep Chirp-daily)
 	sudo mv $CHIRP /usr/local/bin/chirp
 	sudo chmod +x /usr/local/bin/chirp
 
