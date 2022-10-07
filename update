@@ -306,7 +306,7 @@ yad --center --list --checklist --width=600 --height=600 --separator="" \
 	false "GPSUPDATE" "${GPSUPDATE}" "Tool to Manage GPS Devices" \
 	false "ARDOP" "$ARDOP" "Mode for HF" \
 	false "ARDOPGUI" "$ARDOPGUI" "GUI for ARDOP" \
-	false "VARA" "$VARA" "VARA Modem" \
+	false "VARA" "$VARA" "VARA Modem - <b>Pi 4 32bit ONLY</b>" \
 	false "DIREWOLF" "$DIRE" "Software TNC" \
 	false "AX25" "$AX25" "Data Link Layer Protocol" \
 	false "PULSE" "$PULSE" "Sound server" \
@@ -330,6 +330,17 @@ if [ -n $VARA_CHK ]; then
 	--button=gtk-ok
 	sed -i 's/VARA//;/^$/d' ${BASE}
 	fi
+
+	#check if 32 bit system
+	if [ `getconf LONG_BIT` != 32 ]; then
+	yad --form --width=500 --text-align=center --center --title="Build-a-Pi" --text-align=center \
+	--image ${LOGO} --window-icon=${LOGO} --image-on-top --separator="|" --item-separator="|" \
+	--text="<b>Not Compatible</b>\rAt this time VARA is not compatible with 64bit OS. The devolper is working \
+	to resolve this issue.\r\rVARA will not be installed during the build." \
+	--button=gtk-ok
+	sed -i 's/VARA//;/^$/d' ${BASE}
+	fi
+
 fi
 
 #############################################################
