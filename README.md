@@ -111,11 +111,17 @@ FT8 & WISPR software suite. https://sourceforge.net/projects/wsjt/
 #### CHIRP:
 Software to program radios. https://chirp.danplanet.com
 
+#### gARIM:
+ARIM means "Amateur Radio Instant Messaging" and the gARIM program is a GUI host mode program for the ARDOP TNC https://www.whitemesa.net/garim/garim.html
+
 #### XASTIR:
 GUI interface useful when configuring APRS nodes. https://sourceforge.net/projects/xastir/
 
 #### YAAC:
 Yet Another APRS Client GUI interface useful when configuring APRS nodes. https://www.ka2ddo.org/ka2ddo/YAAC.html
+
+#### Repeater START - Showing The Amateur Repeaters Tool:
+Repeater-START (Showing The Amateur Repeaters Tool) is an app to view nearby ham radio repeaters.
 
 #### PYQSO:
 Logging software. https://github.com/ctjacobs/pyqso
