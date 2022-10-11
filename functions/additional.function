@@ -480,9 +480,7 @@ QSSTV() {
 	sudo apt-get install -y g++ libfftw3-dev qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools libpulse-dev libhamlib-dev libasound2-dev libv4l-dev libopenjp2-7 libopenjp2-7-dev
 
 	cd ${BUILDDIR} || return
-
 	git clone https://github.com/ON4QZ/QSSTV
-	
 	cd QSSTV/src || return
 	qmake
 	make
@@ -491,7 +489,7 @@ QSSTV() {
 	cd ${BUILDDIR} || return
 	
 	mkdir -p /usr/local/share/pixmaps/
-	sudo cp ${BUILDDIR}/QSSTV/icons/qsstv.png /usr/local/share/pixmaps/
+	sudo cp ${BUILDDIR}/QSSTV/src/icons/qsstv.png /usr/local/share/pixmaps/
 
 cat >qsstv.desktop <<EOF
 [Desktop Entry]
