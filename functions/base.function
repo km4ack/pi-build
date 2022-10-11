@@ -193,6 +193,7 @@ HAMLIB() {
     PACKAGE=hamlib
     CLEANSOURCE
     sudo apt install libusb-1.0-0 libusb-1.0-0-dev
+    pip install swig
     cd ${BUILDDIR} || return
     NEWRIG=$(curl -s https://sourceforge.net/projects/hamlib/files/latest/download |
         grep -o https://downloads.sourceforge.net/project/hamlib/hamlib/[0-9].[0-9] |
