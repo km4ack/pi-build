@@ -239,7 +239,7 @@ yad --center --list --checklist --width=600 --height=600 --separator="" \
 	false "GPSUPDATE" "Tool to Manage GPS Devices" \
 	false "ARDOP" "Modem for HF" \
 	false "ARDOPGUI" "GUI for ARDOP" \
-	false "VARA" "VARA Modem - <b>Pi 4 32bit ONLY</b>" \
+	false "VARA" "VARA Modem - <b>Pi 4 Required</b>" \
 	false "HAMLIB" "Needed for Rig Control" \
 	false "DIREWOLF" "Software TNC" \
 	false "AX25" "Data Link Layer Protocol" \
