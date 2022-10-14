@@ -317,7 +317,7 @@ if [ ${BUT} = 1 ] || [ ${BUT} = 252 ]; then
 	exit
 fi
 
-#If vARA is chosen, make sure we have a Pi 4 to work with. 
+#If VARA is chosen, make sure we have a Pi 4 to work with. 
 #As of 02OCT2022 the VARA installer only works with the Pi 4.
 VARA_CHK=$(grep VARA ${BASE})
 if [ -n $VARA_CHK ]; then
@@ -327,16 +327,6 @@ if [ -n $VARA_CHK ]; then
 	yad --form --width=500 --text-align=center --center --title="Build-a-Pi" --text-align=center \
 	--image ${LOGO} --window-icon=${LOGO} --image-on-top --separator="|" --item-separator="|" \
 	--text="<b>Not enough memory</b>\rVARA requires a Pi 4.\r\rVARA will not be installed during the build." \
-	--button=gtk-ok
-	sed -i 's/VARA//;/^$/d' ${BASE}
-	fi
-
-	#check if 32 bit system
-	if [ `getconf LONG_BIT` != 32 ]; then
-	yad --form --width=500 --text-align=center --center --title="Build-a-Pi" --text-align=center \
-	--image ${LOGO} --window-icon=${LOGO} --image-on-top --separator="|" --item-separator="|" \
-	--text="<b>Not Compatible</b>\rAt this time VARA is not compatible with 64bit OS. The devolper is working \
-	to resolve this issue.\r\rVARA will not be installed during the build." \
 	--button=gtk-ok
 	sed -i 's/VARA//;/^$/d' ${BASE}
 	fi
