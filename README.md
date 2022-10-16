@@ -130,6 +130,12 @@ Satellite Tracking. http://gpredict.oz9aec.net/
 #### CQRLOG:
 Logging Software. https://www.cqrlog.com/
 
+#### gARIM:
+ARIM means "Amateur Radio Instant Messaging" and the gARIM program is a GUI host mode program for the ARDOP TNC https://www.whitemesa.net/garim/garim.html
+
+#### Repeater START - Showing The Amateur Repeaters Tool:
+Repeater-START (Showing The Amateur Repeaters Tool) is an app to view nearby ham radio repeaters.
+
 #### QSSTV:
 Slow-scan TV (SSTV). http://users.telenet.be/on4qz/qsstv/index.html
 
