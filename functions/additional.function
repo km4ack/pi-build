@@ -490,7 +490,7 @@ QSSTV() {
 	sudo make clean
 	cd ${BUILDDIR} || return
 
-	mkdir -p /usr/local/share/pixmaps/
+	sudo mkdir -p /usr/local/share/pixmaps/
 	sudo cp ${BUILDDIR}/QSSTV/src/icons/qsstv.png /usr/local/share/pixmaps/
 
 cat >qsstv.desktop <<EOF
