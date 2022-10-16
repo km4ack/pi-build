@@ -33,7 +33,7 @@ PAT() {
 	echo "new pat ${NEWPAT}"
 	wget --tries 2 --connect-timeout=60 https://github.com/la5nta/pat/releases/download/v0.${NEWPAT}/${NEWPATV}
 	sudo dpkg -i ${DIR}/${NEWPATV}
-	
+
 	else
 
 	#install deb file for 32 bit systems
@@ -77,7 +77,7 @@ PAT() {
 	#jq '.ax25.rig = '\"my-rig\"'' ${FIG} | jq '.ardop.rig = '\"my-rig\"'' | jq '.hamlib_rigs = {'\"my-rig\"': {"address": "127.0.0.1:4532", "network": "tcp"}}' >~/Desktop/config.json
 	jq '.ax25.rig = '\"my-rig\"'' ${FIG} | jq '.varafm.rig = '\"my-rig\"'' | jq '.varahf.rig = '\"my-rig\"'' | jq '.ardop.rig = '\"my-rig\"'' | \
 	jq '.varafm.ptt_ctrl = 'true'' | jq '.varahf.ptt_ctrl = 'true'' | \
-	jq '.hamlib_rigs = {'\"my-rig\"': {"address": "127.0.0.1:4532", "network": "tcp"}}' >~/Desktop/config.json	
+	jq '.hamlib_rigs = {'\"my-rig\"': {"address": "127.0.0.1:4532", "network": "tcp"}}' >~/Desktop/config.json
 	mv ${HOME}/Desktop/config.json ${FIG}
 	sed -i 's/"enable_http": false,/"enable_http": true,/' ${FIG}
 
@@ -519,7 +519,7 @@ GRIDTRACKER() {
 	#determine if 32/64 bit and set download link accordingly. issue #382
 	if [ `getconf LONG_BIT` = '32' ]; then
 	#GRIDDLL=$(curl -s https://download.gridtracker.org/latest_release.html | grep arm32 | sed 's/.*href="//;s/">.*//')
-	GRIDDLL=$(curl -s https://storage.googleapis.com/gt_download/ | awk 'BEGIN{FS="<Key>"; OFS="\n<Key>"} {$1=$1} 1' | grep arm32 | sed '/<Key>nwjs/d;/<Key>test/d' | head -1 | sed 's/<Key>//;s/<\/Key>.*//')	
+	GRIDDLL=$(curl -s https://storage.googleapis.com/gt_download/ | awk 'BEGIN{FS="<Key>"; OFS="\n<Key>"} {$1=$1} 1' | grep arm32 | sed '/<Key>nwjs/d;/<Key>test/d' | head -1 | sed 's/<Key>//;s/<\/Key>.*//')
 	GT_DIR=$(echo $GRIDDLL | sed 's|/.*||')
 	GRIDDLL=$(echo $GRIDDLL | sed 's/.*GridTracker/GridTracker/')
 	else
@@ -894,13 +894,13 @@ sudo usermod -a -G fuse pi
 
 #as of Feb 2022 there is no 64 bit version of HAMRS. The following will allow it to run
 if [ `getconf LONG_BIT` = '64' ]; then
-sudo dpkg --add-architecture armhf 
+sudo dpkg --add-architecture armhf
 sudo apt-get update
 sudo apt install -y libasound2:armhf zlib1g-dev:armhf fuse:armhf libglib2.0-0:armhf libnss3:armhf libatk1.0-0:armhf \
 libatk-bridge2.0-0:armhf libx11-xcb1:armhf libgdk-pixbuf-2.0-0:armhf libgtk-3-0:armhf libdrm2:armhf libgbm1:armhf
 fi
 
-	#create menu item and download icon	
+	#create menu item and download icon
 	cat >${HOME}/Downloads/hamrs.desktop <<EOF
 	[Desktop Entry]
 	Name=HAMRS
