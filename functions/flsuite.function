@@ -33,7 +33,7 @@ FLSTART() {
 	LIBJPG=libjpeg9-dev
 	fi
 	sudo apt-get install -y libfltk1.1-dev
-	sudo apt -y install build-essential libfltk1.3-dev libsamplerate0-dev portaudio19-dev libsndfile1-dev libxft-dev libxinerama-dev libxcursor-dev libpulse-dev pavucontrol libusb-1.0-0-dev libudev-dev
+	sudo apt-get install -y build-essential libfltk1.3-dev libsamplerate0-dev portaudio19-dev libsndfile1-dev libxft-dev libxinerama-dev libxcursor-dev libpulse-dev pavucontrol libusb-1.0-0-dev libudev-dev
 	sudo apt-get install -y $LIBJPG portaudio19-dev libusb-1.0-0-dev texinfo
 
 	##################################
