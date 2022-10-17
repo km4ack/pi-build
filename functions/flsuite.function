@@ -26,15 +26,10 @@ FLSTART() {
 	#	DEPENDS
 	##################################
 	#install needed depends
-	#check to see if 32 or 64 bit to detemine correct dependency
-	if [ `getconf LONG_BIT` = '64' ]; then
-	LIBJPG=libjpeg62-turbo-dev
-	else
-	LIBJPG=libjpeg9-dev
-	fi
+	#check to see if libjpeg62 32 or 64 bit to detemine correct dependency -- depricated 2022 single package name
 	sudo apt-get install -y libfltk1.1-dev
 	sudo apt-get install -y build-essential libfltk1.3-dev libsamplerate0-dev portaudio19-dev libsndfile1-dev libxft-dev libxinerama-dev libxcursor-dev libpulse-dev pavucontrol libusb-1.0-0-dev libudev-dev
-	sudo apt-get install -y $LIBJPG portaudio19-dev libusb-1.0-0-dev texinfo
+	sudo apt-get install -y libjpeg62-turbo-dev portaudio19-dev libusb-1.0-0-dev texinfo
 
 	##################################
 	#	FLXMLRPC
