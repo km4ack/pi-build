@@ -342,6 +342,23 @@ CHECK() {
 	fi
 
 	#----------------------------------------------------#
+	#			VARIM
+	#----------------------------------------------------#
+	echo "Checking VARIM"
+	if ! hash varim 2>/dev/null; then
+	echo "VARIM=Not_Installed" >> $UPDATEFILE
+	else
+	VARIM=$(varim --version | head -n1 | awk -F ' ' '{print $2}')
+	NEWVARIM=$(curl -s https://www.whitemesa.net/varim/varim.html | grep -m 1 \
+		"armv7l.tar.gz" | awk -F '-' '{print $2}')
+	if (($(echo "${NEWVARIM} ${VARIM}" | awk '{print ($1 > $2)}'))); then
+		echo "VARIM=NEEDS-UPDATE" >> $UPDATEFILE
+	else
+		echo "VARIM=is_latest_version" >> $UPDATEFILE
+	fi
+	fi
+
+	#----------------------------------------------------#
 	#		XASTIR
 	#----------------------------------------------------#
 	echo "Checking Xastir"
