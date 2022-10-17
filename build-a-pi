@@ -483,7 +483,7 @@ yad --center --list --checklist --width=600 --height=600 --separator="" \
 	false "PACKETSEARCH" "Winlink Packet Tool" \
 	false "CALLSIGN" "Call sign lookup" \
 	false "TEMPCONVERT" "Temperature Converter" \
-	false "Reference Materials PDFs" \
+	false "HDOCS" "Reference Materials PDFs" \
 	false "GPARTED" "Disk Utility Tool" \
 	false "SHOWLOG" "Log file viewer" \
 	false "PISTATS" "Pi3/4 Stats Monitor" \
