@@ -403,7 +403,8 @@ yad --center --list --checklist --width=600 --height=600 --separator="" \
 	false "CONKY" "System Information Display" \
 	false "PI-APRS" "APRS Message Application" \
 	false "CHIRP" "Program Radios" \
-	false "GARIM" "File Transfer Program" \
+	false "GARIM" "Radio Chat ARDROP" \
+	false "VARIM" "Radio Chat VARA" \
 	false "PAT" "Radio Email Application" \
 	false "PAT-MENU" "Control for Pat Winlink" \
 	false "JS8CALL" "Weak Signal Digital Mode Software" \
@@ -432,7 +433,7 @@ if [ ${BUT} = 252 ] || [ ${BUT} = 1 ]; then
 fi
 
 if [ ${BUT} = 3 ]; then
-	ADDAPPS=(CONKY PI-APRS CHIRP GARIM PAT PAT-MENU JS8CALL M0IAX WSJTX PYQSO
+	ADDAPPS=(CONKY PI-APRS CHIRP GARIM VARIM PAT PAT-MENU JS8CALL M0IAX WSJTX PYQSO
 		HAMRS EES QSSTV GRIDTRACKER HAMCLOCK PROPAGATION YAAC XASTIR GPREDICT TQSL
 		GRIDCALC CQRLOG REPEAT)
 
