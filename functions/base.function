@@ -238,7 +238,7 @@ DIREWOLF() {
 #	WFVIEWSVR
 ################################
 WFVIEWSVR() {
-    cd ${BUILDDIR} || return
+    
     sudo apt-get -y install build-essential
     sudo apt-get -y install qt5-qmake
     sudo apt-get -y install libqt5core5a
@@ -258,19 +258,18 @@ WFVIEWSVR() {
     sudo apt-get -y install libqcustomplot1.3 libqcustomplot-doc libqcustomplot-dev
     sudo apt-get -y install libqcustomplot2.0 libqcustomplot-doc libqcustomplot-dev
 
-    cd ${BUILDDIR}
-    rm -rf wfview
+    cd ${BUILDDIR} || return
+    rm -rf wfserver
 
-    # wfserver
-    git clone --depth 1 https://gitlab.com/eliggett/wfview.git -b wfserver
+    git clone --depth 1 https://gitlab.com/eliggett/wfview.git ./wfserver
 
-    cd ${BUILDDIR}/wfview || return
+    cd ${BUILDDIR}/wfserver || return
     git submodule init
     git submodule update
     
     mkdir build
     cd build
-    qmake ../wfview/wfserver.pro
+    qmake ../wfserver/wfserver.pro
     make -j2
     sudo make install
     
