@@ -240,8 +240,8 @@ DIREWOLF() {
 WFVIEWSVR() {
     cd ${BUILDDIR} || return
     sudo apt-get install -y libasound2-dev cmake build-essential libudev-dev qt5-qmake libqt5core5a 
-    sudo apt-get install -y qtbase5-dev libqt5serialport5 libqt5serialport5-dev libqt5multimedia5 l
-    sudo apt-get install -y ibqt5multimedia5-plugins libqt5xml5 qtmultimedia5-dev libopus-dev
+    sudo apt-get install -y qtbase5-dev libqt5serialport5 libqt5serialport5-dev libqt5multimedia5
+    sudo apt-get install -y libqt5xml5 qtmultimedia5-dev libopus-dev libqt5multimedia5-plugins
     sudo apt-get install -y libeigen3-dev libportaudio2 libportaudiocpp0 portaudio19-dev librtaudio-dev librtaudio6
     sudo apt-get -y install libqcustomplot1.3 libqcustomplot-doc libqcustomplot-dev
     sudo apt-get -y install libqcustomplot2.0 libqcustomplot-doc libqcustomplot-dev
