@@ -534,6 +534,7 @@ yad --center --list --checklist --width=600 --height=600 --separator="" \
 	false "PACKETSEARCH" "$PACKETSEARCH" "Winlink Packet Tool" \
 	false "CALLSIGN" "${CALLSIGN}" "Call Sign Lookup Utility" \
 	false "TEMPCONVERT" "$TEMPCONVERT" "Temperature Converter" \
+	false "HDOCS" "$HDOCS" "Reference Materials PDFs" \
 	false "GPARTED" "$GPARTED" "Disk Utility Application" \
 	false "RTC" "$RTC" "Real Time Clock" \
 	false "SHOWLOG" "$SHOWLOG" "Log File Viewer" \
