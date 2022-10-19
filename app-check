@@ -574,162 +574,162 @@ CHECK(){
 		echo "JTDX=Installed" >> $UPDATEFILE
 	fi
 
-#----------------------------------------------------#
-#		TELNET
-#----------------------------------------------------#
-if ! hash telnet 2>/dev/null; then
-	echo "TEL=Not_Installed" >> $UPDATEFILE
-else
-	echo "TEL=Installed" >> $UPDATEFILE
-fi
-
-#----------------------------------------------------#
-#		piQtTermTCP
-#----------------------------------------------------#
-if [ -f /usr/local/bin/piQtTermTCP ]; then
-	echo "PITERM=Installed" >> $UPDATEFILE
-else
-	echo "PITERM=Not_Installed" >> $UPDATEFILE
-fi
-
-#----------------------------------------------------#
-#		Security Tools
-#----------------------------------------------------#
-if [ -f /usr/local/bin/securefile ]; then
-	echo "SECURITY=Installed" >> $UPDATEFILE
-else
-	echo "SECURITY=Not_Installed" >> $UPDATEFILE
-fi
-
-#----------------------------------------------------#
-#		YGATE
-#----------------------------------------------------#
-YGATE="${HOME}/bin/ygate.py"
-if [ ! -f "$YGATE" ]; then
-	echo "YGATE=Not_Installed" >> $UPDATEFILE
-else
-	echo "YGATE=Installed" >> $UPDATEFILE
-fi
-
-#----------------------------------------------------#
-#		BPQ
-#----------------------------------------------------#
-BPQ="${HOME}/linbpq/linbpq"
-if [ ! -f "$BPQ" ]; then
-	echo "BPQ=Not_Installed" >> $UPDATEFILE
-else
-	echo "BPQ=Installed" >> $UPDATEFILE
-fi
-
-#----------------------------------------------------#
-#		Battery Test Script :: BATT
-#----------------------------------------------------#
-BATT="${HOME}/bin/batt-test"
-if [ ! -f "$BATT" ]; then
-	echo "BATT=Not_Installed" >> $UPDATEFILE
-else
-	echo "BATT=Installed" >> $UPDATEFILE
-fi
-
-#----------------------------------------------------#
-#		VNC Viewer
-#----------------------------------------------------#
-if ! hash vncviewer 2>/dev/null; then
-	echo "VNC=Not_Installed" >> $UPDATEFILE
-else
-	echo "VNC=Installed" >> $UPDATEFILE
-fi
-
-#----------------------------------------------------#
-#		XYGRIB Viewer
-#----------------------------------------------------#
-if [ -f /usr/bin/XyGrib ]; then
-	echo "XYGRIB=Installed" >> $UPDATEFILE
-else
-	echo "XYGRIB=Not_Installed" >> $UPDATEFILE
-fi
-
-#----------------------------------------------------#
-#		GPS UPDATE TOOL
-#----------------------------------------------------#
-echo "Checking GPS Update Tool"
-if [ ! -f ${HOME}/bin/gpsupdate ]; then
-	echo "GPSUPDATE=Not_Installed" >> $UPDATEFILE
-else
-	GPSUPDATE=$(grep VERSION= ${HOME}/bin/gpsupdate | sed 's/VERSION=//')
-	NEWGPSUPDATE=$(curl -s https://raw.githubusercontent.com/km4ack/pi-scripts/master/gpsupdate | grep VERSION= | sed 's/VERSION=//')
-	if (($(echo "${NEWGPSUPDATE} ${GPSUPDATE}" | awk '{print ($1 > $2)}'))); then
-		echo "GPSUPDATE=NEEDS-UPDATE" >> $UPDATEFILE
+	#----------------------------------------------------#
+	#		TELNET
+	#----------------------------------------------------#
+	if ! hash telnet 2>/dev/null; then
+		echo "TEL=Not_Installed" >> $UPDATEFILE
 	else
-		echo "GPSUPDATE=is_latest_version" >> $UPDATEFILE
+		echo "TEL=Installed" >> $UPDATEFILE
 	fi
-fi
 
-#----------------------------------------------------#
-#		Grid Calc
-#----------------------------------------------------#
-echo "Checking Grid Calc"
-if [ ! -f $HOME/bin/grid-calc ]; then
-	echo "GRIDCALC=Not_Installed" >> $UPDATEFILE
-else
-	CURRENT=$(grep VERSION $HOME/bin/grid-calc | head -1 | sed 's/VERSION=//')
-	LATEST=$(curl -s https://raw.githubusercontent.com/km4ack/pi-scripts/master/grid-calc | grep VERSION | head -1 | sed 's/VERSION=//')
-		if (($(echo "${LATEST} ${CURRENT}" | awk '{print ($1 > $2)}'))); then
-		echo "GRIDCALC=NEEDS-UPDATE" >> $UPDATEFILE
+	#----------------------------------------------------#
+	#		piQtTermTCP
+	#----------------------------------------------------#
+	if [ -f /usr/local/bin/piQtTermTCP ]; then
+		echo "PITERM=Installed" >> $UPDATEFILE
 	else
-		echo "GRIDCALC=is_latest_version" >> $UPDATEFILE
+		echo "PITERM=Not_Installed" >> $UPDATEFILE
 	fi
-fi
 
-#----------------------------------------------------#
-#		HAMRS
-#----------------------------------------------------#
-if [ ! -f /usr/local/bin/hamrs ]; then
-	echo "HAMRS=Not_Installed" >> $UPDATEFILE
-else
-echo "HAMRS=Installed" >> $UPDATEFILE
-fi
-
-#----------------------------------------------------#
-#			PacketSearch
-#----------------------------------------------------#
-echo "Checking Packet Search"
-	if [ ! -f $HOME/bin/packetsearch ]; then
-		echo "PACKETSEARCH=Not_Installed" >> $UPDATEFILE
+	#----------------------------------------------------#
+	#		Security Tools
+	#----------------------------------------------------#
+	if [ -f /usr/local/bin/securefile ]; then
+		echo "SECURITY=Installed" >> $UPDATEFILE
 	else
-		PACKETSEARCH=$(grep VERSION $HOME/bin/packetsearch | sed 's/VERSION=//')
-		NEWPACKETSEARCH=$(curl -s https://raw.githubusercontent.com/km4ack/pi-scripts/master/packetsearch | grep VERSION | sed 's/VERSION=//')
+		echo "SECURITY=Not_Installed" >> $UPDATEFILE
+	fi
 
-		if (($(echo "${NEWPACKETSEARCH} ${PACKETSEARCH}" | awk '{print ($1 > $2)}'))); then
-			echo "PACKETSEARCH=NEEDS-UPDATE" >> $UPDATEFILE
+	#----------------------------------------------------#
+	#		YGATE
+	#----------------------------------------------------#
+	YGATE="${HOME}/bin/ygate.py"
+	if [ ! -f "$YGATE" ]; then
+		echo "YGATE=Not_Installed" >> $UPDATEFILE
+	else
+		echo "YGATE=Installed" >> $UPDATEFILE
+	fi
+
+	#----------------------------------------------------#
+	#		BPQ
+	#----------------------------------------------------#
+	BPQ="${HOME}/linbpq/linbpq"
+	if [ ! -f "$BPQ" ]; then
+		echo "BPQ=Not_Installed" >> $UPDATEFILE
+	else
+		echo "BPQ=Installed" >> $UPDATEFILE
+	fi
+
+	#----------------------------------------------------#
+	#		Battery Test Script :: BATT
+	#----------------------------------------------------#
+	BATT="${HOME}/bin/batt-test"
+	if [ ! -f "$BATT" ]; then
+		echo "BATT=Not_Installed" >> $UPDATEFILE
+	else
+		echo "BATT=Installed" >> $UPDATEFILE
+	fi
+
+	#----------------------------------------------------#
+	#		VNC Viewer
+	#----------------------------------------------------#
+	if ! hash vncviewer 2>/dev/null; then
+		echo "VNC=Not_Installed" >> $UPDATEFILE
+	else
+		echo "VNC=Installed" >> $UPDATEFILE
+	fi
+
+	#----------------------------------------------------#
+	#		XYGRIB Viewer
+	#----------------------------------------------------#
+	if [ -f /usr/bin/XyGrib ]; then
+		echo "XYGRIB=Installed" >> $UPDATEFILE
+	else
+		echo "XYGRIB=Not_Installed" >> $UPDATEFILE
+	fi
+
+	#----------------------------------------------------#
+	#		GPS UPDATE TOOL
+	#----------------------------------------------------#
+	echo "Checking GPS Update Tool"
+	if [ ! -f ${HOME}/bin/gpsupdate ]; then
+		echo "GPSUPDATE=Not_Installed" >> $UPDATEFILE
+	else
+		GPSUPDATE=$(grep VERSION= ${HOME}/bin/gpsupdate | sed 's/VERSION=//')
+		NEWGPSUPDATE=$(curl -s https://raw.githubusercontent.com/km4ack/pi-scripts/master/gpsupdate | grep VERSION= | sed 's/VERSION=//')
+		if (($(echo "${NEWGPSUPDATE} ${GPSUPDATE}" | awk '{print ($1 > $2)}'))); then
+			echo "GPSUPDATE=NEEDS-UPDATE" >> $UPDATEFILE
 		else
-			echo "PACKETSEARCH=is_latest_version" >> $UPDATEFILE
+			echo "GPSUPDATE=is_latest_version" >> $UPDATEFILE
 		fi
 	fi
 
-#----------------------------------------------------#
-#		piQtSoundModem
-#----------------------------------------------------#
-if [ -f /usr/local/bin/piQtSoundModem ]; then
-	echo "QTSOUND=Installed" >> $UPDATEFILE
-else
-	echo "QTSOUND=Not_Installed" >> $UPDATEFILE
-fi
-
-#----------------------------------------------------#
-#		Repeater-Start
-#----------------------------------------------------#
-echo "Checking Repeater-Start"
-REPEAT_CURRENT_VER=$(dpkg --list | grep repeater-start | awk '{print $3}')
-REPEAT_LATEST=$(curl -s https://sourceforge.net/projects/repeater-start/files/ | grep all.deb | head -1 | sed 's/.*repeater/repeater/;s/".*//')
-REPEAT_LATEST_VER=$(echo $REPEAT_LATEST | sed 's/repeater-start_//;s/_.*//')
-
-		if [ -z "$REPEAT_CURRENT_VER" ]; then
-			echo "REPEAT=Not_Installed" >> $UPDATEFILE
-		elif (($(echo "${REPEAT_LATEST_VER} ${REPEAT_CURRENT_VER}" | awk '{print ($1 > $2)}'))); then
-			echo "REPEAT=NEEDS-UPDATE" >> $UPDATEFILE
+	#----------------------------------------------------#
+	#		Grid Calc
+	#----------------------------------------------------#
+	echo "Checking Grid Calc"
+	if [ ! -f $HOME/bin/grid-calc ]; then
+		echo "GRIDCALC=Not_Installed" >> $UPDATEFILE
+	else
+		CURRENT=$(grep VERSION $HOME/bin/grid-calc | head -1 | sed 's/VERSION=//')
+		LATEST=$(curl -s https://raw.githubusercontent.com/km4ack/pi-scripts/master/grid-calc | grep VERSION | head -1 | sed 's/VERSION=//')
+			if (($(echo "${LATEST} ${CURRENT}" | awk '{print ($1 > $2)}'))); then
+			echo "GRIDCALC=NEEDS-UPDATE" >> $UPDATEFILE
 		else
-			echo "REPEAT=is_latest_version" >> $UPDATEFILE
+			echo "GRIDCALC=is_latest_version" >> $UPDATEFILE
 		fi
+	fi
+
+	#----------------------------------------------------#
+	#		HAMRS
+	#----------------------------------------------------#
+	if [ ! -f /usr/local/bin/hamrs ]; then
+		echo "HAMRS=Not_Installed" >> $UPDATEFILE
+	else
+	echo "HAMRS=Installed" >> $UPDATEFILE
+	fi
+
+	#----------------------------------------------------#
+	#			PacketSearch
+	#----------------------------------------------------#
+	echo "Checking Packet Search"
+		if [ ! -f $HOME/bin/packetsearch ]; then
+			echo "PACKETSEARCH=Not_Installed" >> $UPDATEFILE
+		else
+			PACKETSEARCH=$(grep VERSION $HOME/bin/packetsearch | sed 's/VERSION=//')
+			NEWPACKETSEARCH=$(curl -s https://raw.githubusercontent.com/km4ack/pi-scripts/master/packetsearch | grep VERSION | sed 's/VERSION=//')
+
+			if (($(echo "${NEWPACKETSEARCH} ${PACKETSEARCH}" | awk '{print ($1 > $2)}'))); then
+				echo "PACKETSEARCH=NEEDS-UPDATE" >> $UPDATEFILE
+			else
+				echo "PACKETSEARCH=is_latest_version" >> $UPDATEFILE
+			fi
+		fi
+
+	#----------------------------------------------------#
+	#		piQtSoundModem
+	#----------------------------------------------------#
+	if [ -f /usr/local/bin/piQtSoundModem ]; then
+		echo "QTSOUND=Installed" >> $UPDATEFILE
+	else
+		echo "QTSOUND=Not_Installed" >> $UPDATEFILE
+	fi
+
+	#----------------------------------------------------#
+	#		Repeater-Start
+	#----------------------------------------------------#
+	echo "Checking Repeater-Start"
+	REPEAT_CURRENT_VER=$(dpkg --list | grep repeater-start | awk '{print $3}')
+	REPEAT_LATEST=$(curl -s https://sourceforge.net/projects/repeater-start/files/ | grep all.deb | head -1 | sed 's/.*repeater/repeater/;s/".*//')
+	REPEAT_LATEST_VER=$(echo $REPEAT_LATEST | sed 's/repeater-start_//;s/_.*//')
+
+			if [ -z "$REPEAT_CURRENT_VER" ]; then
+				echo "REPEAT=Not_Installed" >> $UPDATEFILE
+			elif (($(echo "${REPEAT_LATEST_VER} ${REPEAT_CURRENT_VER}" | awk '{print ($1 > $2)}'))); then
+				echo "REPEAT=NEEDS-UPDATE" >> $UPDATEFILE
+			else
+				echo "REPEAT=is_latest_version" >> $UPDATEFILE
+			fi
 
 }
