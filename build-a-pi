@@ -405,7 +405,8 @@ yad --center --list --checklist --width=600 --height=600 --separator="" \
 	false "PI-APRS" "APRS Message Application" \
 	false "CHIRP" "Program Radios" \
 	false "WFVIEW" "wfView for Icom radios" \
-	false "GARIM" "File Transfer Program" \
+	false "GARIM" "Radio Chat ARDROP" \
+	false "VARIM" "Radio Chat VARA" \
 	false "PAT" "Radio Email Application" \
 	false "PAT-MENU" "Control for Pat Winlink" \
 	false "JS8CALL" "Weak Signal Digital Mode Software" \
@@ -423,6 +424,7 @@ yad --center --list --checklist --width=600 --height=600 --separator="" \
 	false "XASTIR" "APRS Client" \
 	false "GPREDICT" "Satellite Tracking" \
 	false "TQSL" "LOTW Software" \
+	false "DRATS" "D-RATS tool for D-STAR" \
 	false "GRIDCALC" "Grid Calculation Software" \
 	false "REPEAT" "Repeater Directory" \
 	--button="Exit":1 \
@@ -434,9 +436,9 @@ if [ ${BUT} = 252 ] || [ ${BUT} = 1 ]; then
 fi
 
 if [ ${BUT} = 3 ]; then
-	ADDAPPS=(CONKY PI-APRS CHIRP WFVIEW GARIM PAT PAT-MENU JS8CALL M0IAX WSJTX PYQSO
+   ADDAPPS=(CONKY PI-APRS CHIRP WFVIEW GARIM VARIM PAT PAT-MENU JS8CALL M0IAX WSJTX PYQSO
 		HAMRS EES QSSTV GRIDTRACKER HAMCLOCK PROPAGATION YAAC XASTIR GPREDICT TQSL
-		GRIDCALC CQRLOG REPEAT)
+		DRATS GRIDCALC CQRLOG REPEAT)
 
 	for i in "${ADDAPPS[@]}"; do
 		echo "$i" >>${ADDITIONAL}
@@ -485,6 +487,7 @@ yad --center --list --checklist --width=600 --height=600 --separator="" \
 	false "PACKETSEARCH" "Winlink Packet Tool" \
 	false "CALLSIGN" "Call sign lookup" \
 	false "TEMPCONVERT" "Temperature Converter" \
+	false "HDOCS" "Reference Materials PDFs" \
 	false "GPARTED" "Disk Utility Tool" \
 	false "SHOWLOG" "Log file viewer" \
 	false "PISTATS" "Pi3/4 Stats Monitor" \
@@ -506,7 +509,7 @@ if [ ${BUT} = 252 ] || [ ${BUT} = 1 ]; then
 fi
 
 if [ ${BUT} = 3 ]; then
-	UTILAPPS=(DIPOLE PACKETSEARCH CALLSIGN TEMPCONVERT GPARTED SHOWLOG PISTATS TELNET PITERM QTSOUND SECURITY YGATE BPQ BATT VNC XYGRIB)
+	UTILAPPS=(DIPOLE PACKETSEARCH CALLSIGN TEMPCONVERT HDOCS GPARTED SHOWLOG PISTATS TELNET PITERM QTSOUND SECURITY YGATE BPQ BATT VNC XYGRIB)
 	for i in "${UTILAPPS[@]}"; do
 		echo "$i" >>${UTILITY}
 	done
