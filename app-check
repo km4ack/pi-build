@@ -693,9 +693,9 @@ echo "Checking Packet Search"
 	fi
 
 #----------------------------------------------------#
-#		piQtSoundModem
+#		D-RATS
 #----------------------------------------------------#
-if [ -f $HOME/D-Rats/d-rats.py; ]; then
+if [ -f $HOME/D-Rats/d-rats.py ]; then
 	echo "D-RATS=Installed" >> $UPDATEFILE
 else
 	echo "D-RATS=Not_Installed" >> $UPDATEFILE
