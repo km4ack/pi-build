@@ -713,7 +713,7 @@ fi
 #----------------------------------------------------#
 #		wfviewsvr
 #----------------------------------------------------#
-if [ -f /usr/local/bin/wfviewsvr ]; then
+if [ -f /usr/local/bin/wfserver ]; then
 	echo "WFVIEWSVR=Installed" >> $UPDATEFILE
 else
 	echo "WFVIEWSVR=Not_Installed" >> $UPDATEFILE
