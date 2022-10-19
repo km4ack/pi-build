@@ -259,7 +259,7 @@ WFVIEWSVR() {
     git submodule update
     mkdir build
     cd build
-    qmake ../wfview/wfview.pro
+    qmake ../wfview.pro
     make -j2
     sudo make install
     
