@@ -84,6 +84,9 @@ Winlink client for Raspberry Pi https://getpat.io/
 #### PATMENU:
 Menu for configuring Pat. Recommended if installing Pat. https://github.com/km4ack/patmenu
 
+#### wfview & wfserver
+wfview is a program developed by amateur radio enthusiasts to control modern Icom ham radios https://wfview.org
+
 #### ARDOPC:
 HF modem for Pat. Recommended if installing Pat. https://www.cantab.net/users/john.wiseman/Documents/ARDOPC.html
 
@@ -120,6 +123,9 @@ Software to program radios. https://chirp.danplanet.com
 
 #### XASTIR:
 GUI interface useful when configuring APRS nodes. https://sourceforge.net/projects/xastir/
+
+#### D-RATS:
+D-RATS is a communications tool for D-STAR amateur radio low-speed data (DV mode) https://github.com/ham-radio-software/D-Rats
 
 #### YAAC:
 Yet Another APRS Client GUI interface useful when configuring APRS nodes. https://www.ka2ddo.org/ka2ddo/YAAC.html

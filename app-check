@@ -710,12 +710,39 @@ echo "Checking Packet Search"
 	fi
 
 #----------------------------------------------------#
+#		DRATS
+#----------------------------------------------------#
+if [ -f $HOME/D-Rats/d-rats.py ]; then
+	echo "DRATS=Installed" >> $UPDATEFILE
+else
+	echo "DRATS=Not_Installed" >> $UPDATEFILE
+fi
+
+#----------------------------------------------------#
 #		piQtSoundModem
 #----------------------------------------------------#
 if [ -f /usr/local/bin/piQtSoundModem ]; then
 	echo "QTSOUND=Installed" >> $UPDATEFILE
 else
 	echo "QTSOUND=Not_Installed" >> $UPDATEFILE
+fi
+
+#----------------------------------------------------#
+#		wfview
+#----------------------------------------------------#
+if [ -f /usr/local/bin/wfview ]; then
+	echo "WFVIEW=Installed" >> $UPDATEFILE
+else
+	echo "WFVIEW=Not_Installed" >> $UPDATEFILE
+fi
+
+#----------------------------------------------------#
+#		wfviewsvr
+#----------------------------------------------------#
+if [ -f /usr/local/bin/wfserver ]; then
+	echo "WFVIEWSVR=Installed" >> $UPDATEFILE
+else
+	echo "WFVIEWSVR=Not_Installed" >> $UPDATEFILE
 fi
 
 #----------------------------------------------------#

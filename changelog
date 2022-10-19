@@ -7,6 +7,7 @@ version=3.3.0
 		update chirp install - https://github.com/km4ack/pi-build/issues/337
 		use 64bit package to install pat on 64bit OS - https://github.com/km4ack/pi-build/issues/424
 		Add RepeaterStart - https://github.com/km4ack/pi-build/issues/400
+		fix gridtracker download - https://github.com/km4ack/pi-build/issues/447
 3.2.4		Update HotSpot Tools shortcut
 		Change 1000 to UID in update script
 		Remove Pi username check
