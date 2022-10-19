@@ -696,7 +696,16 @@ echo "Checking Packet Search"
 #		DRATS
 #----------------------------------------------------#
 if [ -f $HOME/D-Rats/d-rats.py ]; then
-	echo "DRATS=Installed" >> $UPDATEFILE
+		
+		DRATVER=$($HOME/D-Rats/cat PKG-INFO | grep Version | tail -1 | sed 's/Version: //')
+		NEWDRATVER=$(curl -s https://raw.githubusercontent.com/ham-radio-software/D-Rats/master/PKG-INFO | grep Version | tail -1 | sed 's/Version: //')
+
+		if (($(echo "${NEWDRATVER} ${DRATVER}" | awk '{print ($1 > $2)}'))); then
+			echo "DRATS=NEEDS-UPDATE" >> $UPDATEFILE
+		else
+			echo "DRATS=is_latest_version" >> $UPDATEFILE
+		fi
+
 else
 	echo "DRATS=Not_Installed" >> $UPDATEFILE
 fi
