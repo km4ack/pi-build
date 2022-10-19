@@ -693,12 +693,12 @@ echo "Checking Packet Search"
 	fi
 
 #----------------------------------------------------#
-#		D-RATS
+#		DRATS
 #----------------------------------------------------#
 if [ -f $HOME/D-Rats/d-rats.py ]; then
-	echo "D-RATS=Installed" >> $UPDATEFILE
+	echo "DRATS=Installed" >> $UPDATEFILE
 else
-	echo "D-RATS=Not_Installed" >> $UPDATEFILE
+	echo "DRATS=Not_Installed" >> $UPDATEFILE
 fi
 
 #----------------------------------------------------#
