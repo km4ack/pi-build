@@ -702,6 +702,24 @@ else
 fi
 
 #----------------------------------------------------#
+#		wfview
+#----------------------------------------------------#
+if [ -f /usr/local/bin/wfview ]; then
+	echo "WFVIEW=Installed" >> $UPDATEFILE
+else
+	echo "WFVIEW=Not_Installed" >> $UPDATEFILE
+fi
+
+#----------------------------------------------------#
+#		wfviewsvr
+#----------------------------------------------------#
+if [ -f /usr/local/bin/wfserver ]; then
+	echo "WFVIEWSVR=Installed" >> $UPDATEFILE
+else
+	echo "WFVIEWSVR=Not_Installed" >> $UPDATEFILE
+fi
+
+#----------------------------------------------------#
 #		Repeater-Start
 #----------------------------------------------------#
 echo "Checking Repeater-Start"

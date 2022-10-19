@@ -84,6 +84,9 @@ Winlink client for Raspberry Pi https://getpat.io/
 #### PATMENU:
 Menu for configuring Pat. Recommended if installing Pat. https://github.com/km4ack/patmenu
 
+#### wfview & wfserver
+wfview is a program developed by amateur radio enthusiasts to control modern Icom ham radios https://wfview.org
+
 #### ARDOPC:
 HF modem for Pat. Recommended if installing Pat. https://www.cantab.net/users/john.wiseman/Documents/ARDOPC.html
 
