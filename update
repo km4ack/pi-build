@@ -464,8 +464,7 @@ yad --center --list --checklist --width=600 --height=600 --separator="" \
 	false "PAT-MENU" "$PATMENU" "Control for Pat Winlink" \
 	false "CHIRP" "$CHIRP" "Program Radios" \
 	false "WFVIEW" "$WFVIEW" "wfView Icom radio controller" \
-	false "GARIM" "$GARIM" "Radio Chat ARDROP" \
-	false "VARIM" "$VARIM" "Radio Chat VARA" \
+	false "GARIM" "$GARIM" "File Transfer Program " \
 	false "M0IAX" "$M0IAX" "Tools for JS8Call messages" \
 	false "CONKY" "$CONKY" "System Information Display" \
 	false "WSJTX" "$FT8" "Weak signal digital mode software" \
@@ -484,7 +483,6 @@ yad --center --list --checklist --width=600 --height=600 --separator="" \
 	false "EES" "$EES" "KM4ACK Emergency Email Server" \
 	false "GPREDICT" "$GPREDICT" "Satellite Tracking" \
 	false "TQSL" "$TQSL" "LOTW Software" \
-	false "DRATS" "$DRATS" "D-RATS tool for D-STAR" \
 	false "GRIDCALC" "$GRIDCALC" "Grid Calculation Software" \
 	--button="Exit":1 \
 	--button="Next":2 >${ADDITIONAL}
@@ -537,7 +535,6 @@ yad --center --list --checklist --width=600 --height=600 --separator="" \
 	false "PACKETSEARCH" "$PACKETSEARCH" "Winlink Packet Tool" \
 	false "CALLSIGN" "${CALLSIGN}" "Call Sign Lookup Utility" \
 	false "TEMPCONVERT" "$TEMPCONVERT" "Temperature Converter" \
-	false "HDOCS" "$HDOCS" "Reference Materials PDFs" \
 	false "GPARTED" "$GPARTED" "Disk Utility Application" \
 	false "RTC" "$RTC" "Real Time Clock" \
 	false "SHOWLOG" "$SHOWLOG" "Log File Viewer" \

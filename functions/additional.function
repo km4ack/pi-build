@@ -415,22 +415,10 @@ sudo make install
 CHIRP() {
 
 	#sudo apt install -y chirp
-
 	cd ${DIR} || return
 	sudo apt install libfuse2
 	CHIRPDATE=$(curl -s https://github.com/goldstar611/chirp-appimage | grep "releases/tag/" | sed 's|.*releases/tag/||;s|">||')
-
-	#determine if 32/64 bit and set download link accordingly. issue #382
-	if [ `getconf LONG_BIT` = '32' ]; then
-	
 	LINK="https://github.com/goldstar611/chirp-appimage/releases/download/$CHIRPDATE/Chirp-daily-$CHIRPDATE-armhf.AppImage"
-
-	else
-
-	LINK="https://github.com/goldstar611/chirp-appimage/releases/download/$CHIRPDATE/Chirp-daily-$CHIRPDATE-aarch64.AppImage"
-
-	fi
-
 	wget $LINK
 	CHIRP=$(ls | grep Chirp-daily)
 	sudo mv $CHIRP /usr/local/bin/chirp
@@ -471,33 +459,11 @@ OLDCODE(){
 #	GARIM
 ##################################
 GARIM() {
-	sudo apt-get install -y libfltk1.1-dev 
-	sudo apt-get install -y libfltk1.3-dev
 	GPKG=$(curl -s https://www.whitemesa.net/garim/src/ | grep tar.gz | tail -1 | sed 's/^.*garim/garim/' | sed 's/tar.gz.*$/tar.gz/')
 	cd ${BUILDDIR} || return
 	wget --tries 2 --connect-timeout=60 https://www.whitemesa.net/garim/src/$GPKG
 	tar -xzvf $GPKG
 	DIRR=$(echo $GPKG | sed 's/.tar.gz//')
-	cd ${DIRR} || return
-	./configure
-	make
-	sudo make install
-	sudo make clean
-	cd ${BUILDDIR} || return
-	rm *.gz
-}
-
-################################
-#	VARIM
-##################################
-VARIM() {
-	sudo apt-get install -y libfltk1.1-dev 
-	sudo apt-get install -y libfltk1.3-dev
-	VPKG=$(curl -s https://www.whitemesa.net/varim/src/ | grep tar.gz | tail -1 | sed 's/^.*varim/varim/' | sed 's/tar.gz.*$/tar.gz/')
-	cd ${BUILDDIR} || return
-	wget --tries 2 --connect-timeout=60 https://www.whitemesa.net/varim/src/$VPKG
-	tar -xzvf $VPKG
-	DIRR=$(echo $VPKG | sed 's/.tar.gz//')
 	cd ${DIRR} || return
 	./configure
 	make
@@ -515,17 +481,19 @@ QSSTV() {
 
 	cd ${BUILDDIR} || return
 
-	git clone https://github.com/ON4QZ/QSSTV
-	cd QSSTV/src || return
-
+	TAR=$(curl -s http://users.telenet.be/on4qz/qsstv/downloads/ | grep tar.gz | sed 's/.*href="//' | sed 's/">.*$//' | tail -1)
+	wget --tries 2 --connect-timeout=60 http://users.telenet.be/on4qz/qsstv/downloads/$TAR
+	tar -xvzf $TAR
+	SSTVTAR=$(ls -d */ | grep qss)
+	cd $SSTVTAR || return
 	qmake
 	make
 	sudo make install
 	sudo make clean
 	cd ${BUILDDIR} || return
-
-	sudo mkdir -p /usr/local/share/pixmaps/
-	sudo cp ${BUILDDIR}/QSSTV/src/icons/qsstv.png /usr/local/share/pixmaps/
+	rm *.gz
+	mkdir -p /usr/local/share/pixmaps/
+	sudo cp ${BUILDDIR}/${SSTVTAR}/icons/qsstv.png /usr/local/share/pixmaps/
 
 cat >qsstv.desktop <<EOF
 [Desktop Entry]
@@ -661,36 +629,6 @@ PROPAGATION() {
 	sudo make install
 	sudo make clean
 	${BUILDDIR}/voacapl-0.7.2/makeitshfbc
-}
-
-##################################
-#	D-RATS
-##################################
-DRATS() {
-	if [ -f ${HOME}/D-Rats/d-rats.py ] ; then
-		echo "updating D-rats"
-		cd ${HOME}/D-Rats/
-		git pull
-	else
-		echo "installing D-rats"
-		cd ${HOME}/
-		git clone https://github.com/ham-radio-software/D-Rats
-	fi
-
-	cat >d-rats.desktop <<EOF
-[Desktop Entry]
-Name=D-RATS
-Comment=D-RATS is a communications tool for D-STAR
-Exec=${HOME}/D-Rats/d-rats.py
-Path=${HOME}/D-Rats/
-Terminal=false
-Type=Application
-Categories=Network;HamRadio
-Keywords=APRS;HamRadio
-EOF
-
-	sudo mv d-rats.desktop /usr/share/applications/
-
 }
 
 ##################################
@@ -1046,6 +984,7 @@ cd ${HOME}/Downloads
 wget https://sourceforge.net/projects/repeater-start/files/$REPEAT_LATEST
 sudo dpkg -i $REPEAT_LATEST
 }
+
 
 ##################################
 #	JTDX

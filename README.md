@@ -99,9 +99,6 @@ Software TNC. In this setup, Direwolf is used for a 2M packet connection with Pa
 #### AX25:
 AX.25 tools for Direwolf & Pat. Recommended if installing Pat. 
 
-#### gARIM/vARIM:
-ARIM means "Amateur Radio Instant Messaging" https://www.whitemesa.net/garim/garim.html and https://www.whitemesa.net/varim/varim.html using ARDROP or VARA modem
-
 #### HAMLIB:
 Rig contol software. https://sourceforge.net/projects/hamlib/
 
@@ -123,9 +120,6 @@ Software to program radios. https://chirp.danplanet.com
 
 #### XASTIR:
 GUI interface useful when configuring APRS nodes. https://sourceforge.net/projects/xastir/
-
-#### D-RATS:
-D-RATS is a communications tool for D-STAR amateur radio low-speed data (DV mode) https://github.com/ham-radio-software/D-Rats
 
 #### YAAC:
 Yet Another APRS Client GUI interface useful when configuring APRS nodes. https://www.ka2ddo.org/ka2ddo/YAAC.html
