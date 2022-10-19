@@ -557,6 +557,23 @@ CHECK() {
 		echo "JTDX=Installed" >> $UPDATEFILE
 	fi
 
+	#----------------------------------------------------#
+	#		DRATS
+	#----------------------------------------------------#
+	if [ -f $HOME/D-Rats/d-rats.py ]; then
+			
+			DRATVER=$(cat $HOME/D-Rats/PKG-INFO | grep Version | tail -1 | sed 's/Version: //')
+			NEWDRATVER=$(curl -s https://raw.githubusercontent.com/ham-radio-software/D-Rats/master/PKG-INFO | grep Version | tail -1 | sed 's/Version: //')
+
+			if (($(echo "${NEWDRATVER} ${DRATVER}" | awk '{print ($1 > $2)}'))); then
+				echo "DRATS=NEEDS-UPDATE" >> $UPDATEFILE
+			else
+				echo "DRATS=is_latest_version" >> $UPDATEFILE
+			fi
+	else
+		echo "DRATS=Not_Installed" >> $UPDATEFILE
+	fi
+
 }
 
 #----------------------------------------------------#
@@ -691,24 +708,6 @@ echo "Checking Packet Search"
 			echo "PACKETSEARCH=is_latest_version" >> $UPDATEFILE
 		fi
 	fi
-
-#----------------------------------------------------#
-#		DRATS
-#----------------------------------------------------#
-if [ -f $HOME/D-Rats/d-rats.py ]; then
-		
-		DRATVER=$(cat $HOME/D-Rats/PKG-INFO | grep Version | tail -1 | sed 's/Version: //')
-		NEWDRATVER=$(curl -s https://raw.githubusercontent.com/ham-radio-software/D-Rats/master/PKG-INFO | grep Version | tail -1 | sed 's/Version: //')
-
-		if (($(echo "${NEWDRATVER} ${DRATVER}" | awk '{print ($1 > $2)}'))); then
-			echo "DRATS=NEEDS-UPDATE" >> $UPDATEFILE
-		else
-			echo "DRATS=is_latest_version" >> $UPDATEFILE
-		fi
-
-else
-	echo "DRATS=Not_Installed" >> $UPDATEFILE
-fi
 
 #----------------------------------------------------#
 #		piQtSoundModem
