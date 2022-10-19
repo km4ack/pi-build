@@ -1,6 +1,7 @@
 version=3.3.1
 
 3.3.1		Fix Chirp not installing on 64bit OS - https://github.com/km4ack/pi-build/pull/452
+		Fix Chitp version check
 		Fix QSSTV Install - https://github.com/km4ack/pi-build/issues/422
 		Fix Repeat Start App Check - https://github.com/km4ack/pi-build/issues/450
 3.3.0		Add VARA modem - https://github.com/km4ack/pi-build/issues/394
