@@ -722,18 +722,35 @@ fi
 #		wfview
 #----------------------------------------------------#
 if [ -f /usr/local/bin/wfview ]; then
-	echo "WFVIEW=Installed" >> $UPDATEFILE
+	echo "Checking wfview"
+	WFVIEW_CURRENT_VER=$(wfview --version | grep version | sed 's/wfview version: //' | cut -c1-4)
+	WFVIEW_LATEST=$(curl -s https://gitlab.com/eliggett/wfview/-/raw/master/WHATSNEW | grep + | tail -n 1 | sed 's/+ //' | cut -c1-4)
+
+	if (($(echo "${WFVIEW_LATEST} ${WFVIEW_CURRENT_VER}" | awk '{print ($1 > $2)}'))); then
+		echo "WFVIEW=NEEDS-UPDATE" >> $UPDATEFILE
+	else
+		echo "WFVIEW=is_latest_version" >> $UPDATEFILE
+	fi
+
 else
 	echo "WFVIEW=Not_Installed" >> $UPDATEFILE
 fi
-
 #----------------------------------------------------#
 #		wfviewsvr
 #----------------------------------------------------#
 if [ -f /usr/local/bin/wfserver ]; then
-	echo "WFVIEWSVR=Installed" >> $UPDATEFILE
+	echo "Checking wfserver"
+	WFSERVER_CURRENT_VER=$(wfserver --version | grep version | sed 's/wfserver version: //' | cut -c1-4)
+	WFSERVER_LATEST=$(curl -s https://gitlab.com/eliggett/wfview/-/raw/master/WHATSNEW | grep + | tail -n 1 | sed 's/+ //' | cut -c1-4)
+
+	if (($(echo "${WFSERVER_LATEST} ${WFSERVER_CURRENT_VER}" | awk '{print ($1 > $2)}'))); then
+		echo "WFSERVER=NEEDS-UPDATE" >> $UPDATEFILE
+	else
+		echo "WFSERVER=is_latest_version" >> $UPDATEFILE
+	fi
+
 else
-	echo "WFVIEWSVR=Not_Installed" >> $UPDATEFILE
+	echo "WFSERVER=Not_Installed" >> $UPDATEFILE
 fi
 
 #----------------------------------------------------#
