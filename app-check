@@ -517,9 +517,6 @@ CHECK() {
 		echo "TQSL=Not_Installed" >> $UPDATEFILE
 	else
 		echo "TQSL=Installed" >> $UPDATEFILE
-
-		TQSLCUR =$(tqsl -v | sed 's/.*Version //')
-		TQSLLATEST=$(curl -s http://www.arrl.org/tqsl-download | grep "for Linux" | sed 's/.*TQSL //' | awk '{print $1}')
 	fi
 
 	#----------------------------------------------------#
