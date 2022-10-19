@@ -240,7 +240,7 @@ yad --center --list --checklist --width=600 --height=600 --separator="" \
 	false "ARDOP" "Modem for HF" \
 	false "ARDOPGUI" "GUI for ARDOP" \
 	false "VARA" "VARA Modem - <b>Pi 4 Required</b>" \
-	false "WFVIEWSVR" "wfView server" \
+	false "WFSERVER" "wfserver for Icom Radios" \
 	false "HAMLIB" "Needed for Rig Control" \
 	false "DIREWOLF" "Software TNC" \
 	false "AX25" "Data Link Layer Protocol" \
@@ -254,7 +254,7 @@ if [ ${BUT} = 252 ] || [ ${BUT} = 1 ]; then
 fi
 
 if [ ${BUT} = 3 ]; then
-	BASEAPPS=(HOTSPOT HSTOOLS GPS ARDOP ARDOPGUI VARA WFVIEWSVR HAMLIB DIREWOLF AX25 PULSE GPSUPDATE)
+	BASEAPPS=(HOTSPOT HSTOOLS GPS ARDOP ARDOPGUI VARA WFSERVER HAMLIB DIREWOLF AX25 PULSE GPSUPDATE)
 	for i in "${BASEAPPS[@]}"; do
 		echo "$i" >>${BASE}
 	done
@@ -404,7 +404,7 @@ yad --center --list --checklist --width=600 --height=600 --separator="" \
 	false "CONKY" "System Information Display" \
 	false "PI-APRS" "APRS Message Application" \
 	false "CHIRP" "Program Radios" \
-	false "WFVIEW" "wfView for Icom radios" \
+	false "WFVIEW" "wfview controller for Icom radios" \
 	false "GARIM" "File Transfer Program" \
 	false "PAT" "Radio Email Application" \
 	false "PAT-MENU" "Control for Pat Winlink" \

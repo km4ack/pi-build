@@ -307,7 +307,7 @@ yad --center --list --checklist --width=600 --height=600 --separator="" \
 	false "ARDOP" "$ARDOP" "Mode for HF" \
 	false "ARDOPGUI" "$ARDOPGUI" "GUI for ARDOP" \
 	false "VARA" "$VARA" "VARA Modem - <b>Pi 4 Required</b>" \
-	false "WFVIEWSVR" "$WFVIEWSVR" "wfView server" \
+	false "WFSERVER" "$WFSERVER" "wfview server for Icom radios" \
 	false "DIREWOLF" "$DIRE" "Software TNC" \
 	false "AX25" "$AX25" "Data Link Layer Protocol" \
 	false "PULSE" "$PULSE" "Sound server" \
@@ -463,7 +463,7 @@ yad --center --list --checklist --width=600 --height=600 --separator="" \
 	false "PAT" "$PAT" "Radio Email Application" \
 	false "PAT-MENU" "$PATMENU" "Control for Pat Winlink" \
 	false "CHIRP" "$CHIRP" "Program Radios" \
-	false "WFVIEW" "$WFVIEW" "wfView Icom radio controller" \
+	false "WFVIEW" "$WFVIEW" "wfview Icom radio controller" \
 	false "GARIM" "$GARIM" "File Transfer Program " \
 	false "VARIM" "$VARIM" "Radio Chat VARA" \
 	false "M0IAX" "$M0IAX" "Tools for JS8Call messages" \

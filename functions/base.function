@@ -235,9 +235,9 @@ DIREWOLF() {
 }
 
 ################################
-#	WFVIEWSVR
+#	WFSERVER
 ################################
-WFVIEWSVR() {
+WFSERVER() {
     
     sudo apt-get -y install build-essential
     sudo apt-get -y install qt5-qmake
