@@ -415,10 +415,22 @@ sudo make install
 CHIRP() {
 
 	#sudo apt install -y chirp
+
 	cd ${DIR} || return
 	sudo apt install libfuse2
 	CHIRPDATE=$(curl -s https://github.com/goldstar611/chirp-appimage | grep "releases/tag/" | sed 's|.*releases/tag/||;s|">||')
+
+	#determine if 32/64 bit and set download link accordingly. issue #382
+	if [ `getconf LONG_BIT` = '32' ]; then
+	
 	LINK="https://github.com/goldstar611/chirp-appimage/releases/download/$CHIRPDATE/Chirp-daily-$CHIRPDATE-armhf.AppImage"
+
+	else
+
+	LINK="https://github.com/goldstar611/chirp-appimage/releases/download/$CHIRPDATE/Chirp-daily-$CHIRPDATE-aarch64.AppImage"
+
+	fi
+
 	wget $LINK
 	CHIRP=$(ls | grep Chirp-daily)
 	sudo mv $CHIRP /usr/local/bin/chirp
