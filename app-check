@@ -700,7 +700,7 @@ echo "Checking Packet Search"
 		PACKETSEARCH=$(grep VERSION $HOME/bin/packetsearch | sed 's/VERSION=//')
 		NEWPACKETSEARCH=$(curl -s https://raw.githubusercontent.com/km4ack/pi-scripts/master/packetsearch | grep VERSION | sed 's/VERSION=//')
 
-		if (($(echo "${NEWFLNET} ${FLNET}" | awk '{print ($1 > $2)}'))); then
+		if (($(echo "${NEWPACKETSEARCH} ${PACKETSEARCH}" | awk '{print ($1 > $2)}'))); then
 			echo "PACKETSEARCH=NEEDS-UPDATE" >> $UPDATEFILE
 		else
 			echo "PACKETSEARCH=is_latest_version" >> $UPDATEFILE
