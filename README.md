@@ -99,6 +99,9 @@ Software TNC. In this setup, Direwolf is used for a 2M packet connection with Pa
 #### AX25:
 AX.25 tools for Direwolf & Pat. Recommended if installing Pat. 
 
+#### gARIM/vARIM:
+ARIM means "Amateur Radio Instant Messaging" https://www.whitemesa.net/garim/garim.html and https://www.whitemesa.net/varim/varim.html using ARDROP or VARA modem
+
 #### HAMLIB:
 Rig contol software. https://sourceforge.net/projects/hamlib/
 
