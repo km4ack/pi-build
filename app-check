@@ -342,6 +342,23 @@ CHECK() {
 	fi
 
 	#----------------------------------------------------#
+	#			VARIM
+	#----------------------------------------------------#
+	echo "Checking VARIM"
+	if ! hash varim 2>/dev/null; then
+	echo "VARIM=Not_Installed" >> $UPDATEFILE
+	else
+	VARIM=$(varim --version | head -n1 | awk -F ' ' '{print $2}')
+	NEWVARIM=$(curl -s https://www.whitemesa.net/varim/varim.html | grep -m 1 \
+		"armv7l.tar.gz" | awk -F '-' '{print $2}')
+	if (($(echo "${NEWVARIM} ${VARIM}" | awk '{print ($1 > $2)}'))); then
+		echo "VARIM=NEEDS-UPDATE" >> $UPDATEFILE
+	else
+		echo "VARIM=is_latest_version" >> $UPDATEFILE
+	fi
+	fi
+
+	#----------------------------------------------------#
 	#		XASTIR
 	#----------------------------------------------------#
 	echo "Checking Xastir"
@@ -727,7 +744,9 @@ REPEAT_CURRENT_VER=$(dpkg --list | grep repeater-start | awk '{print $3}')
 REPEAT_LATEST=$(curl -s https://sourceforge.net/projects/repeater-start/files/ | grep all.deb | head -1 | sed 's/.*repeater/repeater/;s/".*//')
 REPEAT_LATEST_VER=$(echo $REPEAT_LATEST | sed 's/repeater-start_//;s/_.*//')
 
-		if (($(echo "${REPEAT_LATEST_VER} ${REPEAT_CURRENT_VER}" | awk '{print ($1 > $2)}'))); then
+		if [ -z "$REPEAT_CURRENT_VER" ]; then
+			echo "REPEAT=Not_Installed" >> $UPDATEFILE
+		elif (($(echo "${REPEAT_LATEST_VER} ${REPEAT_CURRENT_VER}" | awk '{print ($1 > $2)}'))); then
 			echo "REPEAT=NEEDS-UPDATE" >> $UPDATEFILE
 		else
 			echo "REPEAT=is_latest_version" >> $UPDATEFILE
