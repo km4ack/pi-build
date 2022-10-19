@@ -587,6 +587,9 @@ WFVIEW() {
     sudo apt-get -y install libqcustomplot1.3 libqcustomplot-doc libqcustomplot-dev
     sudo apt-get -y install libqcustomplot2.0 libqcustomplot-doc libqcustomplot-dev
 
+	cd ${BUILDDIR}
+    rm -rf wfview
+
     git clone --depth 1 https://gitlab.com/eliggett/wfview.git
 
     cd ${BUILDDIR}/wfview || return
