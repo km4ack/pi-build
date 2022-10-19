@@ -11,7 +11,7 @@ fi
 #create new file
 touch $UPDATEFILE
 
-CHECK() {
+CHECK(){
 	#----------------------------------------------------#
 	#		Hotspot
 	#----------------------------------------------------#
@@ -574,8 +574,6 @@ CHECK() {
 		echo "JTDX=Installed" >> $UPDATEFILE
 	fi
 
-}
-
 #----------------------------------------------------#
 #		TELNET
 #----------------------------------------------------#
@@ -734,4 +732,4 @@ REPEAT_LATEST_VER=$(echo $REPEAT_LATEST | sed 's/repeater-start_//;s/_.*//')
 			echo "REPEAT=is_latest_version" >> $UPDATEFILE
 		fi
 
-CHECK
+}
