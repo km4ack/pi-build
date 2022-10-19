@@ -269,7 +269,7 @@ WFVIEWSVR() {
     
     mkdir build
     cd build
-    qmake ../wfserver/wfserver.pro
+    qmake ../wfserver.pro
     make -j2
     sudo make install
     
