@@ -568,22 +568,31 @@ EOF
 WFVIEW() {
     cd ${BUILDDIR} || return
     sudo apt-get install -y libasound2-dev cmake build-essential libudev-dev qt5-qmake libqt5core5a 
-    sudo apt-get install -y qtbase5-dev libqt5serialport5 libqt5serialport5-dev libqt5multimedia5 l
-    sudo apt-get install -y ibqt5multimedia5-plugins libqt5xml5 qtmultimedia5-dev libopus-dev
-    sudo apt-get install -y libeigen3-dev libportaudio2 libportaudiocpp0 portaudio19-dev librtaudio-dev librtaudio6
+    sudo apt-get -y install build-essential
+    sudo apt-get -y install qt5-qmake
+    sudo apt-get -y install libqt5core5a
+    sudo apt-get -y install qtbase5-dev
+    sudo apt-get -y install libqt5serialport5 libqt5serialport5-dev
+    sudo apt-get -y install libqt5multimedia5
+    sudo apt-get -y install libqt5multimedia5-plugins
+    sudo apt-get -y install libqt5xml5
+    sudo apt-get -y install qtmultimedia5-dev
+    sudo apt-get -y install libopus-dev
+    sudo apt-get -y install libeigen3-dev
+    sudo apt-get -y install libportaudio2 libportaudiocpp0
+    sudo apt-get -y install portaudio19-dev
+    sudo apt-get -y install librtaudio-dev librtaudio6
+    sudo apt-get -y install git
+    echo "Only one of the next two commands need to work."
     sudo apt-get -y install libqcustomplot1.3 libqcustomplot-doc libqcustomplot-dev
     sudo apt-get -y install libqcustomplot2.0 libqcustomplot-doc libqcustomplot-dev
 
-    
-    ### BRANCH SELECTION ###
-    # Only uncomment one branch. The Master is generally recommended:
-    # Master: 
     git clone --depth 1 https://gitlab.com/eliggett/wfview.git
 
     cd ${BUILDDIR}/wfview || return
-
     git submodule init
     git submodule update
+    
     mkdir build
     cd build
     qmake ../wfview.pro
