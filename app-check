@@ -251,7 +251,7 @@ CHECK() {
 	#		CHRIP
 	#----------------------------------------------------#
 	echo "Checking Chirp"
-	if ! hash chirpw 2>/dev/null; then
+	if ! hash chirp 2>/dev/null; then
 		echo "CHIRP=Not_Installed" >> $UPDATEFILE
 	else
 		#bash function this could be moved to the top of the file and used globally
