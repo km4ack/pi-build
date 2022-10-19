@@ -600,7 +600,7 @@ DRATS() {
 		git pull
 	else
 		echo "installing D-rats"
-		cd$ {HOME}/
+		cd$ ${HOME}/
 		git clone https://github.com/ham-radio-software/D-Rats
 	fi
 
