@@ -258,7 +258,7 @@ CHECK() {
 		#to short hand lookups on GIT release pages
 		lastrelease() { git ls-remote --tags "$1" | cut -d/ -f3- | tail -n1; }
 
-		CP=$(chirpw --version)
+		CP=$(chirp --version)
 		CHIRP=$(echo ${CP} | awk '{ print $2 }' | sed 's/daily-//')
 		NEWCHIRP=$(curl -s https://github.com/goldstar611/chirp-appimage/releases | grep Release- | head -1 | sed 's/.*Release-//;s/">//')
 
