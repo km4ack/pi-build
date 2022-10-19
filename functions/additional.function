@@ -609,6 +609,7 @@ DRATS() {
 Name=D-RATS
 Comment=D-RATS is a communications tool for D-STAR
 Exec=${HOME}/D-Rats/d-rats.py
+Path=${HOME}/D-Rats/
 Terminal=false
 Type=Application
 Categories=Network;HamRadio
