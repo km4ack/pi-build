@@ -697,7 +697,7 @@ echo "Checking Packet Search"
 #----------------------------------------------------#
 if [ -f $HOME/D-Rats/d-rats.py ]; then
 		
-		DRATVER=$($HOME/D-Rats/cat PKG-INFO | grep Version | tail -1 | sed 's/Version: //')
+		DRATVER=$(cat $HOME/D-Rats/PKG-INFO | grep Version | tail -1 | sed 's/Version: //')
 		NEWDRATVER=$(curl -s https://raw.githubusercontent.com/ham-radio-software/D-Rats/master/PKG-INFO | grep Version | tail -1 | sed 's/Version: //')
 
 		if (($(echo "${NEWDRATVER} ${DRATVER}" | awk '{print ($1 > $2)}'))); then
