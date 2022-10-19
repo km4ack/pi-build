@@ -623,6 +623,36 @@ PROPAGATION() {
 }
 
 ##################################
+#	D-RATS
+##################################
+DRATS() {
+	if [ -f ${HOME}/D-Rats/d-rats.py ] ; then
+		echo "updating D-rats"
+		cd ${HOME}/D-Rats/
+		git pull
+	else
+		echo "installing D-rats"
+		cd ${HOME}/
+		git clone https://github.com/ham-radio-software/D-Rats
+	fi
+
+	cat >d-rats.desktop <<EOF
+[Desktop Entry]
+Name=D-RATS
+Comment=D-RATS is a communications tool for D-STAR
+Exec=${HOME}/D-Rats/d-rats.py
+Path=${HOME}/D-Rats/
+Terminal=false
+Type=Application
+Categories=Network;HamRadio
+Keywords=APRS;HamRadio
+EOF
+
+	sudo mv d-rats.desktop /usr/share/applications/
+
+}
+
+##################################
 #	YAAC
 ##################################
 YAAC() {
