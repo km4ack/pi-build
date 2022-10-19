@@ -693,6 +693,15 @@ echo "Checking Packet Search"
 	fi
 
 #----------------------------------------------------#
+#		DRATS
+#----------------------------------------------------#
+if [ -f $HOME/D-Rats/d-rats.py ]; then
+	echo "DRATS=Installed" >> $UPDATEFILE
+else
+	echo "DRATS=Not_Installed" >> $UPDATEFILE
+fi
+
+#----------------------------------------------------#
 #		piQtSoundModem
 #----------------------------------------------------#
 if [ -f /usr/local/bin/piQtSoundModem ]; then
