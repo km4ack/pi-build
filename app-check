@@ -251,28 +251,28 @@ CHECK() {
 	#		CHRIP
 	#----------------------------------------------------#
 	echo "Checking Chirp"
-	if ! hash chirpw 2>/dev/null; then
+	if ! hash chirp 2>/dev/null; then
 		echo "CHIRP=Not_Installed" >> $UPDATEFILE
 	else
-		echo "CHIRP=Installed" >> $UPDATEFILE
-	fi
-	OLDCODE(){
-	#old code left for reference
-	if ! hash chirpw 2>/dev/null; then
-		echo "CHIRP=Not_Installed" >> $UPDATEFILE
-	else
-		CP=$(chirpw --version)
+		#bash function this could be moved to the top of the file and used globally
+		#to short hand lookups on GIT release pages
+		lastrelease() { git ls-remote --tags "$1" | cut -d/ -f3- | tail -n1; }
+
+		CP=$(chirp --version)
 		CHIRP=$(echo ${CP} | awk '{ print $2 }' | sed 's/daily-//')
-		NEWCHIRP=$(curl -s https://trac.chirp.danplanet.com/chirp_daily/LATEST/ |
-			grep .tar.gz | awk -F 'chirp-daily-' '{print $2}' | head -c 8)
+		NEWCHIRP=$(curl -s https://github.com/goldstar611/chirp-appimage/releases | grep Release- | head -1 | sed 's/.*Release-//;s/">//')
+
+		CP=$(chirp --version)
+		CHIRP=$(echo ${CP} | awk '{ print $2 }' | sed 's/daily-//')
+		#function above called here as shorthand
+		NEWCHIRP=$(lastrelease https://github.com/goldstar611/chirp-appimage)
 
 		if (($(echo "${NEWCHIRP} ${CHIRP}" | awk '{print ($1 > $2)}'))); then
-			echo "CHIRP=NEEDS-UPDATE" >> $UPDATEFILE
+				echo "CHIRP=NEEDS-UPDATE" >> $UPDATEFILE
 		else
-			echo "CHIRP=is_latest_version" >> $UPDATEFILE
+				echo "CHIRP=is_latest_version" >> $UPDATEFILE   
 		fi
 	fi
-	}
 	#----------------------------------------------------#
 	#		DIREWOLF
 	#----------------------------------------------------#
