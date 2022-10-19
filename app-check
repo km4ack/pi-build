@@ -693,18 +693,18 @@ fi
 #			PacketSearch
 #----------------------------------------------------#
 echo "Checking Packet Search"
-	if [ ! -f $HOME/bin/packetsearch ]; then
-		echo "PACKETSEARCH=Not_Installed" >> $UPDATEFILE
-	else
-		PACKETSEARCH=$(grep VERSION $HOME/bin/packetsearch | sed 's/VERSION=//')
-		NEWPACKETSEARCH=$(curl -s https://raw.githubusercontent.com/km4ack/pi-scripts/master/packetsearch | grep VERSION | sed 's/VERSION=//')
+if [ ! -f $HOME/bin/packetsearch ]; then
+	echo "PACKETSEARCH=Not_Installed" >> $UPDATEFILE
+else
+	PACKETSEARCH=$(grep VERSION $HOME/bin/packetsearch | sed 's/VERSION=//')
+	NEWPACKETSEARCH=$(curl -s https://raw.githubusercontent.com/km4ack/pi-scripts/master/packetsearch | grep VERSION | sed 's/VERSION=//')
 
-		if (($(echo "${NEWPACKETSEARCH} ${PACKETSEARCH}" | awk '{print ($1 > $2)}'))); then
-			echo "PACKETSEARCH=NEEDS-UPDATE" >> $UPDATEFILE
-		else
-			echo "PACKETSEARCH=is_latest_version" >> $UPDATEFILE
-		fi
+	if (($(echo "${NEWPACKETSEARCH} ${PACKETSEARCH}" | awk '{print ($1 > $2)}'))); then
+		echo "PACKETSEARCH=NEEDS-UPDATE" >> $UPDATEFILE
+	else
+		echo "PACKETSEARCH=is_latest_version" >> $UPDATEFILE
 	fi
+fi
 
 #----------------------------------------------------#
 #		piQtSoundModem
