@@ -463,6 +463,7 @@ yad --center --list --checklist --width=600 --height=600 --separator="" \
 	false "PAT-MENU" "$PATMENU" "Control for Pat Winlink" \
 	false "CHIRP" "$CHIRP" "Program Radios" \
 	false "GARIM" "$GARIM" "File Transfer Program " \
+	false "VARIM" "$VARIM" "Radio Chat VARA" \
 	false "M0IAX" "$M0IAX" "Tools for JS8Call messages" \
 	false "CONKY" "$CONKY" "System Information Display" \
 	false "WSJTX" "$FT8" "Weak signal digital mode software" \
