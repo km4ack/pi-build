@@ -272,8 +272,6 @@ CHECK() {
 		else
 				echo "CHIRP=is_latest_version" >> $UPDATEFILE   
 		fi
-
-
 	fi
 	#----------------------------------------------------#
 	#		DIREWOLF
