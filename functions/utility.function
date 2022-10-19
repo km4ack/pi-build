@@ -516,8 +516,9 @@ sudo mv /run/user/$UID/packetsearch.desktop /usr/share/applications/
 #	Reference Documents
 ##################################
 HDOCS() {
-	cd ${HOME}/Desktop
+	cd ${HOME}/Documents/
 	mkdir Reference
+    ln -s ${HOME}/Documents/Reference ${HOME}/Desktop/Reference
 	cd Reference
 	wget --tries 2 --connect-timeout=60 https://icomamerica.com/en/amateur/amateurtools/US-BandPlan-Update-1-2020.pdf
 	wget --tries 2 --connect-timeout=60 https://icomamerica.com/en/amateur/amateurtools/US-Grid-Square-Map-03-05-2019.pdf
