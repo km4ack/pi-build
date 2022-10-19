@@ -481,6 +481,7 @@ yad --center --list --checklist --width=600 --height=600 --separator="" \
 	false "EES" "$EES" "KM4ACK Emergency Email Server" \
 	false "GPREDICT" "$GPREDICT" "Satellite Tracking" \
 	false "TQSL" "$TQSL" "LOTW Software" \
+	false "D-RATS" "$DRATS" "D-RATS tool for D-STAR" \
 	false "GRIDCALC" "$GRIDCALC" "Grid Calculation Software" \
 	--button="Exit":1 \
 	--button="Next":2 >${ADDITIONAL}
