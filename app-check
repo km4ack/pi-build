@@ -53,6 +53,8 @@ fi
 if [ -f ${HOME}/ardop/piardopc ]; then
 	echo "ARDOP=Installed" >> $UPDATEFILE
 	ARDOPVER=$(${HOME}/ardop/piardopc --help | grep Version | sed 's/ardopc Version //')
+	#online version isnt printed likley better to just assume upgrade
+	#otherwise a download to check the build online is needed it appears
 else
 	echo "ARDOP=Not_Installed" >> $UPDATEFILE
 fi
@@ -61,7 +63,7 @@ fi
 #----------------------------------------------------#
 if [ -f ${HOME}/ardop/piARDOP_GUI ]; then
 	echo "ARDOPGUI=Installed" >> $UPDATEFILE
-	#no cli versioning found yet
+	#no cli versioning found yet, see note for ARDOP as well
 else
 	echo "ARDOPGUI=Not_Installed" >> $UPDATEFILE
 fi
@@ -72,6 +74,7 @@ echo "Checking VARA"
 if [ -f ${HOME}/.wine/drive_c/VARA/VARA.exe ]; then
 	echo "VARA=Installed" >> $UPDATEFILE
 	#updates handled externally add here?
+	VARANEW=$(curl -s https://rosmodem.wordpress.com | grep 'VARA HF v' | cut -d "v" -f3 | head -c6)
 else
 	echo "VARA=Not_Installed" >> $UPDATEFILE
 fi
@@ -81,6 +84,7 @@ fi
 if ! hash js8call 2>/dev/null; then
 	echo "JS8=Not_Installed" >> $UPDATEFILE
 	JS8CALLVER=$(js8call -v | sed 's/JS8Call //')
+	JS8CALLNEW=$(curl -s http://files.js8call.com/latest.html | grep version | sed 's/<p>The latest version of JS8Call is <strong>//' | cut -c1-5)
 else
 	echo "JS8=Installed" >> $UPDATEFILE
 fi
@@ -90,6 +94,9 @@ fi
 if ! hash wsjtx 2>/dev/null; then
 	echo "FT8=Not_Installed" >> $UPDATEFILE
 	#GUI returns might look at files?
+	#looks for current and next
+	WSJTXNEW=$(curl -s https://physics.princeton.edu/pulsar/k1jt/wsjtx.html | grep "WSJT-X" | grep "resources" | cut -d ">" -f2- | head -c12 | sed 's/WSJT-X //')
+	WSJTNEXT=$(curl -s https://physics.princeton.edu/pulsar/k1jt/wsjtx.html | grep "WSJT-X" | grep "resources" | cut -d ">" -f2- | tail -n 1 | sed 's/WSJT-X //' | cut -f1 -d "<")
 else
 	echo "FT8=Installed" >> $UPDATEFILE
 fi
