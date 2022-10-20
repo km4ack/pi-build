@@ -544,15 +544,6 @@ else
 fi
 
 #----------------------------------------------------#
-#		TQSL
-#----------------------------------------------------#
-if ! hash tqsl 2>/dev/null; then
-	echo "TQSL=Not_Installed" >> $UPDATEFILE
-else
-	echo "TQSL=Installed" >> $UPDATEFILE
-fi
-
-#----------------------------------------------------#
 #		PISTATS
 #----------------------------------------------------#
 if ! hash pistats 2>/dev/null; then
