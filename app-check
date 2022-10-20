@@ -522,6 +522,16 @@ else
 fi
 
 #----------------------------------------------------#
+#		HamClock
+#----------------------------------------------------#
+HAMCLOCK=$(ls /usr/local/bin | grep hamclock)
+if [ -n "$HAMCLOCK" ]; then
+	echo "HAMCLOCK=Installed" >> $UPDATEFILE
+else
+	echo "HAMCLOCK=Not_Installed" >> $UPDATEFILE
+fi
+
+#----------------------------------------------------#
 #		Real Time Clock
 #----------------------------------------------------#
 echo "RTC=Unknown" >> $UPDATEFILE
