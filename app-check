@@ -108,6 +108,7 @@ fi
 #----------------------------------------------------#
 #		RIG CONTROL - HAMLIB
 #----------------------------------------------------#
+echo "Checking HAMIB"
 if ! hash rigctl 2>/dev/null; then
 	echo "RIG=Not_Installed" >> $UPDATEFILE
 else
@@ -547,6 +548,7 @@ fi
 #----------------------------------------------------#
 #		XLOG CHECK
 #----------------------------------------------------#
+echo "Checking XLOG"
 if ! hash xlog 2>/dev/null; then
 	echo "XLOG=Not_Installed" >> $UPDATEFILE
 else
