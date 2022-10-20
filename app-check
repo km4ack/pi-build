@@ -52,6 +52,7 @@ fi
 #----------------------------------------------------#
 if [ -f ${HOME}/ardop/piardopc ]; then
 	echo "ARDOP=Installed" >> $UPDATEFILE
+	ARDOPVER=$(${HOME}/ardop/piardopc --help | grep Version | sed 's/ardopc Version //')
 else
 	echo "ARDOP=Not_Installed" >> $UPDATEFILE
 fi
@@ -60,6 +61,7 @@ fi
 #----------------------------------------------------#
 if [ -f ${HOME}/ardop/piARDOP_GUI ]; then
 	echo "ARDOPGUI=Installed" >> $UPDATEFILE
+	#no cli versioning found yet
 else
 	echo "ARDOPGUI=Not_Installed" >> $UPDATEFILE
 fi
@@ -69,6 +71,7 @@ fi
 echo "Checking VARA"
 if [ -f ${HOME}/.wine/drive_c/VARA/VARA.exe ]; then
 	echo "VARA=Installed" >> $UPDATEFILE
+	#updates handled externally add here?
 else
 	echo "VARA=Not_Installed" >> $UPDATEFILE
 fi
@@ -77,6 +80,7 @@ fi
 #----------------------------------------------------#
 if ! hash js8call 2>/dev/null; then
 	echo "JS8=Not_Installed" >> $UPDATEFILE
+	JS8CALLVER=$(js8call -v | sed 's/JS8Call //')
 else
 	echo "JS8=Installed" >> $UPDATEFILE
 fi
@@ -85,6 +89,7 @@ fi
 #----------------------------------------------------#
 if ! hash wsjtx 2>/dev/null; then
 	echo "FT8=Not_Installed" >> $UPDATEFILE
+	#GUI returns might look at files?
 else
 	echo "FT8=Installed" >> $UPDATEFILE
 fi
@@ -101,6 +106,7 @@ fi
 #----------------------------------------------------#
 if [ -f /usr/local/bin/JS8CallUtils_v2 ]; then
 	echo "M0IAX=Installed" >> $UPDATEFILE
+	#no CLI info given
 else
 	echo "M0IAX=Not_Installed" >> $UPDATEFILE
 fi
@@ -401,6 +407,8 @@ if ! hash pyqso 2>/dev/null; then
 	echo "PYQSO=Not_Installed" >> $UPDATEFILE
 else
 	echo "PYQSO=Installed" >> $UPDATEFILE
+	PYQSOVER=$(pyqso --help 2>&1 | grep 'PyQSO version' | sed 's/INFO:root:PyQSO version //')
+	#additional note has error Could not import the geocoder module!
 fi
 
 #----------------------------------------------------#
@@ -408,6 +416,7 @@ fi
 #----------------------------------------------------#
 if ! hash qsstv 2>/dev/null; then
 	echo "QSSTV=Not_Installed" >> $UPDATEFILE
+	#GUI but in github now
 else
 	echo "QSSTV=Installed" >> $UPDATEFILE
 fi
@@ -429,6 +438,7 @@ if ! hash voacapl 2>/dev/null; then
 	echo "PROP=Not_Installed" >> $UPDATEFILE
 else
 	echo "PROP=Installed" >> $UPDATEFILE
+	PROPVER=$(voacapl -v | sed 's/voacapl - release //')
 fi
 
 #----------------------------------------------------#
