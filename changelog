@@ -1,5 +1,15 @@
-version=3.3.0
+version=3.3.1
 
+3.3.1		Fix Chirp not installing on 64bit OS - https://github.com/km4ack/pi-build/pull/452
+		Fix Chirp version check
+		Fix QSSTV Install - https://github.com/km4ack/pi-build/issues/422
+		Fix Repeat Start App Check - https://github.com/km4ack/pi-build/issues/450
+		Add VARIM - https://github.com/km4ack/pi-build/pull/458
+		Add reference docs - https://github.com/km4ack/pi-build/pull/446
+		Cleanup app-check script
+		Fix VARA showing "not installed" when it was installed
+		Hide Passwords while typing. - Thanks Nullvibes!
+		Fix FLRIG not in flsuite sub category - Thanks lcgreenwald!
 3.3.0		Add VARA modem - https://github.com/km4ack/pi-build/issues/394
 		fix conky 7 inch config - https://github.com/km4ack/pi-build/issues/414
 		fix old ardop modem not removed - https://github.com/km4ack/pi-build/issues/413
@@ -7,6 +17,7 @@ version=3.3.0
 		update chirp install - https://github.com/km4ack/pi-build/issues/337
 		use 64bit package to install pat on 64bit OS - https://github.com/km4ack/pi-build/issues/424
 		Add RepeaterStart - https://github.com/km4ack/pi-build/issues/400
+		fix gridtracker download - https://github.com/km4ack/pi-build/issues/447
 3.2.4		Update HotSpot Tools shortcut
 		Change 1000 to UID in update script
 		Remove Pi username check

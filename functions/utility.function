@@ -513,6 +513,24 @@ sudo mv /run/user/$UID/packetsearch.desktop /usr/share/applications/
 }
 
 ##################################
+#	Reference Documents
+##################################
+HDOCS() {
+	cd ${HOME}/Documents/
+	mkdir -p Reference
+    ln -s ${HOME}/Documents/Reference ${HOME}/Desktop/Reference
+	cd Reference
+	wget --tries 2 --connect-timeout=60 https://icomamerica.com/en/amateur/amateurtools/US-BandPlan-Update-1-2020.pdf
+	wget --tries 2 --connect-timeout=60 https://icomamerica.com/en/amateur/amateurtools/US-Grid-Square-Map-03-05-2019.pdf
+	wget --tries 2 --connect-timeout=60 https://icomamerica.com/en/amateur/amateurtools/2013_ITU_CQ_WorldMaps.pdf
+	wget --tries 2 --connect-timeout=60 https://icomamerica.com/en/amateur/amateurtools/HamRadioTerms-2011.pdf
+	wget --tries 2 --connect-timeout=60 http://www.arrl.org/files/file/Regulatory/Band%20Chart/Band%20Chart.pdf
+	wget --tries 2 --connect-timeout=60 http://www.arrl.org/files/file/Regulatory/Band%20Chart/Band%20Chart%20-%2011X17%20Color.pdf
+	wget --tries 2 --connect-timeout=60 http://www.arrl.org/files/file/Get%20on%20the%20Air/Comm%20w%20Other%20Hams-Q%20Signals.pdf
+	wget --tries 2 --connect-timeout=60 https://www.arrl.org/files/file/Get%20Licensed/Quickstart%20Guide%20EBOOK.pdf
+}
+
+##################################
 #	PiQtSoundModem
 ##################################
 #Documentation - https://www.cantab.net/users/john.wiseman/Documents/QtSoundModem.html
