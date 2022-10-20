@@ -356,7 +356,7 @@ for the Hot Spot\r</b>NOTE: The last field is the password for the hotspot. You 
 connect to your Pi when it is in hotspot mode <b>This password can only contain letters and numbers</b>" \
 			--title="Build-a-Pi" \
 			--field="Home Wifi SSID":CB "${LIST}" \
-			--field="Home Wifi Password" \
+			--field="Home Wifi Password":H \
 			--field="Hot Spot Password" \
 			--button="Exit":1 \
 			--button="Continue":2 \
@@ -463,6 +463,7 @@ yad --center --list --checklist --width=600 --height=600 --separator="" \
 	false "PAT-MENU" "$PATMENU" "Control for Pat Winlink" \
 	false "CHIRP" "$CHIRP" "Program Radios" \
 	false "GARIM" "$GARIM" "File Transfer Program " \
+	false "VARIM" "$VARIM" "Radio Chat VARA" \
 	false "M0IAX" "$M0IAX" "Tools for JS8Call messages" \
 	false "CONKY" "$CONKY" "System Information Display" \
 	false "WSJTX" "$FT8" "Weak signal digital mode software" \
@@ -511,7 +512,7 @@ if [ -n "$PATCHECK" ]; then
 		--image ${LOGO} --window-icon=${LOGO} --image-on-top --separator="|" --item-separator="|" \
 		--text="<b>version $VERSION</b>" \
 		--field="Six Character Grid Square" "$GRID" \
-		--field="Winlink Password" \
+		--field="Winlink Password":H \
 		--field="<b>Password is case sensitive</b>":LBL \
 		--button="Continue":2)
 	GRID=$(echo $INFO | awk -F "|" '{print $1}')
@@ -534,6 +535,7 @@ yad --center --list --checklist --width=600 --height=600 --separator="" \
 	false "PACKETSEARCH" "$PACKETSEARCH" "Winlink Packet Tool" \
 	false "CALLSIGN" "${CALLSIGN}" "Call Sign Lookup Utility" \
 	false "TEMPCONVERT" "$TEMPCONVERT" "Temperature Converter" \
+	false "HDOCS" "$HDOCS" "Reference Materials PDFs" \
 	false "GPARTED" "$GPARTED" "Disk Utility Application" \
 	false "RTC" "$RTC" "Real Time Clock" \
 	false "SHOWLOG" "$SHOWLOG" "Log File Viewer" \
