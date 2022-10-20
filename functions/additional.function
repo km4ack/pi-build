@@ -1016,7 +1016,6 @@ wget https://sourceforge.net/projects/repeater-start/files/$REPEAT_LATEST
 sudo dpkg -i $REPEAT_LATEST
 }
 
-
 ##################################
 #	JTDX
 ##################################
