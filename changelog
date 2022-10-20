@@ -8,6 +8,7 @@ version=3.3.1
 		Add reference docs - https://github.com/km4ack/pi-build/pull/446
 		Cleanup app-check script
 		Fix VARA showing "not installed" when it was installed
+		Hide Passwords while typing. - Thanks Nullvibes!
 3.3.0		Add VARA modem - https://github.com/km4ack/pi-build/issues/394
 		fix conky 7 inch config - https://github.com/km4ack/pi-build/issues/414
 		fix old ardop modem not removed - https://github.com/km4ack/pi-build/issues/413
