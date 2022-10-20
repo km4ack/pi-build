@@ -505,6 +505,7 @@ fi
 #----------------------------------------------------#
 #		TQSL
 #----------------------------------------------------#
+echo "Checking TQSL"
 if ! hash tqsl 2>/dev/null; then
   echo "TQSL=Not_Installed" >> $UPDATEFILE
 else
