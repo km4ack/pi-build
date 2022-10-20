@@ -67,7 +67,7 @@ fi
 #		VARA
 #----------------------------------------------------#
 echo "Checking VARA"
-if [ -f /home/pi/.wine/drive_c/VARA/VARA.exe ]; then
+if [ -f ${HOME}/.wine/drive_c/VARA/VARA.exe ]; then
 	echo "VARA=Installed" >> $UPDATEFILE
 else
 	echo "VARA=Not_Installed" >> $UPDATEFILE
