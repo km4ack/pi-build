@@ -11,7 +11,7 @@ else
     echo "USB here do the work"
 fi
 
-# What to backup. remember the \ for new line continuation last tine has none
+# What to backup. remember the \ for new line continuation last line has none
 backup_files="${HOME}/pi-build \
 ${HOME}/.config \
 ${HOME}/.fl* \
