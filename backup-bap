@@ -1,5 +1,5 @@
 #!/bin/bash
-echo -e "BAP Backup utility \n"
+echo -e "\nBAP Backup utility \n"
 # Where to backup
 BACKUP_PATH="/tmp"
 MOUNT_POINT="/media/usb"
@@ -20,6 +20,9 @@ ${HOME}/.tqsl \
 ${HOME}/.wine/drive_c/VARA/VARA.ini \
 ${HOME}/Desktop \
 ${HOME}/qsstv \
+${HOME}/.local/share/WSJT-X \
+${HOME}/.local/share/JS8Call \
+${HOME}/.local/share/pat \
 ${HOME}/.conkyrc \
 ${HOME}/*.*"
 
