@@ -43,11 +43,11 @@ ls -lh $BACKUP_PATH/$archive_file
 
 #handle archive or off pi copy
 
-#scp $BACKUP_PATH/$archive_file username@to_host:/remote/directory/
-
 #check if mount point exists
 if [ ! -d “MOUNT_POINT” ] ; then 
 	echo -e "\nUSB not found cant copy file off SD-CARD"
+    echo -e "\nOptional edit backup-bap script to scp off"
+    #scp $BACKUP_PATH/$archive_file username@to_host:/remote/directory/
 else
     echo -e "\nUSB found"
     cp $BACKUP_PATH/$archive_file $MOUNT_POINT
