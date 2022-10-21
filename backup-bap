@@ -16,6 +16,7 @@ backup_files="${HOME}/pi-build \
 ${HOME}/.config \
 ${HOME}/.fl* \
 ${HOME}/.xastir \
+${HOME}/.tqsl \
 ${HOME}/.wine/drive_c/VARA/VARA.ini \
 ${HOME}/Desktop \
 ${HOME}/qsstv \
