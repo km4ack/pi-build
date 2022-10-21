@@ -47,9 +47,9 @@ ls -lh $BACKUP_PATH/$archive_file
 
 #check if mount point exists
 if [ ! -d “MOUNT_POINT” ] ; then 
-	echo "USB not found cant copy file off SD-CARD"
+	echo -e "\nUSB not found cant copy file off SD-CARD"
 else
-    echo "USB found"
+    echo -e "\nUSB found"
     cp $BACKUP_PATH/$archive_file $MOUNT_POINT
     
 fi
