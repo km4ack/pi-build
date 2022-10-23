@@ -75,6 +75,15 @@ if [ -f ${HOME}/.wine/drive_c/VARA/VARA.exe ]; then
 	echo "VARA=Installed" >> $UPDATEFILE
 	#updates handled externally add here?
 	VARANEW=$(curl -s https://rosmodem.wordpress.com | grep 'VARA HF v' | cut -d "v" -f3 | head -c6)
+	VARACUR=$(cat ${HOME}/.wine/drive_c/VARA/ChangeLog.txt | head -3 | grep v | sed 's/v//' | cut -c -7)
+
+
+	if (($(echo "$VARANEW $VARACUR" | awk '{print ($1 > $2)}'))); then
+		echo "VARA=NEEDS-UPDATE" >> $UPDATEFILE
+	else
+		echo "VARA=is_latest_version" >> $UPDATEFILE
+	fi
+
 else
 	echo "VARA=Not_Installed" >> $UPDATEFILE
 fi
@@ -416,6 +425,7 @@ else
 	echo "PYQSO=Installed" >> $UPDATEFILE
 	PYQSOVER=$(pyqso --help 2>&1 | grep 'PyQSO version' | sed 's/INFO:root:PyQSO version //')
 	#additional note has error Could not import the geocoder module!
+	#on github
 fi
 
 #----------------------------------------------------#
@@ -615,6 +625,7 @@ fi
 #----------------------------------------------------#
 if [ -f /usr/local/bin/piQtTermTCP ]; then
 	echo "PITERM=Installed" >> $UPDATEFILE
+	#GUI no apparent cli version
 else
 	echo "PITERM=Not_Installed" >> $UPDATEFILE
 fi
