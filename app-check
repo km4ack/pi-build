@@ -521,6 +521,24 @@ else
 fi
 
 #----------------------------------------------------#
+#		TQSL
+#----------------------------------------------------#
+echo "Checking TQSL"
+if ! hash tqsl 2>/dev/null; then
+  echo "TQSL=Not_Installed" >> $UPDATEFILE
+else
+  TQSLCUR=$(tqsl -v 2>&1 | sed 's/TQSL Version //' | cut -c1-6)
+  TQSLLATEST=$(curl -s http://www.arrl.org/tqsl-download | grep "for Linux" | sed 's/.*TQSL //' | awk '{print $1}')
+
+  if (($(echo "${TQSLLATEST} ${TQSLCUR}" | awk '{print ($1 > $2)}'))); then
+    echo "TQSL=NEEDS-UPDATE" >> $UPDATEFILE
+  else
+    echo "TQSL=is_latest_version" >> $UPDATEFILE
+  fi
+
+fi
+
+#----------------------------------------------------#
 #		HamClock
 #----------------------------------------------------#
 HAMCLOCK=$(ls /usr/local/bin | grep hamclock)
@@ -542,15 +560,6 @@ if ! hash gpredict 2>/dev/null; then
 	echo "GPREDICT=Not_Installed" >> $UPDATEFILE
 else
 	echo "GPREDICT=Installed" >> $UPDATEFILE
-fi
-
-#----------------------------------------------------#
-#		TQSL
-#----------------------------------------------------#
-if ! hash tqsl 2>/dev/null; then
-	echo "TQSL=Not_Installed" >> $UPDATEFILE
-else
-	echo "TQSL=Installed" >> $UPDATEFILE
 fi
 
 #----------------------------------------------------#
