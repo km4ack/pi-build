@@ -28,7 +28,7 @@ archive_file="BAP-Backup-$hostname-$day.tgz"
 #make some extra backup notes abnout the repo we have currently
 echo -e "\n\nBAP Backup Log for $($BACKUP_PATH/$archive_file)"  >> ${HOME}/BAP-backup-log.txt
 echo -e "$(git show --pretty=medium | head -7)\n" >> ${HOME}/BAP-backup-log.txt
-echo -e "$(cd pi-build/ && git branch)\n" >> ${HOME}/BAP-backup-log.txt
+echo -e "$(git branch)\n" >> ${HOME}/BAP-backup-log.txt
 
 # Print start status message.
 echo -e "\nBacking up $backup_files to $BACKUP_PATH/$archive_file \n\n"
