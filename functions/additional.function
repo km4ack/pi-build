@@ -26,34 +26,16 @@ PAT() {
 	fi
 
 	if [ `getconf LONG_BIT` = '64' ]; then
-
-	#reference:
-	#https://www.jeremymorgan.com/tutorials/raspberry-pi/install-go-raspberry-pi/
-	#https://github.com/la5nta/pat/wiki/Building-from-source
-	#https://cqdeks4td.blogspot.com/2021/11/installing-pat-open-source-winlink.html
-
-	#install golang needed for pat build
-	cd
-	wget https://go.dev/dl/go1.17.7.linux-arm64.tar.gz
-	sudo tar -C /usr/local -xzf go1.17.7.linux-arm64.tar.gz
-	rm go1.17.7.linux-arm64.tar.gz
-
-	echo "PATH=$PATH:/usr/local/go/bin" >> $HOME/.profile
-	echo "GOPATH=$HOME/go" >> $HOME/.profile
-
-	source $HOME/.profile
-
-	#download/build latest pat
-	cd
-	git clone https://github.com/la5nta/pat
-	cd pat
-	./make.bash libax25
-	./make.bash
-
-	sudo cp $HOME/pat/debian/pat@.service /lib/systemd/system/
-	sudo cp $HOME/pat/pat /usr/bin/
-	rm -rf $HOME/pat
+	#install deb file for 64 bit systems
+	NEWPATV=$(curl -s https://github.com/la5nta/pat/releases | grep arm64 | head -1 | sed 's/.*pat_/pat_/' | sed 's/<\/a>.*$//')
+	NEWPAT=$(echo ${NEWPATV} | sed 's/pat_//' | sed 's/_linux_arm64.deb//' | sed 's/0\.//')
+	echo "new pat v ${NEWPATV}"
+	echo "new pat ${NEWPAT}"
+	wget --tries 2 --connect-timeout=60 https://github.com/la5nta/pat/releases/download/v0.${NEWPAT}/${NEWPATV}
+	sudo dpkg -i ${DIR}/${NEWPATV}
+	
 	else
+
 	#install deb file for 32 bit systems
 	NEWPATV=$(curl -s https://github.com/la5nta/pat/releases | grep armhf | head -1 | sed 's/.*pat_/pat_/' | sed 's/<\/a>.*$//')
 	NEWPAT=$(echo ${NEWPATV} | sed 's/pat_//' | sed 's/_linux_armhf.deb//' | sed 's/0\.//')
@@ -92,13 +74,46 @@ PAT() {
 	#This is a secutiry risk. See https://github.com/km4ack/pi-build/issues/299
 	#Changed to 127.0.0.1 on 11OCT2021 KM4ACK
 	sed -i "s/\"http_addr\": \".*\",/\"http_addr\": \"127.0.0.1:$PORT\",/" ${FIG}
-	jq '.ax25.rig = '\"my-rig\"'' ${FIG} | jq '.ardop.rig = '\"my-rig\"'' | jq '.hamlib_rigs = {'\"my-rig\"': {"address": "127.0.0.1:4532", "network": "tcp"}}' >~/Desktop/config.json
+	#jq '.ax25.rig = '\"my-rig\"'' ${FIG} | jq '.ardop.rig = '\"my-rig\"'' | jq '.hamlib_rigs = {'\"my-rig\"': {"address": "127.0.0.1:4532", "network": "tcp"}}' >~/Desktop/config.json
+	jq '.ax25.rig = '\"my-rig\"'' ${FIG} | jq '.varafm.rig = '\"my-rig\"'' | jq '.varahf.rig = '\"my-rig\"'' | jq '.ardop.rig = '\"my-rig\"'' | \
+	jq '.varafm.ptt_ctrl = 'true'' | jq '.varahf.ptt_ctrl = 'true'' | \
+	jq '.hamlib_rigs = {'\"my-rig\"': {"address": "127.0.0.1:4532", "network": "tcp"}}' >~/Desktop/config.json	
 	mv ${HOME}/Desktop/config.json ${FIG}
 	sed -i 's/"enable_http": false,/"enable_http": true,/' ${FIG}
 
 	if [ -f ${DIR}/config.json ]; then
 		mv ${DIR}/config.json ${HOME}/.wl2k/
 	fi
+
+	PAT_OLD_SOURCE_INSTALL() {
+	#This code is left for reference. This was used ot build pat from source when 64bit Pi OS was first released. 20220922
+	#reference:
+	#https://www.jeremymorgan.com/tutorials/raspberry-pi/install-go-raspberry-pi/
+	#https://github.com/la5nta/pat/wiki/Building-from-source
+	#https://cqdeks4td.blogspot.com/2021/11/installing-pat-open-source-winlink.html
+
+	#install golang needed for pat build
+	cd
+	wget https://go.dev/dl/go1.17.7.linux-arm64.tar.gz
+	sudo tar -C /usr/local -xzf go1.17.7.linux-arm64.tar.gz
+	rm go1.17.7.linux-arm64.tar.gz
+
+	echo "PATH=$PATH:/usr/local/go/bin" >> $HOME/.profile
+	echo "GOPATH=$HOME/go" >> $HOME/.profile
+
+	source $HOME/.profile
+
+	#download/build latest pat
+	cd
+	git clone https://github.com/la5nta/pat
+	cd pat
+	./make.bash libax25
+	./make.bash
+
+	sudo cp $HOME/pat/debian/pat@.service /lib/systemd/system/
+	sudo cp $HOME/pat/pat /usr/bin/
+	rm -rf $HOME/pat
+	}
 
 }
 ##################################
@@ -399,7 +414,29 @@ sudo make install
 ##################################
 CHIRP() {
 
-sudo apt install -y chirp
+	#sudo apt install -y chirp
+	cd ${DIR} || return
+	sudo apt install libfuse2
+	CHIRPDATE=$(curl -s https://github.com/goldstar611/chirp-appimage | grep "releases/tag/" | sed 's|.*releases/tag/||;s|">||')
+	LINK="https://github.com/goldstar611/chirp-appimage/releases/download/$CHIRPDATE/Chirp-daily-$CHIRPDATE-armhf.AppImage"
+	wget $LINK
+	CHIRP=$(ls | grep Chirp-daily)
+	sudo mv $CHIRP /usr/local/bin/chirp
+	sudo chmod +x /usr/local/bin/chirp
+
+cat >chirp.desktop <<EOF
+[Desktop Entry]
+Name=Chirp
+Comment=Radio Programming Software
+GenericName=Chirp
+Exec=/usr/local/bin/chirp
+Icon=qsstv.png
+Type=Application
+Terminal=false
+Categories=HamRadio;
+EOF
+
+	sudo mv chirp.desktop /usr/share/applications/
 
 OLDCODE(){
 	#left for reference
@@ -473,27 +510,29 @@ EOF
 	sudo mv qsstv.desktop /usr/share/applications/
 
 }
+
 ##################################
 #	GRIDTRACKER
 ##################################
 GRIDTRACKER() {
+	#due to constant changes to GT website, get the download link from a file on KM4ACK github.
+	cd /run/user/$UID/
+	wget https://raw.githubusercontent.com/km4ack/pi-scripts/master/gt-download-links	
 	cd ${HOME} || return
 	sudo apt-get install -y libgconf-2-4
+
 	#determine if 32/64 bit and set download link accordingly. issue #382
 	if [ `getconf LONG_BIT` = '32' ]; then
-	#GRIDDLL=$(curl -s https://download.gridtracker.org/latest_release.html | grep arm32 | sed 's/.*href="//;s/">.*//')
-	GRIDDLL=$(curl -s https://storage.googleapis.com/gt_download/ | awk 'BEGIN{FS="<Key>"; OFS="\n<Key>"} {$1=$1} 1' | grep arm32 | sed '/<Key>nwjs/d;/<Key>test/d' | head -1 | sed 's/<Key>//;s/<\/Key>.*//')	
-	GT_DIR=$(echo $GRIDDLL | sed 's|/.*||')
-	GRIDDLL=$(echo $GRIDDLL | sed 's/.*GridTracker/GridTracker/')
+	GRIDDLL=$(cat /run/user/$UID/gt-download-links | grep arm32 | sed 's/arm32=//')
+	GT_TAR_NAME=$(echo $GRIDDLL | sed 's/.*GridTracker/GridTracker/')
+
 	else
-	#GRIDDLL=$(curl -s https://download.gridtracker.org/latest_release.html | grep arm64 | sed 's/.*href="//;s/">.*//')
-	GRIDDLL=$(curl -s https://storage.googleapis.com/gt_download/ | awk 'BEGIN{FS="<Key>"; OFS="\n<Key>"} {$1=$1} 1' | grep arm32 | sed '/<Key>nwjs/d;/<Key>test/d' | head -1 | sed 's/<Key>//;s/<\/Key>.*//')
-	GT_DIR=$(echo $GRIDDLL | sed 's|/.*||')
-	GRIDDLL=$(echo $GRIDDLL | sed 's/.*GridTracker/GridTracker/')
+	GRIDDLL=$(cat /run/user/$UID/gt-download-links | grep arm64 | sed 's/arm64=//')
+	GT_TAR_NAME=$(echo $GRIDDLL | sed 's/.*GridTracker/GridTracker/')
 	fi
-	wget --tries 2 --connect-timeout=60 https://storage.googleapis.com/gt_download/$GT_DIR/$GRIDDLL
-	GRIDTAR=$(echo $GRIDDLL | sed 's/.*\///g')
-	tar -xzvf $GRIDTAR
+
+	wget --tries 2 --connect-timeout=60 $GRIDDLL
+	tar -xzvf $GT_TAR_NAME
 	rm GridTracker*.gz
 	#determine if 32/64 bit and get correct directory name.
 	if [ `getconf LONG_BIT` = '32' ]; then
@@ -502,6 +541,8 @@ GRIDTRACKER() {
 	OLDFOLDER=$(ls | grep GridTracker*-linux-arm64)
 	fi
 	mv "$OLDFOLDER" $HOME/GridTracker
+
+
 	cat >gridtracker.desktop <<EOF
 [Desktop Entry]
 Name=GridTracker
@@ -520,6 +561,7 @@ EOF
 
 
 }
+
 
 ##################################
 #	PROPAGATION
@@ -892,6 +934,18 @@ GRIDCALC(){
 }
 
 ##################################
+#	Repeater-Start
+##################################
+REPEAT(){
+sudo apt install -y gir1.2-osmgpsmap-1.0 gir1.2-geoclue-2.0 libosmgpsmap-1.0-1
+REPEAT_LATEST=$(curl -s https://sourceforge.net/projects/repeater-start/files/ | grep all.deb | head -1 | sed 's/.*repeater/repeater/;s/".*//')
+cd ${HOME}/Downloads
+wget https://sourceforge.net/projects/repeater-start/files/$REPEAT_LATEST
+sudo dpkg -i $REPEAT_LATEST
+}
+
+
+##################################
 #	JTDX
 ##################################
 #This code is left in place but no option is given during inital
@@ -912,4 +966,6 @@ JTDX() {
 	sudo apt-get --fix-broken -y install
 	sudo dpkg -i ${VER}
 	rm ${VER}
+
+
 }

@@ -239,6 +239,7 @@ yad --center --list --checklist --width=600 --height=600 --separator="" \
 	false "GPSUPDATE" "Tool to Manage GPS Devices" \
 	false "ARDOP" "Modem for HF" \
 	false "ARDOPGUI" "GUI for ARDOP" \
+	false "VARA" "VARA Modem - <b>Pi 4 Required</b>" \
 	false "HAMLIB" "Needed for Rig Control" \
 	false "DIREWOLF" "Software TNC" \
 	false "AX25" "Data Link Layer Protocol" \
@@ -252,10 +253,26 @@ if [ ${BUT} = 252 ] || [ ${BUT} = 1 ]; then
 fi
 
 if [ ${BUT} = 3 ]; then
-	BASEAPPS=(HOTSPOT HSTOOLS GPS ARDOP ARDOPGUI HAMLIB DIREWOLF AX25 PULSE GPSUPDATE)
+	BASEAPPS=(HOTSPOT HSTOOLS GPS ARDOP ARDOPGUI VARA HAMLIB DIREWOLF AX25 PULSE GPSUPDATE)
 	for i in "${BASEAPPS[@]}"; do
 		echo "$i" >>${BASE}
 	done
+fi
+
+#If VARA is chosen, make sure we have a Pi 4 32 bit system to work with. 
+#As of 02OCT2022 the VARA installer only works with the Pi 4.
+VARA_CHK=$(grep VARA ${BASE})
+if [ -n "$VARA_CHK" ]; then
+	FREEMEM=$(free -m | grep Mem: | awk '{ print $2 }')
+	if [ $FREEMEM -lt 1500 ]; then
+	echo "Not enough memory available"
+	yad --form --width=500 --text-align=center --center --title="Build-a-Pi" --text-align=center \
+	--image ${LOGO} --window-icon=${LOGO} --image-on-top --separator="|" --item-separator="|" \
+	--text="<b>Not enough memory</b>\rVARA requires a Pi 4.\r\rVARA will not be installed during the build." \
+	--button=gtk-ok
+	sed -i 's/VARA//;/^$/d' ${BASE}
+	fi
+
 fi
 
 #check if hotspot is chosen for install & get info if needed
@@ -405,6 +422,7 @@ yad --center --list --checklist --width=600 --height=600 --separator="" \
 	false "GPREDICT" "Satellite Tracking" \
 	false "TQSL" "LOTW Software" \
 	false "GRIDCALC" "Grid Calculation Software" \
+	false "REPEAT" "Repeater Directory" \
 	--button="Exit":1 \
 	--button="Check All and Continue":3 \
 	--button="Next":2 >${ADDITIONAL}
@@ -416,7 +434,7 @@ fi
 if [ ${BUT} = 3 ]; then
 	ADDAPPS=(CONKY PI-APRS CHIRP GARIM PAT PAT-MENU JS8CALL M0IAX WSJTX PYQSO
 		HAMRS EES QSSTV GRIDTRACKER HAMCLOCK PROPAGATION YAAC XASTIR GPREDICT TQSL
-		GRIDCALC CQRLOG)
+		GRIDCALC CQRLOG REPEAT)
 
 	for i in "${ADDAPPS[@]}"; do
 		echo "$i" >>${ADDITIONAL}
