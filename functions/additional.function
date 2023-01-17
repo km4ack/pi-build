@@ -247,10 +247,10 @@ WSJTX() {
 
 	sudo apt install -y build-essential git cmake gfortran fftw3-dev qtbase5-dev qttools5-dev libqt5serialport5-dev  qtmultimedia5-dev libqt5multimedia5-plugins libqt5sql5-sqlite autoconf automake libtool texinfo libusb-1.0-0-dev libudev-dev libboost-all-dev asciidoctor
 
-	FT8PKG=$(curl -s https://physics.princeton.edu/pulsar/k1jt/wsjtx.html | grep .tgz | sed 's/.*="//;s/">.*$//' | head -1)
+	FT8PKG=$(curl -s https://wsjt.sourceforge.io/wsjtx.html | grep .tgz | sed 's|.*">\(.*\.tgz\)</.*|\1|' | head -1)
 	FT8DIR=$(echo $FT8PKG | sed 's/.tgz//')
 	cd ${BUILDDIR}
-	wget --tries 2 --connect-timeout=60 https://physics.princeton.edu/pulsar/k1jt/$FT8PKG
+	wget --tries 2 --connect-timeout=60 https://sourceforge.net/projects/wsjt/files/$FT8PKG
 	tar -xvf $FT8PKG
 	rm $FT8PKG
 	cd $FT8DIR
