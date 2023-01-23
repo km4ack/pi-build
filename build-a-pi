@@ -233,8 +233,8 @@ yad --center --list --checklist --width=600 --height=600 --separator="" \
 	--image ${LOGO} --column=Check --column=App --column=Description \
 	--print-column=2 --window-icon=${LOGO} --image-on-top --text-align=center \
 	--text="<b>Base Applications</b>" --title="Build-a-Pi" \
-	false "HOTSPOT" "Hot Spot Generator for Portable Ops" \
-	false "HSTOOLS" "Tools to Manage Hot Spot" \
+	false "HOTSPOT" "Hotspot Generator for Portable Ops" \
+	false "HSTOOLS" "Tools to Manage Hotspot" \
 	false "GPS" "GPS Software" \
 	false "GPSUPDATE" "Tool to Manage GPS Devices" \
 	false "ARDOP" "Modem for HF" \
@@ -290,16 +290,16 @@ if [ -n "$HS" ]; then
 		HSINFO=$(yad --center --form --width=400 --height=400 --separator="|" --item-separator="|" \
 			--image ${LOGO} --column=Check --column=App --column=Description \
 			--window-icon=${LOGO} --image-on-top --text-align=center \
-			--text="<b>HotSpot Information\r\rPlease enter the information\rbelow \
-for the Hot Spot\r</b>NOTE: The last field is the password for the hotspot. You will use this password to \
+			--text="<b>Hotspot Information\r\rPlease enter the information\rbelow \
+for the hotspot\r</b>NOTE: The last field is the password for the hotspot. You will use this password to \
 connect to your Pi when it is in hotspot mode <b>This password can only contain letters and numbers</b>" \
 			--title="Build-a-Pi" \
-			--field="Home Wifi SSID":CB "$LIST" \
-			--field="Home Wifi Password" \
-			--field="Hot Spot Password" \
+			--field="Home Wi-Fi SSID":CB "$LIST" \
+			--field="Home Wi-Fi Password" \
+			--field="Raspberry Pi Hotspot Password" \
 			--button="Exit":1 \
 			--button="Continue":2 \
-			--button="Refresh Wifi":3)
+			--button="Refresh Wi-Fi":3)
 		BUT=$?
 		if [ ${BUT} = 3 ]; then
 			HSINFO #Call HSINFO function
