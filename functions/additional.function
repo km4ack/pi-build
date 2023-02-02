@@ -51,7 +51,7 @@ PAT() {
 	sudo systemctl start pat@${WHO}
 	sudo systemctl enable pat@${WHO}
 	cd ${DIR}
-	PAT_VERSION=$(pat version | awk '{print $2}' | sed 's/v0.//;s/.0//')
+	PAT_VERSION=$(pat version | awk '{print $2}' | awk -F "." '{print $2}')
 	#The Pat Winlink config file will change location in version 0.12. The below if statement
 	#checks to see which version is installed.
 	#check to see if pat version is 12 or greater. Change config file location
