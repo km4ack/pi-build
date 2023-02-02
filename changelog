@@ -1,5 +1,8 @@
-version=3.3.1
+version=3.3.2
 
+3.2.2		Fix WSJTX not installing - Thanks Michael Shriver!
+		Fix Chirp not installing
+		Fix VARA check where Pi user was hard coded
 3.3.1		Fix Chirp not installing on 64bit OS - https://github.com/km4ack/pi-build/pull/452
 		Fix Chirp version check
 		Fix QSSTV Install - https://github.com/km4ack/pi-build/issues/422
