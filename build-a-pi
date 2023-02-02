@@ -413,7 +413,6 @@ yad --center --list --checklist --width=600 --height=600 --separator="" \
 	false "HAMRS" "Logging Software" \
 	false "CQRLOG" "Logging Software" \
 	false "EES" "KM4ACK Emergency Email Server" \
-	false "QSSTV" "Slow Scan TV" \
 	false "GRIDTRACKER" "Track Grids in WSJTX" \
 	false "HAMCLOCK" "Clock for Ham Radio Ops" \
 	false "PROPAGATION" "Propagation Prediction Software" \
@@ -433,7 +432,7 @@ fi
 
 if [ ${BUT} = 3 ]; then
 	ADDAPPS=(CONKY PI-APRS CHIRP GARIM VARIM PAT PAT-MENU JS8CALL M0IAX WSJTX PYQSO
-		HAMRS EES QSSTV GRIDTRACKER HAMCLOCK PROPAGATION YAAC XASTIR GPREDICT TQSL
+		HAMRS EES GRIDTRACKER HAMCLOCK PROPAGATION YAAC XASTIR GPREDICT TQSL
 		GRIDCALC CQRLOG REPEAT)
 
 	for i in "${ADDAPPS[@]}"; do
