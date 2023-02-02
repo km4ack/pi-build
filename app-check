@@ -250,28 +250,21 @@ fi
 #		CHRIP
 #----------------------------------------------------#
 echo "Checking Chirp"
+#as of 02FEB23 running "chirp --version" no longer gives the version number
+#but instead starts chirp. Mods were made below to simply check if chirp
+#is installed or not
 if ! hash chirp 2>/dev/null; then
 	echo "CHIRP=Not_Installed" >> $UPDATEFILE
 else
+	echo "Installed" >> $UPDATEFILE
+
+fi
+
+
 	#bash function this could be moved to the top of the file and used globally
 	#to short hand lookups on GIT release pages
-	lastrelease() { git ls-remote --tags "$1" | cut -d/ -f3- | tail -n1; }
+	#lastrelease() { git ls-remote --tags "$1" | cut -d/ -f3- | tail -n1; }
 
-	CP=$(chirp --version)
-	CHIRP=$(echo ${CP} | awk '{ print $2 }' | sed 's/daily-//')
-	NEWCHIRP=$(curl -s https://github.com/goldstar611/chirp-appimage/releases | grep Release- | head -1 | sed 's/.*Release-//;s/">//')
-
-	CP=$(chirp --version)
-	CHIRP=$(echo ${CP} | awk '{ print $2 }' | sed 's/daily-//')
-	#function above called here as shorthand
-	NEWCHIRP=$(lastrelease https://github.com/goldstar611/chirp-appimage)
-
-	if (($(echo "${NEWCHIRP} ${CHIRP}" | awk '{print ($1 > $2)}'))); then
-			echo "CHIRP=NEEDS-UPDATE" >> $UPDATEFILE
-	else
-			echo "CHIRP=is_latest_version" >> $UPDATEFILE   
-	fi
-fi
 #----------------------------------------------------#
 #		DIREWOLF
 #----------------------------------------------------#
