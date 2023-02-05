@@ -51,7 +51,7 @@ PAT() {
 	sudo systemctl start pat@${WHO}
 	sudo systemctl enable pat@${WHO}
 	cd ${DIR}
-	PAT_VERSION=$(pat version | awk '{print $2}' | sed 's/v0.//;s/.0//')
+	PAT_VERSION=$(pat version | awk '{print $2}' | awk -F "." '{print $2}')
 	#The Pat Winlink config file will change location in version 0.12. The below if statement
 	#checks to see which version is installed.
 	#check to see if pat version is 12 or greater. Change config file location
@@ -247,10 +247,11 @@ WSJTX() {
 
 	sudo apt install -y build-essential git cmake gfortran fftw3-dev qtbase5-dev qttools5-dev libqt5serialport5-dev  qtmultimedia5-dev libqt5multimedia5-plugins libqt5sql5-sqlite autoconf automake libtool texinfo libusb-1.0-0-dev libudev-dev libboost-all-dev asciidoctor
 
-	FT8PKG=$(curl -s https://physics.princeton.edu/pulsar/k1jt/wsjtx.html | grep .tgz | sed 's/.*="//;s/">.*$//' | head -1)
+	#credit to Michael Shriver for this fix
+	FT8PKG=$(curl -s https://wsjt.sourceforge.io/wsjtx.html | grep .tgz | sed 's|.*">\(.*\.tgz\)</.*|\1|' | head -1)
 	FT8DIR=$(echo $FT8PKG | sed 's/.tgz//')
 	cd ${BUILDDIR}
-	wget --tries 2 --connect-timeout=60 https://physics.princeton.edu/pulsar/k1jt/$FT8PKG
+	wget --tries 2 --connect-timeout=60 https://sourceforge.net/projects/wsjt/files/$FT8PKG
 	tar -xvf $FT8PKG
 	rm $FT8PKG
 	cd $FT8DIR
@@ -415,12 +416,25 @@ sudo make install
 CHIRP() {
 
 	#sudo apt install -y chirp
+	#sample link - https://github.com/goldstar611/chirp-appimage/releases/download/20230202/Chirp-next-20230202-armhf.AppImage
+
 	cd ${DIR} || return
 	sudo apt install libfuse2
 	CHIRPDATE=$(curl -s https://github.com/goldstar611/chirp-appimage | grep "releases/tag/" | sed 's|.*releases/tag/||;s|">||')
-	LINK="https://github.com/goldstar611/chirp-appimage/releases/download/$CHIRPDATE/Chirp-daily-$CHIRPDATE-armhf.AppImage"
+
+	#determine if 32/64 bit and set download link accordingly. issue #382
+	if [ `getconf LONG_BIT` = '32' ]; then
+	
+	LINK="https://github.com/goldstar611/chirp-appimage/releases/download/$CHIRPDATE/Chirp-next-$CHIRPDATE-armhf.AppImage"
+
+	else
+
+	LINK="https://github.com/goldstar611/chirp-appimage/releases/download/$CHIRPDATE/Chirp-next-$CHIRPDATE-aarch64.AppImage"
+
+	fi
+
 	wget $LINK
-	CHIRP=$(ls | grep Chirp-daily)
+	CHIRP=$(ls | grep Chirp-next)
 	sudo mv $CHIRP /usr/local/bin/chirp
 	sudo chmod +x /usr/local/bin/chirp
 
@@ -473,6 +487,27 @@ GARIM() {
 	rm *.gz
 }
 
+
+################################
+#	VARIM
+##################################
+VARIM() {
+	sudo apt-get install -y libfltk1.1-dev 
+	sudo apt-get install -y libfltk1.3-dev
+	VPKG=$(curl -s https://www.whitemesa.net/varim/src/ | grep tar.gz | tail -1 | sed 's/^.*varim/varim/' | sed 's/tar.gz.*$/tar.gz/')
+	cd ${BUILDDIR} || return
+	wget --tries 2 --connect-timeout=60 https://www.whitemesa.net/varim/src/$VPKG
+	tar -xzvf $VPKG
+	DIRR=$(echo $VPKG | sed 's/.tar.gz//')
+	cd ${DIRR} || return
+	./configure
+	make
+	sudo make install
+	sudo make clean
+	cd ${BUILDDIR} || return
+	rm *.gz
+}
+
 ##################################
 #	QSSTV
 ##################################
@@ -481,19 +516,17 @@ QSSTV() {
 
 	cd ${BUILDDIR} || return
 
-	TAR=$(curl -s http://users.telenet.be/on4qz/qsstv/downloads/ | grep tar.gz | sed 's/.*href="//' | sed 's/">.*$//' | tail -1)
-	wget --tries 2 --connect-timeout=60 http://users.telenet.be/on4qz/qsstv/downloads/$TAR
-	tar -xvzf $TAR
-	SSTVTAR=$(ls -d */ | grep qss)
-	cd $SSTVTAR || return
+	git clone https://github.com/ON4QZ/QSSTV
+	cd QSSTV/src || return
+
 	qmake
 	make
 	sudo make install
 	sudo make clean
 	cd ${BUILDDIR} || return
-	rm *.gz
-	mkdir -p /usr/local/share/pixmaps/
-	sudo cp ${BUILDDIR}/${SSTVTAR}/icons/qsstv.png /usr/local/share/pixmaps/
+
+	sudo mkdir -p /usr/local/share/pixmaps/
+	sudo cp ${BUILDDIR}/QSSTV/src/icons/qsstv.png /usr/local/share/pixmaps/
 
 cat >qsstv.desktop <<EOF
 [Desktop Entry]
@@ -943,7 +976,6 @@ cd ${HOME}/Downloads
 wget https://sourceforge.net/projects/repeater-start/files/$REPEAT_LATEST
 sudo dpkg -i $REPEAT_LATEST
 }
-
 
 ##################################
 #	JTDX
