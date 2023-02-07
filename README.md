@@ -1,6 +1,6 @@
 # Support this Project
 
-[![Patreon](https://www.dropbox.com/s/gr6k9j359b744tl/patreon-logo1.png?dl=1)](https://patreon.com/km4ack) | [![Tip Jar](https://www.dropbox.com/s/tk4w0tery1ugrqz/tip-jar-1024x900.png?dl=1)](https://paypal.me/km4ack)
+<a href="https://patreon.com/km4ack" target="_blank"><img height="100" alt="KM4ACK on Patreon" src="https://c5.patreon.com/external/logo/downloads_logomark_color_on_white@2x.png"></a><a href="https://paypal.me/km4ack" target="_blank"><img height="100" hspace="50" alt="Tip Jar for KM4ACK on PayPal" src="https://d10j3mvrs1suex.cloudfront.net/u/139193/c13105ecfe2a6f227f8efece882ad178ae9eac31/original/tip-jar-1024x900.png/!!/b%3AW1sicmVzaXplIixbNjAwLG51bGwseyJ3aXRob3V0RW5sYXJnZW1lbnQiOnRydWUsImZpdCI6Im91dHNpZGUifV1dXQ%3D%3D/meta%3AeyJzcmNCdWNrZXQiOiJiemdsZmlsZXMifQ%3D%3D.png"></a>
 
 # Description
 
