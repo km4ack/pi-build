@@ -1,5 +1,6 @@
-version=3.3.2
+version=3.3.3
 
+3.3.3		Update the way libhamlib (rigctl) conflict is resolved
 3.3.2		Fix WSJTX not installing - Thanks Michael Shriver!
 		Fix Chirp not installing
 		Chirp update check changed. See notes in app-check script.
