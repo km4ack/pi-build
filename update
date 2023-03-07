@@ -111,7 +111,7 @@ LATEST=$(curl -s https://raw.githubusercontent.com/km4ack/pi-build/master/change
 if (($(echo "$LATEST $CURRENT" | awk '{print ($1 > $2)}'))); then
 	cat <<EOF >${MYPATH}/updatebap.txt
 Build a Pi update available. Current version is $CURRENT and
-the lateest version is $LATEST. Would you like to update?
+the latest version is $LATEST. Would you like to update?
 
 Change log - https://github.com/km4ack/pi-build/blob/master/changelog
 EOF
