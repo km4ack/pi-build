@@ -52,6 +52,9 @@ fi
 #----------------------------------------------------#
 if [ -f ${HOME}/ardop/piardopc ]; then
 	echo "ARDOP=Installed" >> $UPDATEFILE
+	ARDOPVER=$(${HOME}/ardop/piardopc --help | grep Version | sed 's/ardopc Version //')
+	#online version isnt printed likley better to just assume upgrade
+	#otherwise a download to check the build online is needed it appears
 else
 	echo "ARDOP=Not_Installed" >> $UPDATEFILE
 fi
@@ -60,6 +63,7 @@ fi
 #----------------------------------------------------#
 if [ -f ${HOME}/ardop/piARDOP_GUI ]; then
 	echo "ARDOPGUI=Installed" >> $UPDATEFILE
+	#no cli versioning found yet, see note for ARDOP as well
 else
 	echo "ARDOPGUI=Not_Installed" >> $UPDATEFILE
 fi
@@ -69,6 +73,17 @@ fi
 echo "Checking VARA"
 if [ -f ${HOME}/.wine/drive_c/VARA/VARA.exe ]; then
 	echo "VARA=Installed" >> $UPDATEFILE
+	#updates handled externally add here?
+	VARANEW=$(curl -s https://rosmodem.wordpress.com | grep 'VARA HF v' | cut -d "v" -f3 | head -c6)
+	VARACUR=$(cat ${HOME}/.wine/drive_c/VARA/ChangeLog.txt | head -3 | grep v | sed 's/v//' | cut -c -7)
+
+
+	if (($(echo "$VARANEW $VARACUR" | awk '{print ($1 > $2)}'))); then
+		echo "VARA=NEEDS-UPDATE" >> $UPDATEFILE
+	else
+		echo "VARA=is_latest_version" >> $UPDATEFILE
+	fi
+
 else
 	echo "VARA=Not_Installed" >> $UPDATEFILE
 fi
@@ -77,6 +92,8 @@ fi
 #----------------------------------------------------#
 if ! hash js8call 2>/dev/null; then
 	echo "JS8=Not_Installed" >> $UPDATEFILE
+	JS8CALLVER=$(js8call -v | sed 's/JS8Call //')
+	JS8CALLNEW=$(curl -s http://files.js8call.com/latest.html | grep version | sed 's/<p>The latest version of JS8Call is <strong>//' | cut -c1-5)
 else
 	echo "JS8=Installed" >> $UPDATEFILE
 fi
@@ -85,6 +102,10 @@ fi
 #----------------------------------------------------#
 if ! hash wsjtx 2>/dev/null; then
 	echo "FT8=Not_Installed" >> $UPDATEFILE
+	#GUI returns might look at files?
+	#looks for current and next
+	WSJTXNEW=$(curl -s https://physics.princeton.edu/pulsar/k1jt/wsjtx.html | grep "WSJT-X" | grep "resources" | cut -d ">" -f2- | head -c12 | sed 's/WSJT-X //')
+	WSJTNEXT=$(curl -s https://physics.princeton.edu/pulsar/k1jt/wsjtx.html | grep "WSJT-X" | grep "resources" | cut -d ">" -f2- | tail -n 1 | sed 's/WSJT-X //' | cut -f1 -d "<")
 else
 	echo "FT8=Installed" >> $UPDATEFILE
 fi
@@ -101,6 +122,7 @@ fi
 #----------------------------------------------------#
 if [ -f /usr/local/bin/JS8CallUtils_v2 ]; then
 	echo "M0IAX=Installed" >> $UPDATEFILE
+	#no CLI info given
 else
 	echo "M0IAX=Not_Installed" >> $UPDATEFILE
 fi
@@ -108,6 +130,7 @@ fi
 #----------------------------------------------------#
 #		RIG CONTROL - HAMLIB
 #----------------------------------------------------#
+echo "Checking HAMIB"
 if ! hash rigctl 2>/dev/null; then
 	echo "RIG=Not_Installed" >> $UPDATEFILE
 else
@@ -393,6 +416,9 @@ if ! hash pyqso 2>/dev/null; then
 	echo "PYQSO=Not_Installed" >> $UPDATEFILE
 else
 	echo "PYQSO=Installed" >> $UPDATEFILE
+	PYQSOVER=$(pyqso --help 2>&1 | grep 'PyQSO version' | sed 's/INFO:root:PyQSO version //')
+	#additional note has error Could not import the geocoder module!
+	#on github
 fi
 
 #----------------------------------------------------#
@@ -400,6 +426,7 @@ fi
 #----------------------------------------------------#
 if ! hash qsstv 2>/dev/null; then
 	echo "QSSTV=Not_Installed" >> $UPDATEFILE
+	#GUI but in github now
 else
 	echo "QSSTV=Installed" >> $UPDATEFILE
 fi
@@ -421,6 +448,7 @@ if ! hash voacapl 2>/dev/null; then
 	echo "PROP=Not_Installed" >> $UPDATEFILE
 else
 	echo "PROP=Installed" >> $UPDATEFILE
+	PROPVER=$(voacapl -v | sed 's/voacapl - release //')
 fi
 
 #----------------------------------------------------#
@@ -496,6 +524,24 @@ else
 fi
 
 #----------------------------------------------------#
+#		TQSL
+#----------------------------------------------------#
+echo "Checking TQSL"
+if ! hash tqsl 2>/dev/null; then
+  echo "TQSL=Not_Installed" >> $UPDATEFILE
+else
+  TQSLCUR=$(tqsl -v 2>&1 | sed 's/TQSL Version //' | cut -c1-6)
+  TQSLLATEST=$(curl -s http://www.arrl.org/tqsl-download | grep "for Linux" | sed 's/.*TQSL //' | awk '{print $1}')
+
+  if (($(echo "${TQSLLATEST} ${TQSLCUR}" | awk '{print ($1 > $2)}'))); then
+    echo "TQSL=NEEDS-UPDATE" >> $UPDATEFILE
+  else
+    echo "TQSL=is_latest_version" >> $UPDATEFILE
+  fi
+
+fi
+
+#----------------------------------------------------#
 #		HamClock
 #----------------------------------------------------#
 HAMCLOCK=$(ls /usr/local/bin | grep hamclock)
@@ -520,15 +566,6 @@ else
 fi
 
 #----------------------------------------------------#
-#		TQSL
-#----------------------------------------------------#
-if ! hash tqsl 2>/dev/null; then
-	echo "TQSL=Not_Installed" >> $UPDATEFILE
-else
-	echo "TQSL=Installed" >> $UPDATEFILE
-fi
-
-#----------------------------------------------------#
 #		PISTATS
 #----------------------------------------------------#
 if ! hash pistats 2>/dev/null; then
@@ -540,6 +577,7 @@ fi
 #----------------------------------------------------#
 #		XLOG CHECK
 #----------------------------------------------------#
+echo "Checking XLOG"
 if ! hash xlog 2>/dev/null; then
 	echo "XLOG=Not_Installed" >> $UPDATEFILE
 else
@@ -580,6 +618,7 @@ fi
 #----------------------------------------------------#
 if [ -f /usr/local/bin/piQtTermTCP ]; then
 	echo "PITERM=Installed" >> $UPDATEFILE
+	#GUI no apparent cli version
 else
 	echo "PITERM=Not_Installed" >> $UPDATEFILE
 fi
