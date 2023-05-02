@@ -108,7 +108,9 @@ CURRENT=$(head -1 ${MYPATH}/changelog | sed s'/version=//')
 
 LATEST=$(curl -s https://raw.githubusercontent.com/km4ack/pi-build/master/changelog | tac | tac | head -1 | sed 's/version=//')
 
-if (($(echo "$LATEST $CURRENT" | awk '{print ($1 > $2)}'))); then
+if [ -z "$LATEST" ] then
+	echo "There was an issue determining the latest version.  Please confirm that you have a working internet connection.
+elif (($(echo "$LATEST $CURRENT" | awk '{print ($1 > $2)}'))); then
 	cat <<EOF >${MYPATH}/updatebap.txt
 Build a Pi update available. Current version is $CURRENT and
 the lateest version is $LATEST. Would you like to update?
