@@ -47,16 +47,19 @@ sed -i s'/#DAEMON_CONF=""/DAEMON_CONF="\/etc\/hostapd\/hostapd.conf"/' /etc/defa
 sed -i s'/DAEMON_OPTS=""/#DAEMON_OPTS=""/' /etc/default/hostapd
 
 #add needed info to dnsmasq.conf
-echo "#AutoHotspot config" >>/etc/dnsmasq.conf
-echo "interface=wlan0" >>/etc/dnsmasq.conf
-echo "bind-dynamic" >>/etc/dnsmasq.conf
-echo "server=8.8.8.8" >>/etc/dnsmasq.conf
-echo "domain-needed" >>/etc/dnsmasq.conf
-echo "bogus-priv" >>/etc/dnsmasq.conf
-echo "dhcp-range=10.10.10.150,10.10.10.200,255.255.255.0,12h" >>/etc/dnsmasq.conf
-echo "#Set up redirect for email.com" >>/etc/dnsmasq.conf
-echo "dhcp-option=3,10.10.10.10" >>/etc/dnsmasq.conf
-echo "address=/email.com/10.10.10.10" >>/etc/dnsmasq.conf
+echo "#AutoHotspot config" >> /etc/dnsmasq.conf
+echo "interface=wlan0" >> /etc/dnsmasq.conf
+echo "bind-dynamic" >> /etc/dnsmasq.conf
+echo "server=8.8.8.8" >> /etc/dnsmasq.conf
+echo "domain-needed" >> /etc/dnsmasq.conf
+echo "bogus-priv" >> /etc/dnsmasq.conf
+# these two lines make it so you can connect to your pi using piname.local
+echo "domain=local" >> /etc/dnsmasq.conf
+echo "local=/local/" >> /etc/dnsmasq.conf
+echo "dhcp-range=10.10.10.150,10.10.10.200,255.255.255.0,12h" >> /etc/dnsmasq.conf
+echo "#Set up redirect for email.com" >> /etc/dnsmasq.conf
+echo "dhcp-option=3,10.10.10.10" >> /etc/dnsmasq.conf
+echo "address=/email.com/10.10.10.10" >> /etc/dnsmasq.conf
 
 mv /etc/network/interfaces /etc/network/interfaces.org
 
